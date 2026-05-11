@@ -1,0 +1,34 @@
+
+\begingroup
+\centering
+\begin{tabular}{lcccc}
+   \tabularnewline \midrule \midrule
+   Dependent Variables: & dist\_rail\_real\_2003 & \multicolumn{3}{c}{tratado}\\
+                           & (1) Dist. Contínua & (2) Dummy Sem-Mar & (3) Dummy Aleatório & (4) Dum. Aleat. 50km \\   
+   Model:                  & (1)                & (2)               & (3)                 & (4)\\  
+   \midrule
+   \emph{Variables}\\
+   dist\_semmar\_km        & 0.6298$^{***}$     &                   &                     &   \\   
+                           & (0.0296)           &                   &                     &   \\   
+   instrumento             &                    & 0.2838$^{***}$    &                     &   \\   
+                           &                    & (0.0434)          &                     &   \\   
+   instrumento\_aleatorio  &                    &                   & -0.0964$^{**}$      & -0.0932$^{*}$\\   
+                           &                    &                   & (0.0303)            & (0.0427)\\   
+   \midrule
+   \emph{Fixed-effects}\\
+   abbrev\_state           & Yes                & Yes               & Yes                 & Yes\\  
+   \midrule
+   \emph{Fit statistics}\\
+   Observations            & 1,048              & 1,048             & 1,048               & 774\\  
+   R$^2$                   & 0.75903            & 0.07005           & 0.02779             & 0.02109\\  
+   Within R$^2$            & 0.67679            & 0.05153           & 0.00843             & 0.00580\\  
+   \midrule \midrule
+   \multicolumn{5}{l}{\emph{Heteroskedasticity-robust standard-errors in parentheses}}\\
+   \multicolumn{5}{l}{\emph{Signif. Codes: ***: 0.001, **: 0.01, *: 0.05, .: 0.1}}\\
+\end{tabular}
+ 
+\par \raggedright 
+EP robustos (HC1). FE de estado. (1)-(3) amostra completa (N=1.048). (4) restringe a 50km (N=774). Dep. var.: (1) distância real (km); (2)-(4) dummy tratado.
+\par\endgroup
+
+

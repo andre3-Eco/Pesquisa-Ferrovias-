@@ -1,0 +1,46 @@
+Dicionário de Dados: Projeto Ferroviário Nordeste
+1. Dados Demográficos Históricos (Recenseamento do Império)
+
+Arquivos: DSBrazilCensus1872Piauhy.pdf, DSBrazilCensus1872Parahyba.pdf, DSBrazilCensus1872Maranhao.pdf, DSBrazilCensus1872Ceara.pdf, DSBrazilCensus1872Bahia.pdf, DSBrazilCensus1872Alagoas.pdf e DSBrazilCensus1872v1National.pdf.
+
+Descrição: Cópias digitalizadas dos volumes originais do primeiro Censo Demográfico do Brasil, realizado em 1872. O download contém os dados desagregados para as principais províncias nordestinas e um consolidado nacional. 
+
+2. Dados Climáticos (WorldClim - Resolução de 10 Minutos)
+Pastas: bio_10m, prec_10m, tmean_10m, tmax_10m e tmin_10m (arquivos duplicados nos formatos _esri e _bil).
+Descrição: Séries de dados meteorológicos globais em formato matricial (raster).  
+
+bio: Variáveis bioclimáticas (métricas complexas derivadas de temperatura e chuva).
+
+prec: Precipitação climática (chuvas).
+
+tmean, tmax, tmin: Temperaturas média, máxima e mínima.
+
+3. Limites Territoriais e Linha de Costa (IBGE)
+
+Pasta: bc_250_shapefiles_2026_03_03
+
+Descrição: Base Cartográfica Contínua do Brasil na escala 1:250.000.
+
+4. Uso e Cobertura da Terra (MapBiomas)
+
+Arquivo: brazil_coverage_2024.tif
+
+Descrição: Arquivo de imagem georreferenciada (raster) contendo a classificação espacial do uso da terra (ex: áreas de agricultura, pastagem, florestas nativas e áreas urbanizadas) no Brasil para o ano de 2024.
+
+5. Malha Hidrográfica (ANA)
+
+Pasta: GEOFT_BHO_REF_RIO
+
+Descrição: Base Hidrográfica Ottocodificada da Agência Nacional de Águas, contendo a malha de rios do Brasil.
+
+6. Pedologia e Classes de Solo (IBGE/Embrapa)
+
+Pastas: Solos_5000mil_mdb, brasil_solos_5m_20201104 (versões compactada e descompactada).
+
+Descrição: Mapeamento digital vetorial com a classificação dos solos do Brasil, em escala 1:5.000.000.
+
+
+
+
+
+

@@ -1,0 +1,31 @@
+
+\begingroup
+\centering
+\begin{tabular}{lccccc}
+   \tabularnewline \midrule \midrule
+   Dependent Variables: & log\_pop2021 & \multicolumn{4}{c}{log\_pib}\\
+                               & (1) log Pop 2021 & (2) log PIB Total & (3) log VAB Total & (4) log VAB Agro & (5) log VAB Indústria \\   
+   Model:                      & (1)              & (2)               & (3)               & (4)              & (5)\\  
+   \midrule
+   \emph{Variables}\\
+   tratado                     & 2.246$^{***}$    & 3.009$^{***}$     & 2.918$^{***}$     & 1.141$^{***}$    & 4.860$^{***}$\\   
+                               & (0.3867)         & (0.5145)          & (0.5020)          & (0.3252)         & (0.8272)\\   
+   \midrule
+   \emph{Fixed-effects}\\
+   abbrev\_state               & Yes              & Yes               & Yes               & Yes              & Yes\\  
+   \midrule
+   \emph{Fit statistics}\\
+   F-test (1st stage), tratado & 56.391           & 56.391            & 56.391            & 56.391           & 56.391\\  
+   Wu-Hausman                  & 43.259           & 54.843            & 54.082            & 11.200           & 61.503\\  
+   Observations                & 1,048            & 1,048             & 1,048             & 1,048            & 1,048\\  
+   Within R$^2$                & 0.06409          & 0.07576           & 0.07463           & 0.01428          & 0.08231\\  
+   \midrule \midrule
+   \multicolumn{6}{l}{\emph{Heteroskedasticity-robust standard-errors in parentheses}}\\
+   \multicolumn{6}{l}{\emph{Signif. Codes: ***: 0.001, **: 0.01, *: 0.05, .: 0.1}}\\
+\end{tabular}
+ 
+\par \raggedright 
+EP robustos (HC1). FE de estado. Variável endógena: tratado (dummy = 1 se ferrovia real cruza o AMC). Instrumento: dummy = 1 se rede sintética sem-mar cruza o AMC. 'F 1º est.' = F parcial do instrumento excluído. 'Wu-Hausman' = teste de endogeneidade.
+\par\endgroup
+
+

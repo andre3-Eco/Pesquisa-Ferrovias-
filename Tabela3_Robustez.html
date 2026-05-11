@@ -1,0 +1,33 @@
+
+\begingroup
+\centering
+\begin{tabular}{lcccccccccccc}
+   \tabularnewline \midrule \midrule
+   Dependent Variables: & \multicolumn{3}{c}{log\_pop2021} & \multicolumn{9}{c}{log\_pib}\\
+                               & Sem-Mar       & Aleatório & Aleat. 50km & Sem-Mar       & Aleatório & Aleat. 50km & Sem-Mar       & Aleatório & Aleat. 50km & Sem-Mar       & Aleatório    & Aleat. 50km \\   
+   Model:                      & (1)           & (2)       & (3)         & (4)           & (5)       & (6)         & (7)           & (8)       & (9)         & (10)          & (11)         & (12)\\  
+   \midrule
+   \emph{Variables}\\
+   tratado                     & 2.246$^{***}$ & -1.384    & -1.440      & 3.009$^{***}$ & -1.744    & -1.428      & 4.860$^{***}$ & -2.728    & -2.835      & 1.141$^{***}$ & -2.165$^{*}$ & -0.5817\\   
+                               & (0.3867)      & (0.8769)  & (1.265)     & (0.5145)      & (1.109)   & (1.506)     & (0.8272)      & (1.735)   & (2.565)     & (0.3252)      & (1.001)      & (0.9225)\\   
+   \midrule
+   \emph{Fixed-effects}\\
+   abbrev\_state               & Yes           & Yes       & Yes         & Yes           & Yes       & Yes         & Yes           & Yes       & Yes         & Yes           & Yes          & Yes\\  
+   \midrule
+   \emph{Fit statistics}\\
+   F-test (1st stage), tratado & 56.391        & 8.8281    & 4.4537      & 56.391        & 8.8281    & 4.4537      & 56.391        & 8.8281    & 4.4537      & 56.391        & 8.8281       & 4.4537\\  
+   Observations                & 1,048         & 1,048     & 774         & 1,048         & 1,048     & 774         & 1,048         & 1,048     & 774         & 1,048         & 1,048        & 774\\  
+   Outcome: log Pop 2021       & (1)           & (2)       & (3)         &               &           &             &               &           &             &               &              & \\  
+   Outcome: log PIB Total      &               &           &             & (4)           & (5)       & (6)         &               &           &             &               &              & \\  
+   Outcome: log VAB Indústria  &               &           &             &               &           &             & (7)           & (8)       & (9)         &               &              & \\  
+   Outcome: log VAB Agro       &               &           &             &               &           &             &               &           &             & (10)          & (11)         & (12)\\  
+   \midrule \midrule
+   \multicolumn{13}{l}{\emph{Heteroskedasticity-robust standard-errors in parentheses}}\\
+   \multicolumn{13}{l}{\emph{Signif. Codes: ***: 0.001, **: 0.01, *: 0.05, .: 0.1}}\\
+\end{tabular}
+ 
+\par \raggedright 
+EP robustos (HC1). FE de estado. 'Aleat.' usa rede sintética aleatória como instrumento. 'Aleat. 50km' restringe a amostra a AMCs dentro de 50km da malha ferroviária real (N=774). Referência: IV Sem-Mar usa rede sintética de menor custo sem cruzar o oceano.
+\par\endgroup
+
+
