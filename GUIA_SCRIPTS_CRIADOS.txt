@@ -1,0 +1,376 @@
+================================================================================
+GUIA DOS SCRIPTS CRIADOS - BATERIA COMPLETA DE TESTES IV
+================================================================================
+
+DATA: 11/05/2026
+PESQUISA: Impacto de Ferrovias no Desenvolvimento Regional (Nordeste)
+
+================================================================================
+RESUMO EXECUTIVO
+================================================================================
+
+Foram criados 3 scripts R principais que automatizam completamente a análise
+econométrica IV (Variáveis Instrumentais / 2SLS) com:
+
+  • Múltiplas especificações amostrais (4 tipos)
+  • Diferentes tipos de tratamento (3: distância, dummy, densidade)
+  • Vários outcomes (população 2003/2010, PIB se disponível)
+  • Testes de primeiro estágio (força do instrumento)
+  • Testes de segundo estágio (efeito causal)
+  • Análises de robustez e visualizações
+
+TEMPO TOTAL DE EXECUÇÃO: ~30-40 minutos
+TOTAL DE TESTES: 4 especificações × 3 tratamentos × 2 outcomes = 24 regressões
+
+================================================================================
+1. QUICK_START_BATERIA_IV.R ⭐ COMECE AQUI
+================================================================================
+
+PROPÓSITO: Executar tudo automaticamente em 2 passos simples
+
+COMANDO:
+  source("QUICK_START_BATERIA_IV.R")
+
+O QUE FAZ:
+  ✓ Verifica pré-requisitos (arquivos, dados)
+  ✓ Executa script principal (6_Bateria_Testes_Etapas_I_II.R)
+  ✓ Executa visualizações (7_Visualizar_Resultados_IV.R)
+  ✓ Produz sumário executivo com próximos passos
+
+TEMPO: ~40 minutos (sem intervenção)
+
+SAÍDAS:
+  • resultados_bateria_iv.csv
+  • 4 gráficos PNG
+  • 3 tabelas HTML
+  • Feedback detalhado no console
+
+RECOMENDADO PARA: Análise rápida, primeiro contato com dados
+
+================================================================================
+2. 6_BATERIA_TESTES_ETAPAS_I_II.R ⭐ ANÁLISE PRINCIPAL
+================================================================================
+
+PROPÓSITO: Executar a bateria completa de testes IV
+
+COMANDO:
+  source("6_Bateria_Testes_Etapas_I_II.R")
+
+ETAPAS PRINCIPAIS:
+
+  SEÇÃO 1: Carregamento de dados
+    • Base integrada (distância, dummy, densidade)
+    • Geometria das AMCs (via geobr)
+    • Ferrovias reais (cronologia)
+    • Dados de população e PIB
+
+  SEÇÃO 2: Preparação de outcomes
+    • Agregação de dados municipais para AMC
+    • Tratamento de dados de PIB (se disponível)
+
+  SEÇÃO 3: Identificação de extremidades
+    • Detecta AMCs nas pontas das ferrovias
+    • Permite excluir outliers em análises de robustez
+
+  SEÇÃO 4: Construção da base analítica
+    • Merge: geometria + população + distâncias/dummy/densidade
+
+  SEÇÃO 5: Definição de especificações
+    • 4 especificações amostrais
+    • 3 tipos de tratamento
+    • 2+ outcomes
+
+  SEÇÃO 6: Função de análise IV
+    • Roda 1º estágio (forma reduzida, testa força do instrumento)
+    • Roda 2º estágio (2SLS, estima efeito causal)
+    • Coleta coeficientes, testes, p-values, R²
+
+  SEÇÃO 7: Execução da bateria
+    • Loop: para cada especificação
+    •   Loop: para cada tratamento
+    •     Loop: para cada outcome
+    •       Executa análise IV completa
+
+  SEÇÃO 8: Exportação de resultados
+    • CSV com todos os coeficientes
+    • Tabelas resumidas por especificação e tratamento
+    • Diagnóstico de instrumentos fracos
+
+SAÍDA PRINCIPAL:
+  📊 resultados_bateria_iv.csv (um teste por linha)
+  
+  Colunas-chave:
+    • especificacao
+    • tratamento
+    • outcome
+    • coef_fs (1º estágio)
+    • f_stat (força do instrumento) ← CRÍTICO: deve ser > 10
+    • coef_ss (2º estágio) ← EFEITO CAUSAL ESTIMADO
+    • p_value (significância)
+    • r2_ss (qualidade do ajuste)
+
+TAMBÉM PRODUZ:
+  • resumo_por_especificacao.csv
+  • resumo_por_tratamento.csv
+
+TEMPO: ~15-25 minutos
+
+RECOMENDADO PARA: Análise detalhada, customização de testes
+
+================================================================================
+3. 7_VISUALIZAR_RESULTADOS_IV.R ⭐ PÓS-ESTIMAÇÃO
+================================================================================
+
+PROPÓSITO: Visualizar, resumir e analisar resultados da bateria
+
+COMANDO:
+  source("7_Visualizar_Resultados_IV.R")
+
+O QUE FAZ:
+
+  SEÇÃO 1: Carregamento
+    • Lê resultados_bateria_iv.csv
+
+  SEÇÃO 2: Tabelas de resumo
+    • Tabela 1: Coeficientes por especificação e outcome
+    • Tabela 2: Estatísticas resumidas por tratamento
+    • Tabela 3: F-estatísticos (força do instrumento)
+
+  SEÇÃO 3: Gráficos
+    • Gráfico 1: Distribuição de coeficientes (boxplots)
+    • Gráfico 2: F-estatísticos por especificação
+    • Gráfico 3: Distribuição de p-values
+    • Gráfico 4: F-stat vs Coeficiente
+
+  SEÇÃO 4: Análise de robustez
+    • Robustez 1: Impacto de efeitos fixos de estado
+    • Robustez 2: Impacto de excluir extremidades
+
+  SEÇÃO 5: Recomendações
+    • Avalia força do instrumento
+    • Identifica heterogeneidade entre tratamentos
+    • Comenta sobre significância
+
+  SEÇÃO 6: Exportação de relatórios
+    • Tabelas em HTML (formatadas para navegador)
+
+SAÍDAS PRINCIPAIS:
+  📈 Gráficos PNG:
+    • grafico_coeficientes_ss.png
+    • grafico_f_stat.png
+    • grafico_p_values.png
+    • grafico_f_vs_coef.png
+
+  📋 Tabelas HTML:
+    • tabela_resultados_por_outcome.html
+    • tabela_resultados_por_tratamento.html
+    • tabela_f_estatistico.html
+
+TEMPO: ~3-5 minutos
+
+RECOMENDADO PARA: Compreender e apresentar resultados, análise visual
+
+================================================================================
+DOCUMENTAÇÃO CRIADA
+================================================================================
+
+📖 README_BATERIA_TESTES_IV.md
+   • Explicação detalhada de tudo
+   • Como executar passo a passo
+   • Interpretação econômica dos resultados
+   • Troubleshooting
+   • Personalizações possíveis
+   • FAQ
+
+📖 AGENTS.md (este arquivo foi atualizado)
+   • Sumário do projeto
+   • Referência rápida de variáveis
+   • Relação entre scripts
+   • Próximos passos sugeridos
+
+📄 GUIA_SCRIPTS_CRIADOS.txt (este documento)
+   • Resumo visual dos scripts
+   • Fluxo de execução
+   • Saídas esperadas
+
+================================================================================
+FLUXO RECOMENDADO DE EXECUÇÃO
+================================================================================
+
+OPÇÃO 1: AUTOMATIZADA (Recomendado para começar)
+┌─────────────────────────────────────────────────────────────────────┐
+│ source("QUICK_START_BATERIA_IV.R")                                  │
+│                                                                     │
+│ Isso automaticamente:                                               │
+│ 1. Roda 6_Bateria_Testes_Etapas_I_II.R                             │
+│ 2. Roda 7_Visualizar_Resultados_IV.R                               │
+│ 3. Abre feedback com próximos passos                                │
+│                                                                     │
+│ ⏱️  Tempo total: ~40 minutos                                         │
+└─────────────────────────────────────────────────────────────────────┘
+
+OPÇÃO 2: MANUAL (Mais controle)
+┌─────────────────────────────────────────────────────────────────────┐
+│ Passo 1: Carregar dados                                             │
+│ ────────────────────────────────────────────────────────────────   │
+│ library(readxl)                                                    │
+│ população <- read_excel("população.xlsx")                         │
+│                                                                    │
+│ Passo 2: Rodar bateria                                             │
+│ ────────────────────────────────────────────────────────────────   │
+│ source("6_Bateria_Testes_Etapas_I_II.R")                          │
+│ # ⏱️  ~20 min                                                      │
+│                                                                    │
+│ Passo 3: Visualizar                                                │
+│ ────────────────────────────────────────────────────────────────   │
+│ source("7_Visualizar_Resultados_IV.R")                            │
+│ # ⏱️  ~5 min                                                       │
+│                                                                    │
+│ ⏱️  Tempo total: ~30-40 minutos                                     │
+└─────────────────────────────────────────────────────────────────────┘
+
+================================================================================
+ESPECIFICAÇÕES TESTADAS
+================================================================================
+
+AMOSTRA 1: Completa
+  • Todas as ~700 AMCs do Nordeste
+  • Nenhuma restrição
+
+AMOSTRA 2: Completa + FE Estado
+  • Mesma amostra
+  • Controla por estado (9 UFs)
+  • Captura heterogeneidade regional
+
+AMOSTRA 3: ≤200km + FE Estado
+  • Apenas AMCs a até 200 km das ferrovias reais
+  • Com efeitos fixos de estado
+  • Evita causalidade reversa
+
+AMOSTRA 4: ≤200km + Excluindo Pontas + FE Estado
+  • Distância ≤200km
+  • Remove extremidades de ferrovias (evita outliers)
+  • Com efeitos fixos
+  • Mais seletiva e robusta
+
+================================================================================
+TIPOS DE TRATAMENTO (VARIÁVEIS ENDÓGENAS)
+================================================================================
+
+TRATAMENTO 1: DISTÂNCIA
+  Variável endógena:  dist_rail_real_2003
+  Instrumento:        dist_rail_sintetica_km
+  Unidade:            km
+  Interpretação:      "Um aumento de 1 km reduz população em β%"
+  Força esperada:     Moderada a forte
+
+TRATAMENTO 2: DUMMY DE ATENDIMENTO
+  Variável endógena:  dummy_atendida_real_2003
+  Instrumento:        dummy_atendida_sintetica
+  Unidade:            0/1 (binária)
+  Interpretação:      "Estar atendido aumenta população em β%"
+  Força esperada:     Forte (maior variabilidade)
+
+TRATAMENTO 3: DENSIDADE
+  Variável endógena:  densidade_real_2003
+  Instrumento:        densidade_sintetica
+  Unidade:            km/1000km²
+  Interpretação:      "Aumentar 10 km/1000km² aumenta população em β%"
+  Força esperada:     Moderada
+
+================================================================================
+OUTCOMES TESTADOS
+================================================================================
+
+• População 2003
+• População 2010
+• PIB Total (se arquivo tabelaspib.xlsx disponível)
+• PIB por setor (se arquivo disponível)
+
+Formato: log(outcome) ~ tratamento | instrumento
+
+================================================================================
+INTERPRETAÇÃO RÁPIDA DOS RESULTADOS
+================================================================================
+
+No arquivo resultados_bateria_iv.csv, procure por:
+
+1️⃣ FORÇA DO INSTRUMENTO (coluna: f_stat)
+   • F > 10      : ✓ Forte (confiável)
+   • 5 ≤ F ≤ 10  : ⚠️ Moderado (cuidado)
+   • F < 5       : ❌ Fraco (não confiável)
+
+2️⃣ EFEITO CAUSAL (coluna: coef_ss)
+   • Valor positivo : Tratamento aumenta outcome
+   • Valor negativo : Tratamento diminui outcome
+   • Magnitude: coef = 0.10 → +10% no outcome (elasticidade)
+
+3️⃣ SIGNIFICÂNCIA (coluna: p_value)
+   • p < 0.01    : *** Significativo a 1%
+   • p < 0.05    : ** Significativo a 5%
+   • p < 0.10    : * Significativo a 10%
+   • p ≥ 0.10    : Não significativo
+
+4️⃣ ROBUSTEZ
+   Compare coeficientes entre especificações:
+   • Mudança pequena (< 20%) → Resultado robusto ✓
+   • Mudança grande (> 50%) → Resultado frágil ⚠️
+
+================================================================================
+PRÓXIMOS PASSOS APÓS A ANÁLISE
+================================================================================
+
+1. DOCUMENTAR ACHADOS
+   • Quais tratamentos mostraram efeitos significativos?
+   • Qual é a magnitude dos efeitos?
+   • Os resultados são robustos?
+
+2. ANALISAR HETEROGENEIDADE
+   • Os efeitos variam por estado?
+   • Os efeitos variam por subperíodo (antes/depois)?
+
+3. EVENT STUDY
+   • Quando as ferrovias foram inauguradas?
+   • Qual foi o impacto cronológico?
+
+4. REFINAR ESPECIFICAÇÕES
+   • Testar outros limiares de distância
+   • Testar outros instrumentos
+   • Incluir covariadas adicionais
+
+5. PREPARAR MANUSCRITO
+   • Tabela principal de resultados
+   • Figura de robustez
+   • Discussão de mecanismos
+
+================================================================================
+TROUBLESHOOTING RÁPIDO
+================================================================================
+
+PROBLEMA: "object 'população' not found"
+SOLUÇÃO:  library(readxl); população <- read_excel("população.xlsx")
+
+PROBLEMA: "file not found"
+SOLUÇÃO:  Verifique se está no diretório correto (getwd())
+
+PROBLEMA: Instrumentos fracos em todos os testes
+SOLUÇÃO:  A rede sintética pode não ser exógena. Revisar conceitual.
+
+PROBLEMA: Script demora muito
+SOLUÇÃO:  Pode reduzir outcomes ou especificações testadas
+
+================================================================================
+CONTATO E SUPORTE
+================================================================================
+
+Documentação completa: README_BATERIA_TESTES_IV.md
+FAQ: Ver seção em README_BATERIA_TESTES_IV.md
+Definições de variáveis: AGENTS.md ou README_BASES_DADOS.md
+
+================================================================================
+DATA DE CRIAÇÃO: 11/05/2026
+STATUS: ✅ Pronto para uso
+
+Todos os scripts foram testados e estão prontos para execução.
+Comece com: source("QUICK_START_BATERIA_IV.R")
+================================================================================

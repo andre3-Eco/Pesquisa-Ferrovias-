@@ -1,0 +1,383 @@
+Coluna,Tipo,Descricao
+code_amc,numeric,Código único da AMC
+area_km2,numeric,Área da AMC em km²
+dist_rail_sintetica_km,numeric,Distância até rede sintética LCP (km)
+dummy_atendida_sintetica,numeric,Dummy: 1 se ≤25km de rede sintética
+cobertura_continua_sintetica,numeric,Cobertura contínua (inverso de distância) - sintética
+cobertura_continua_real_1858,numeric,Cobertura contínua (inverso de distância) - real até 1858
+cobertura_continua_real_1860,numeric,Cobertura contínua (inverso de distância) - real até 1860
+cobertura_continua_real_1862,numeric,Cobertura contínua (inverso de distância) - real até 1862
+cobertura_continua_real_1863,numeric,Cobertura contínua (inverso de distância) - real até 1863
+cobertura_continua_real_1873,numeric,Cobertura contínua (inverso de distância) - real até 1873
+cobertura_continua_real_1875,numeric,Cobertura contínua (inverso de distância) - real até 1875
+cobertura_continua_real_1876,numeric,Cobertura contínua (inverso de distância) - real até 1876
+cobertura_continua_real_1880,numeric,Cobertura contínua (inverso de distância) - real até 1880
+cobertura_continua_real_1881,numeric,Cobertura contínua (inverso de distância) - real até 1881
+cobertura_continua_real_1882,numeric,Cobertura contínua (inverso de distância) - real até 1882
+cobertura_continua_real_1883,numeric,Cobertura contínua (inverso de distância) - real até 1883
+cobertura_continua_real_1884,numeric,Cobertura contínua (inverso de distância) - real até 1884
+cobertura_continua_real_1885,numeric,Cobertura contínua (inverso de distância) - real até 1885
+cobertura_continua_real_1886,numeric,Cobertura contínua (inverso de distância) - real até 1886
+cobertura_continua_real_1887,numeric,Cobertura contínua (inverso de distância) - real até 1887
+cobertura_continua_real_1888,numeric,Cobertura contínua (inverso de distância) - real até 1888
+cobertura_continua_real_1891,numeric,Cobertura contínua (inverso de distância) - real até 1891
+cobertura_continua_real_1892,numeric,Cobertura contínua (inverso de distância) - real até 1892
+cobertura_continua_real_1894,numeric,Cobertura contínua (inverso de distância) - real até 1894
+cobertura_continua_real_1895,numeric,Cobertura contínua (inverso de distância) - real até 1895
+cobertura_continua_real_1896,numeric,Cobertura contínua (inverso de distância) - real até 1896
+cobertura_continua_real_1900,numeric,Cobertura contínua (inverso de distância) - real até 1900
+cobertura_continua_real_1901,numeric,Cobertura contínua (inverso de distância) - real até 1901
+cobertura_continua_real_1902,numeric,Cobertura contínua (inverso de distância) - real até 1902
+cobertura_continua_real_1904,numeric,Cobertura contínua (inverso de distância) - real até 1904
+cobertura_continua_real_1905,numeric,Cobertura contínua (inverso de distância) - real até 1905
+cobertura_continua_real_1906,numeric,Cobertura contínua (inverso de distância) - real até 1906
+cobertura_continua_real_1907,numeric,Cobertura contínua (inverso de distância) - real até 1907
+cobertura_continua_real_1908,numeric,Cobertura contínua (inverso de distância) - real até 1908
+cobertura_continua_real_1910,numeric,Cobertura contínua (inverso de distância) - real até 1910
+cobertura_continua_real_1911,numeric,Cobertura contínua (inverso de distância) - real até 1911
+cobertura_continua_real_1912,numeric,Cobertura contínua (inverso de distância) - real até 1912
+cobertura_continua_real_1913,numeric,Cobertura contínua (inverso de distância) - real até 1913
+cobertura_continua_real_1914,numeric,Cobertura contínua (inverso de distância) - real até 1914
+cobertura_continua_real_1915,numeric,Cobertura contínua (inverso de distância) - real até 1915
+cobertura_continua_real_1916,numeric,Cobertura contínua (inverso de distância) - real até 1916
+cobertura_continua_real_1917,numeric,Cobertura contínua (inverso de distância) - real até 1917
+cobertura_continua_real_1918,numeric,Cobertura contínua (inverso de distância) - real até 1918
+cobertura_continua_real_1919,numeric,Cobertura contínua (inverso de distância) - real até 1919
+cobertura_continua_real_1920,numeric,Cobertura contínua (inverso de distância) - real até 1920
+cobertura_continua_real_1921,numeric,Cobertura contínua (inverso de distância) - real até 1921
+cobertura_continua_real_1922,numeric,Cobertura contínua (inverso de distância) - real até 1922
+cobertura_continua_real_1923,numeric,Cobertura contínua (inverso de distância) - real até 1923
+cobertura_continua_real_1924,numeric,Cobertura contínua (inverso de distância) - real até 1924
+cobertura_continua_real_1925,numeric,Cobertura contínua (inverso de distância) - real até 1925
+cobertura_continua_real_1926,numeric,Cobertura contínua (inverso de distância) - real até 1926
+cobertura_continua_real_1927,numeric,Cobertura contínua (inverso de distância) - real até 1927
+cobertura_continua_real_1929,numeric,Cobertura contínua (inverso de distância) - real até 1929
+cobertura_continua_real_1931,numeric,Cobertura contínua (inverso de distância) - real até 1931
+cobertura_continua_real_1932,numeric,Cobertura contínua (inverso de distância) - real até 1932
+cobertura_continua_real_1933,numeric,Cobertura contínua (inverso de distância) - real até 1933
+cobertura_continua_real_1934,numeric,Cobertura contínua (inverso de distância) - real até 1934
+cobertura_continua_real_1936,numeric,Cobertura contínua (inverso de distância) - real até 1936
+cobertura_continua_real_1937,numeric,Cobertura contínua (inverso de distância) - real até 1937
+cobertura_continua_real_1940,numeric,Cobertura contínua (inverso de distância) - real até 1940
+cobertura_continua_real_1941,numeric,Cobertura contínua (inverso de distância) - real até 1941
+cobertura_continua_real_1944,numeric,Cobertura contínua (inverso de distância) - real até 1944
+cobertura_continua_real_1947,numeric,Cobertura contínua (inverso de distância) - real até 1947
+cobertura_continua_real_1948,numeric,Cobertura contínua (inverso de distância) - real até 1948
+cobertura_continua_real_1949,numeric,Cobertura contínua (inverso de distância) - real até 1949
+cobertura_continua_real_1950,numeric,Cobertura contínua (inverso de distância) - real até 1950
+cobertura_continua_real_1951,numeric,Cobertura contínua (inverso de distância) - real até 1951
+cobertura_continua_real_1953,numeric,Cobertura contínua (inverso de distância) - real até 1953
+cobertura_continua_real_1955,numeric,Cobertura contínua (inverso de distância) - real até 1955
+cobertura_continua_real_1956,numeric,Cobertura contínua (inverso de distância) - real até 1956
+cobertura_continua_real_1957,numeric,Cobertura contínua (inverso de distância) - real até 1957
+cobertura_continua_real_1958,numeric,Cobertura contínua (inverso de distância) - real até 1958
+cobertura_continua_real_1961,numeric,Cobertura contínua (inverso de distância) - real até 1961
+cobertura_continua_real_1962,numeric,Cobertura contínua (inverso de distância) - real até 1962
+cobertura_continua_real_1966,numeric,Cobertura contínua (inverso de distância) - real até 1966
+cobertura_continua_real_1969,numeric,Cobertura contínua (inverso de distância) - real até 1969
+cobertura_continua_real_1972,numeric,Cobertura contínua (inverso de distância) - real até 1972
+cobertura_continua_real_1985,numeric,Cobertura contínua (inverso de distância) - real até 1985
+cobertura_continua_real_1996,numeric,Cobertura contínua (inverso de distância) - real até 1996
+cobertura_continua_real_2003,numeric,Cobertura contínua (inverso de distância) - real até 2003
+comprimento_sintetico_km,numeric,Comprimento de ferrovia sintética na AMC (km)
+densidade_sintetica,numeric,Densidade de ferrovia sintética (km/1000km²)
+dist_rail_real_1858,numeric,Distância até rede real até 1858 (km)
+dist_rail_real_1860,numeric,Distância até rede real até 1860 (km)
+dist_rail_real_1862,numeric,Distância até rede real até 1862 (km)
+dist_rail_real_1863,numeric,Distância até rede real até 1863 (km)
+dist_rail_real_1873,numeric,Distância até rede real até 1873 (km)
+dist_rail_real_1875,numeric,Distância até rede real até 1875 (km)
+dist_rail_real_1876,numeric,Distância até rede real até 1876 (km)
+dist_rail_real_1880,numeric,Distância até rede real até 1880 (km)
+dist_rail_real_1881,numeric,Distância até rede real até 1881 (km)
+dist_rail_real_1882,numeric,Distância até rede real até 1882 (km)
+dist_rail_real_1883,numeric,Distância até rede real até 1883 (km)
+dist_rail_real_1884,numeric,Distância até rede real até 1884 (km)
+dist_rail_real_1885,numeric,Distância até rede real até 1885 (km)
+dist_rail_real_1886,numeric,Distância até rede real até 1886 (km)
+dist_rail_real_1887,numeric,Distância até rede real até 1887 (km)
+dist_rail_real_1888,numeric,Distância até rede real até 1888 (km)
+dist_rail_real_1891,numeric,Distância até rede real até 1891 (km)
+dist_rail_real_1892,numeric,Distância até rede real até 1892 (km)
+dist_rail_real_1894,numeric,Distância até rede real até 1894 (km)
+dist_rail_real_1895,numeric,Distância até rede real até 1895 (km)
+dist_rail_real_1896,numeric,Distância até rede real até 1896 (km)
+dist_rail_real_1900,numeric,Distância até rede real até 1900 (km)
+dist_rail_real_1901,numeric,Distância até rede real até 1901 (km)
+dist_rail_real_1902,numeric,Distância até rede real até 1902 (km)
+dist_rail_real_1904,numeric,Distância até rede real até 1904 (km)
+dist_rail_real_1905,numeric,Distância até rede real até 1905 (km)
+dist_rail_real_1906,numeric,Distância até rede real até 1906 (km)
+dist_rail_real_1907,numeric,Distância até rede real até 1907 (km)
+dist_rail_real_1908,numeric,Distância até rede real até 1908 (km)
+dist_rail_real_1910,numeric,Distância até rede real até 1910 (km)
+dist_rail_real_1911,numeric,Distância até rede real até 1911 (km)
+dist_rail_real_1912,numeric,Distância até rede real até 1912 (km)
+dist_rail_real_1913,numeric,Distância até rede real até 1913 (km)
+dist_rail_real_1914,numeric,Distância até rede real até 1914 (km)
+dist_rail_real_1915,numeric,Distância até rede real até 1915 (km)
+dist_rail_real_1916,numeric,Distância até rede real até 1916 (km)
+dist_rail_real_1917,numeric,Distância até rede real até 1917 (km)
+dist_rail_real_1918,numeric,Distância até rede real até 1918 (km)
+dist_rail_real_1919,numeric,Distância até rede real até 1919 (km)
+dist_rail_real_1920,numeric,Distância até rede real até 1920 (km)
+dist_rail_real_1921,numeric,Distância até rede real até 1921 (km)
+dist_rail_real_1922,numeric,Distância até rede real até 1922 (km)
+dist_rail_real_1923,numeric,Distância até rede real até 1923 (km)
+dist_rail_real_1924,numeric,Distância até rede real até 1924 (km)
+dist_rail_real_1925,numeric,Distância até rede real até 1925 (km)
+dist_rail_real_1926,numeric,Distância até rede real até 1926 (km)
+dist_rail_real_1927,numeric,Distância até rede real até 1927 (km)
+dist_rail_real_1929,numeric,Distância até rede real até 1929 (km)
+dist_rail_real_1931,numeric,Distância até rede real até 1931 (km)
+dist_rail_real_1932,numeric,Distância até rede real até 1932 (km)
+dist_rail_real_1933,numeric,Distância até rede real até 1933 (km)
+dist_rail_real_1934,numeric,Distância até rede real até 1934 (km)
+dist_rail_real_1936,numeric,Distância até rede real até 1936 (km)
+dist_rail_real_1937,numeric,Distância até rede real até 1937 (km)
+dist_rail_real_1940,numeric,Distância até rede real até 1940 (km)
+dist_rail_real_1941,numeric,Distância até rede real até 1941 (km)
+dist_rail_real_1944,numeric,Distância até rede real até 1944 (km)
+dist_rail_real_1947,numeric,Distância até rede real até 1947 (km)
+dist_rail_real_1948,numeric,Distância até rede real até 1948 (km)
+dist_rail_real_1949,numeric,Distância até rede real até 1949 (km)
+dist_rail_real_1950,numeric,Distância até rede real até 1950 (km)
+dist_rail_real_1951,numeric,Distância até rede real até 1951 (km)
+dist_rail_real_1953,numeric,Distância até rede real até 1953 (km)
+dist_rail_real_1955,numeric,Distância até rede real até 1955 (km)
+dist_rail_real_1956,numeric,Distância até rede real até 1956 (km)
+dist_rail_real_1957,numeric,Distância até rede real até 1957 (km)
+dist_rail_real_1958,numeric,Distância até rede real até 1958 (km)
+dist_rail_real_1961,numeric,Distância até rede real até 1961 (km)
+dist_rail_real_1962,numeric,Distância até rede real até 1962 (km)
+dist_rail_real_1966,numeric,Distância até rede real até 1966 (km)
+dist_rail_real_1969,numeric,Distância até rede real até 1969 (km)
+dist_rail_real_1972,numeric,Distância até rede real até 1972 (km)
+dist_rail_real_1985,numeric,Distância até rede real até 1985 (km)
+dist_rail_real_1996,numeric,Distância até rede real até 1996 (km)
+dist_rail_real_2003,numeric,Distância até rede real até 2003 (km)
+dummy_atendida_real_1858,numeric,Dummy: 1 se ≤25km de rede real até 1858
+dummy_atendida_real_1860,numeric,Dummy: 1 se ≤25km de rede real até 1860
+dummy_atendida_real_1862,numeric,Dummy: 1 se ≤25km de rede real até 1862
+dummy_atendida_real_1863,numeric,Dummy: 1 se ≤25km de rede real até 1863
+dummy_atendida_real_1873,numeric,Dummy: 1 se ≤25km de rede real até 1873
+dummy_atendida_real_1875,numeric,Dummy: 1 se ≤25km de rede real até 1875
+dummy_atendida_real_1876,numeric,Dummy: 1 se ≤25km de rede real até 1876
+dummy_atendida_real_1880,numeric,Dummy: 1 se ≤25km de rede real até 1880
+dummy_atendida_real_1881,numeric,Dummy: 1 se ≤25km de rede real até 1881
+dummy_atendida_real_1882,numeric,Dummy: 1 se ≤25km de rede real até 1882
+dummy_atendida_real_1883,numeric,Dummy: 1 se ≤25km de rede real até 1883
+dummy_atendida_real_1884,numeric,Dummy: 1 se ≤25km de rede real até 1884
+dummy_atendida_real_1885,numeric,Dummy: 1 se ≤25km de rede real até 1885
+dummy_atendida_real_1886,numeric,Dummy: 1 se ≤25km de rede real até 1886
+dummy_atendida_real_1887,numeric,Dummy: 1 se ≤25km de rede real até 1887
+dummy_atendida_real_1888,numeric,Dummy: 1 se ≤25km de rede real até 1888
+dummy_atendida_real_1891,numeric,Dummy: 1 se ≤25km de rede real até 1891
+dummy_atendida_real_1892,numeric,Dummy: 1 se ≤25km de rede real até 1892
+dummy_atendida_real_1894,numeric,Dummy: 1 se ≤25km de rede real até 1894
+dummy_atendida_real_1895,numeric,Dummy: 1 se ≤25km de rede real até 1895
+dummy_atendida_real_1896,numeric,Dummy: 1 se ≤25km de rede real até 1896
+dummy_atendida_real_1900,numeric,Dummy: 1 se ≤25km de rede real até 1900
+dummy_atendida_real_1901,numeric,Dummy: 1 se ≤25km de rede real até 1901
+dummy_atendida_real_1902,numeric,Dummy: 1 se ≤25km de rede real até 1902
+dummy_atendida_real_1904,numeric,Dummy: 1 se ≤25km de rede real até 1904
+dummy_atendida_real_1905,numeric,Dummy: 1 se ≤25km de rede real até 1905
+dummy_atendida_real_1906,numeric,Dummy: 1 se ≤25km de rede real até 1906
+dummy_atendida_real_1907,numeric,Dummy: 1 se ≤25km de rede real até 1907
+dummy_atendida_real_1908,numeric,Dummy: 1 se ≤25km de rede real até 1908
+dummy_atendida_real_1910,numeric,Dummy: 1 se ≤25km de rede real até 1910
+dummy_atendida_real_1911,numeric,Dummy: 1 se ≤25km de rede real até 1911
+dummy_atendida_real_1912,numeric,Dummy: 1 se ≤25km de rede real até 1912
+dummy_atendida_real_1913,numeric,Dummy: 1 se ≤25km de rede real até 1913
+dummy_atendida_real_1914,numeric,Dummy: 1 se ≤25km de rede real até 1914
+dummy_atendida_real_1915,numeric,Dummy: 1 se ≤25km de rede real até 1915
+dummy_atendida_real_1916,numeric,Dummy: 1 se ≤25km de rede real até 1916
+dummy_atendida_real_1917,numeric,Dummy: 1 se ≤25km de rede real até 1917
+dummy_atendida_real_1918,numeric,Dummy: 1 se ≤25km de rede real até 1918
+dummy_atendida_real_1919,numeric,Dummy: 1 se ≤25km de rede real até 1919
+dummy_atendida_real_1920,numeric,Dummy: 1 se ≤25km de rede real até 1920
+dummy_atendida_real_1921,numeric,Dummy: 1 se ≤25km de rede real até 1921
+dummy_atendida_real_1922,numeric,Dummy: 1 se ≤25km de rede real até 1922
+dummy_atendida_real_1923,numeric,Dummy: 1 se ≤25km de rede real até 1923
+dummy_atendida_real_1924,numeric,Dummy: 1 se ≤25km de rede real até 1924
+dummy_atendida_real_1925,numeric,Dummy: 1 se ≤25km de rede real até 1925
+dummy_atendida_real_1926,numeric,Dummy: 1 se ≤25km de rede real até 1926
+dummy_atendida_real_1927,numeric,Dummy: 1 se ≤25km de rede real até 1927
+dummy_atendida_real_1929,numeric,Dummy: 1 se ≤25km de rede real até 1929
+dummy_atendida_real_1931,numeric,Dummy: 1 se ≤25km de rede real até 1931
+dummy_atendida_real_1932,numeric,Dummy: 1 se ≤25km de rede real até 1932
+dummy_atendida_real_1933,numeric,Dummy: 1 se ≤25km de rede real até 1933
+dummy_atendida_real_1934,numeric,Dummy: 1 se ≤25km de rede real até 1934
+dummy_atendida_real_1936,numeric,Dummy: 1 se ≤25km de rede real até 1936
+dummy_atendida_real_1937,numeric,Dummy: 1 se ≤25km de rede real até 1937
+dummy_atendida_real_1940,numeric,Dummy: 1 se ≤25km de rede real até 1940
+dummy_atendida_real_1941,numeric,Dummy: 1 se ≤25km de rede real até 1941
+dummy_atendida_real_1944,numeric,Dummy: 1 se ≤25km de rede real até 1944
+dummy_atendida_real_1947,numeric,Dummy: 1 se ≤25km de rede real até 1947
+dummy_atendida_real_1948,numeric,Dummy: 1 se ≤25km de rede real até 1948
+dummy_atendida_real_1949,numeric,Dummy: 1 se ≤25km de rede real até 1949
+dummy_atendida_real_1950,numeric,Dummy: 1 se ≤25km de rede real até 1950
+dummy_atendida_real_1951,numeric,Dummy: 1 se ≤25km de rede real até 1951
+dummy_atendida_real_1953,numeric,Dummy: 1 se ≤25km de rede real até 1953
+dummy_atendida_real_1955,numeric,Dummy: 1 se ≤25km de rede real até 1955
+dummy_atendida_real_1956,numeric,Dummy: 1 se ≤25km de rede real até 1956
+dummy_atendida_real_1957,numeric,Dummy: 1 se ≤25km de rede real até 1957
+dummy_atendida_real_1958,numeric,Dummy: 1 se ≤25km de rede real até 1958
+dummy_atendida_real_1961,numeric,Dummy: 1 se ≤25km de rede real até 1961
+dummy_atendida_real_1962,numeric,Dummy: 1 se ≤25km de rede real até 1962
+dummy_atendida_real_1966,numeric,Dummy: 1 se ≤25km de rede real até 1966
+dummy_atendida_real_1969,numeric,Dummy: 1 se ≤25km de rede real até 1969
+dummy_atendida_real_1972,numeric,Dummy: 1 se ≤25km de rede real até 1972
+dummy_atendida_real_1985,numeric,Dummy: 1 se ≤25km de rede real até 1985
+dummy_atendida_real_1996,numeric,Dummy: 1 se ≤25km de rede real até 1996
+dummy_atendida_real_2003,numeric,Dummy: 1 se ≤25km de rede real até 2003
+comprimento_real_1858,numeric,Comprimento de ferrovia real até 1858 na AMC (km)
+comprimento_real_1860,numeric,Comprimento de ferrovia real até 1860 na AMC (km)
+comprimento_real_1862,numeric,Comprimento de ferrovia real até 1862 na AMC (km)
+comprimento_real_1863,numeric,Comprimento de ferrovia real até 1863 na AMC (km)
+comprimento_real_1873,numeric,Comprimento de ferrovia real até 1873 na AMC (km)
+comprimento_real_1875,numeric,Comprimento de ferrovia real até 1875 na AMC (km)
+comprimento_real_1876,numeric,Comprimento de ferrovia real até 1876 na AMC (km)
+comprimento_real_1880,numeric,Comprimento de ferrovia real até 1880 na AMC (km)
+comprimento_real_1881,numeric,Comprimento de ferrovia real até 1881 na AMC (km)
+comprimento_real_1882,numeric,Comprimento de ferrovia real até 1882 na AMC (km)
+comprimento_real_1883,numeric,Comprimento de ferrovia real até 1883 na AMC (km)
+comprimento_real_1884,numeric,Comprimento de ferrovia real até 1884 na AMC (km)
+comprimento_real_1885,numeric,Comprimento de ferrovia real até 1885 na AMC (km)
+comprimento_real_1886,numeric,Comprimento de ferrovia real até 1886 na AMC (km)
+comprimento_real_1887,numeric,Comprimento de ferrovia real até 1887 na AMC (km)
+comprimento_real_1888,numeric,Comprimento de ferrovia real até 1888 na AMC (km)
+comprimento_real_1891,numeric,Comprimento de ferrovia real até 1891 na AMC (km)
+comprimento_real_1892,numeric,Comprimento de ferrovia real até 1892 na AMC (km)
+comprimento_real_1894,numeric,Comprimento de ferrovia real até 1894 na AMC (km)
+comprimento_real_1895,numeric,Comprimento de ferrovia real até 1895 na AMC (km)
+comprimento_real_1896,numeric,Comprimento de ferrovia real até 1896 na AMC (km)
+comprimento_real_1900,numeric,Comprimento de ferrovia real até 1900 na AMC (km)
+comprimento_real_1901,numeric,Comprimento de ferrovia real até 1901 na AMC (km)
+comprimento_real_1902,numeric,Comprimento de ferrovia real até 1902 na AMC (km)
+comprimento_real_1904,numeric,Comprimento de ferrovia real até 1904 na AMC (km)
+comprimento_real_1905,numeric,Comprimento de ferrovia real até 1905 na AMC (km)
+comprimento_real_1906,numeric,Comprimento de ferrovia real até 1906 na AMC (km)
+comprimento_real_1907,numeric,Comprimento de ferrovia real até 1907 na AMC (km)
+comprimento_real_1908,numeric,Comprimento de ferrovia real até 1908 na AMC (km)
+comprimento_real_1910,numeric,Comprimento de ferrovia real até 1910 na AMC (km)
+comprimento_real_1911,numeric,Comprimento de ferrovia real até 1911 na AMC (km)
+comprimento_real_1912,numeric,Comprimento de ferrovia real até 1912 na AMC (km)
+comprimento_real_1913,numeric,Comprimento de ferrovia real até 1913 na AMC (km)
+comprimento_real_1914,numeric,Comprimento de ferrovia real até 1914 na AMC (km)
+comprimento_real_1915,numeric,Comprimento de ferrovia real até 1915 na AMC (km)
+comprimento_real_1916,numeric,Comprimento de ferrovia real até 1916 na AMC (km)
+comprimento_real_1917,numeric,Comprimento de ferrovia real até 1917 na AMC (km)
+comprimento_real_1918,numeric,Comprimento de ferrovia real até 1918 na AMC (km)
+comprimento_real_1919,numeric,Comprimento de ferrovia real até 1919 na AMC (km)
+comprimento_real_1920,numeric,Comprimento de ferrovia real até 1920 na AMC (km)
+comprimento_real_1921,numeric,Comprimento de ferrovia real até 1921 na AMC (km)
+comprimento_real_1922,numeric,Comprimento de ferrovia real até 1922 na AMC (km)
+comprimento_real_1923,numeric,Comprimento de ferrovia real até 1923 na AMC (km)
+comprimento_real_1924,numeric,Comprimento de ferrovia real até 1924 na AMC (km)
+comprimento_real_1925,numeric,Comprimento de ferrovia real até 1925 na AMC (km)
+comprimento_real_1926,numeric,Comprimento de ferrovia real até 1926 na AMC (km)
+comprimento_real_1927,numeric,Comprimento de ferrovia real até 1927 na AMC (km)
+comprimento_real_1929,numeric,Comprimento de ferrovia real até 1929 na AMC (km)
+comprimento_real_1931,numeric,Comprimento de ferrovia real até 1931 na AMC (km)
+comprimento_real_1932,numeric,Comprimento de ferrovia real até 1932 na AMC (km)
+comprimento_real_1933,numeric,Comprimento de ferrovia real até 1933 na AMC (km)
+comprimento_real_1934,numeric,Comprimento de ferrovia real até 1934 na AMC (km)
+comprimento_real_1936,numeric,Comprimento de ferrovia real até 1936 na AMC (km)
+comprimento_real_1937,numeric,Comprimento de ferrovia real até 1937 na AMC (km)
+comprimento_real_1940,numeric,Comprimento de ferrovia real até 1940 na AMC (km)
+comprimento_real_1941,numeric,Comprimento de ferrovia real até 1941 na AMC (km)
+comprimento_real_1944,numeric,Comprimento de ferrovia real até 1944 na AMC (km)
+comprimento_real_1947,numeric,Comprimento de ferrovia real até 1947 na AMC (km)
+comprimento_real_1948,numeric,Comprimento de ferrovia real até 1948 na AMC (km)
+comprimento_real_1949,numeric,Comprimento de ferrovia real até 1949 na AMC (km)
+comprimento_real_1950,numeric,Comprimento de ferrovia real até 1950 na AMC (km)
+comprimento_real_1951,numeric,Comprimento de ferrovia real até 1951 na AMC (km)
+comprimento_real_1953,numeric,Comprimento de ferrovia real até 1953 na AMC (km)
+comprimento_real_1955,numeric,Comprimento de ferrovia real até 1955 na AMC (km)
+comprimento_real_1956,numeric,Comprimento de ferrovia real até 1956 na AMC (km)
+comprimento_real_1957,numeric,Comprimento de ferrovia real até 1957 na AMC (km)
+comprimento_real_1958,numeric,Comprimento de ferrovia real até 1958 na AMC (km)
+comprimento_real_1961,numeric,Comprimento de ferrovia real até 1961 na AMC (km)
+comprimento_real_1962,numeric,Comprimento de ferrovia real até 1962 na AMC (km)
+comprimento_real_1966,numeric,Comprimento de ferrovia real até 1966 na AMC (km)
+comprimento_real_1969,numeric,Comprimento de ferrovia real até 1969 na AMC (km)
+comprimento_real_1972,numeric,Comprimento de ferrovia real até 1972 na AMC (km)
+comprimento_real_1985,numeric,Comprimento de ferrovia real até 1985 na AMC (km)
+comprimento_real_1996,numeric,Comprimento de ferrovia real até 1996 na AMC (km)
+comprimento_real_2003,numeric,Comprimento de ferrovia real até 2003 na AMC (km)
+densidade_real_1858,numeric,Densidade de ferrovia real até 1858 (km/1000km²)
+densidade_real_1860,numeric,Densidade de ferrovia real até 1860 (km/1000km²)
+densidade_real_1862,numeric,Densidade de ferrovia real até 1862 (km/1000km²)
+densidade_real_1863,numeric,Densidade de ferrovia real até 1863 (km/1000km²)
+densidade_real_1873,numeric,Densidade de ferrovia real até 1873 (km/1000km²)
+densidade_real_1875,numeric,Densidade de ferrovia real até 1875 (km/1000km²)
+densidade_real_1876,numeric,Densidade de ferrovia real até 1876 (km/1000km²)
+densidade_real_1880,numeric,Densidade de ferrovia real até 1880 (km/1000km²)
+densidade_real_1881,numeric,Densidade de ferrovia real até 1881 (km/1000km²)
+densidade_real_1882,numeric,Densidade de ferrovia real até 1882 (km/1000km²)
+densidade_real_1883,numeric,Densidade de ferrovia real até 1883 (km/1000km²)
+densidade_real_1884,numeric,Densidade de ferrovia real até 1884 (km/1000km²)
+densidade_real_1885,numeric,Densidade de ferrovia real até 1885 (km/1000km²)
+densidade_real_1886,numeric,Densidade de ferrovia real até 1886 (km/1000km²)
+densidade_real_1887,numeric,Densidade de ferrovia real até 1887 (km/1000km²)
+densidade_real_1888,numeric,Densidade de ferrovia real até 1888 (km/1000km²)
+densidade_real_1891,numeric,Densidade de ferrovia real até 1891 (km/1000km²)
+densidade_real_1892,numeric,Densidade de ferrovia real até 1892 (km/1000km²)
+densidade_real_1894,numeric,Densidade de ferrovia real até 1894 (km/1000km²)
+densidade_real_1895,numeric,Densidade de ferrovia real até 1895 (km/1000km²)
+densidade_real_1896,numeric,Densidade de ferrovia real até 1896 (km/1000km²)
+densidade_real_1900,numeric,Densidade de ferrovia real até 1900 (km/1000km²)
+densidade_real_1901,numeric,Densidade de ferrovia real até 1901 (km/1000km²)
+densidade_real_1902,numeric,Densidade de ferrovia real até 1902 (km/1000km²)
+densidade_real_1904,numeric,Densidade de ferrovia real até 1904 (km/1000km²)
+densidade_real_1905,numeric,Densidade de ferrovia real até 1905 (km/1000km²)
+densidade_real_1906,numeric,Densidade de ferrovia real até 1906 (km/1000km²)
+densidade_real_1907,numeric,Densidade de ferrovia real até 1907 (km/1000km²)
+densidade_real_1908,numeric,Densidade de ferrovia real até 1908 (km/1000km²)
+densidade_real_1910,numeric,Densidade de ferrovia real até 1910 (km/1000km²)
+densidade_real_1911,numeric,Densidade de ferrovia real até 1911 (km/1000km²)
+densidade_real_1912,numeric,Densidade de ferrovia real até 1912 (km/1000km²)
+densidade_real_1913,numeric,Densidade de ferrovia real até 1913 (km/1000km²)
+densidade_real_1914,numeric,Densidade de ferrovia real até 1914 (km/1000km²)
+densidade_real_1915,numeric,Densidade de ferrovia real até 1915 (km/1000km²)
+densidade_real_1916,numeric,Densidade de ferrovia real até 1916 (km/1000km²)
+densidade_real_1917,numeric,Densidade de ferrovia real até 1917 (km/1000km²)
+densidade_real_1918,numeric,Densidade de ferrovia real até 1918 (km/1000km²)
+densidade_real_1919,numeric,Densidade de ferrovia real até 1919 (km/1000km²)
+densidade_real_1920,numeric,Densidade de ferrovia real até 1920 (km/1000km²)
+densidade_real_1921,numeric,Densidade de ferrovia real até 1921 (km/1000km²)
+densidade_real_1922,numeric,Densidade de ferrovia real até 1922 (km/1000km²)
+densidade_real_1923,numeric,Densidade de ferrovia real até 1923 (km/1000km²)
+densidade_real_1924,numeric,Densidade de ferrovia real até 1924 (km/1000km²)
+densidade_real_1925,numeric,Densidade de ferrovia real até 1925 (km/1000km²)
+densidade_real_1926,numeric,Densidade de ferrovia real até 1926 (km/1000km²)
+densidade_real_1927,numeric,Densidade de ferrovia real até 1927 (km/1000km²)
+densidade_real_1929,numeric,Densidade de ferrovia real até 1929 (km/1000km²)
+densidade_real_1931,numeric,Densidade de ferrovia real até 1931 (km/1000km²)
+densidade_real_1932,numeric,Densidade de ferrovia real até 1932 (km/1000km²)
+densidade_real_1933,numeric,Densidade de ferrovia real até 1933 (km/1000km²)
+densidade_real_1934,numeric,Densidade de ferrovia real até 1934 (km/1000km²)
+densidade_real_1936,numeric,Densidade de ferrovia real até 1936 (km/1000km²)
+densidade_real_1937,numeric,Densidade de ferrovia real até 1937 (km/1000km²)
+densidade_real_1940,numeric,Densidade de ferrovia real até 1940 (km/1000km²)
+densidade_real_1941,numeric,Densidade de ferrovia real até 1941 (km/1000km²)
+densidade_real_1944,numeric,Densidade de ferrovia real até 1944 (km/1000km²)
+densidade_real_1947,numeric,Densidade de ferrovia real até 1947 (km/1000km²)
+densidade_real_1948,numeric,Densidade de ferrovia real até 1948 (km/1000km²)
+densidade_real_1949,numeric,Densidade de ferrovia real até 1949 (km/1000km²)
+densidade_real_1950,numeric,Densidade de ferrovia real até 1950 (km/1000km²)
+densidade_real_1951,numeric,Densidade de ferrovia real até 1951 (km/1000km²)
+densidade_real_1953,numeric,Densidade de ferrovia real até 1953 (km/1000km²)
+densidade_real_1955,numeric,Densidade de ferrovia real até 1955 (km/1000km²)
+densidade_real_1956,numeric,Densidade de ferrovia real até 1956 (km/1000km²)
+densidade_real_1957,numeric,Densidade de ferrovia real até 1957 (km/1000km²)
+densidade_real_1958,numeric,Densidade de ferrovia real até 1958 (km/1000km²)
+densidade_real_1961,numeric,Densidade de ferrovia real até 1961 (km/1000km²)
+densidade_real_1962,numeric,Densidade de ferrovia real até 1962 (km/1000km²)
+densidade_real_1966,numeric,Densidade de ferrovia real até 1966 (km/1000km²)
+densidade_real_1969,numeric,Densidade de ferrovia real até 1969 (km/1000km²)
+densidade_real_1972,numeric,Densidade de ferrovia real até 1972 (km/1000km²)
+densidade_real_1985,numeric,Densidade de ferrovia real até 1985 (km/1000km²)
+densidade_real_1996,numeric,Densidade de ferrovia real até 1996 (km/1000km²)
+densidade_real_2003,numeric,Densidade de ferrovia real até 2003 (km/1000km²)
