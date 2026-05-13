@@ -1,0 +1,249 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║            PESQUISA SOBRE IMPACTO DE FERROVIAS NO NORDESTE                 ║
+║                     ESTRUTURA VISUAL DO PROJETO                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+
+📦 RAIZ DO PROJETO (Pesquisa (Ferrovias)/)
+│
+│   README.md                    ← 📌 COMECE AQUI (visão geral do projeto)
+│   INDEX.md                     ← 🔍 Índice com atalhos rápidos
+│   AGENTS.md                    ← 📚 Guia técnico e detalhado
+│   Pesquisa (Ferrovias).Rproj   ← RStudio project file
+│
+├─────────────────────────────────────────────────────────────────────────────
+│
+├─ 01-DADOS/ (Organização por estágio de processamento)
+│
+│  ├─ brutos/
+│  │  │
+│  │  ├─ população.xlsx               ← Dados municipais (censos)
+│  │  ├─ tabelaspib.xlsx              ← Dados de PIB setorial
+│  │  ├─ hubs_lcp_nordeste.csv        ← Pontos de origem-destino
+│  │  └─ sergipe.csv                  ← Dados adicionais
+│  │
+│  │  [NOTA: Estes são os INPUTS originais do projeto]
+│  │
+│  │
+│  └─ processados/
+│     │
+│     ├─ ⭐ base_completa_integrada.csv  ← BASE PRINCIPAL (use esta!)
+│     ├─ ⭐ base_completa_integrada.rds  ← Formato RDS (mais rápido)
+│     │
+│     ├─ [Componentes da base integrada]
+│     ├─ base_distancias_amcs_nordeste_semmar.csv    (km até ferrovia)
+│     ├─ base_dummy_atendimento_ferrovias.csv        (1 se ≤25km)
+│     ├─ base_densidade_ferrovias.csv                (km/1000km²)
+│     │
+│     ├─ [Controles geográficos]
+│     ├─ controles_clima_amcs_nordeste.csv/.rds
+│     ├─ controles_solo_amcs_nordeste.csv/.rds
+│     ├─ controles_rios_amcs_nordeste.csv/.rds
+│     │
+│     ├─ [Dados históricos e dicionário]
+│     ├─ base_distancias_historicas_anual.csv
+│     ├─ base_completa_data_dictionary.csv
+│     └─ df_econometria_final_R.csv
+│
+│     [NOTA: Estes são OUTPUTS dos scripts de preparação]
+│
+│
+├─ 02-SCRIPTS/ (Organize por tipo de análise)
+│
+│  ├─ 01-preparacao/    [Processamento de dados brutos]
+│  │  │
+│  │  ├─ 0_MASTER_Criar_Todas_Bases.R ⭐ EXECUTA TUDO AUTOMATICAMENTE
+│  │  │  └─ Cria base_completa_integrada do zero
+│  │  │
+│  │  ├─ 0_Criar_Base_Dados_IV.R
+│  │  ├─ 1_Criar_Base_Distancias.R
+│  │  ├─ 2_Criar_Base_Dummy_Atendimento.R
+│  │  ├─ 3_Criar_Base_Densidade_Ferrovias.R
+│  │  ├─ 4_Integrar_Bases_Completas.R
+│  │  ├─ 5_Adicionar_State_Abbr.R
+│  │  ├─ 5_Validar_Bases_Criadas.R
+│  │  └─ COMECE_AQUI.R
+│  │
+│  │  [QUANDO: Quando dados brutos mudarem]
+│  │  [TEMPO: ~20-30 minutos]
+│  │
+│  │
+│  ├─ 02-analise/       [Econometria - Variáveis Instrumentais]
+│  │  │
+│  │  ├─ 🚀 QUICK_START_BATERIA_IV.R      ⭐ COMECE AQUI (rápido)
+│  │  │  └─ Executa tudo em 30-40 min
+│  │  │  └─ Ideal para testes rápidos
+│  │  │
+│  │  ├─ 6_Bateria_Testes_Etapas_I_II.R   [Regressões 2SLS]
+│  │  │  └─ 24 regressões (4 amostras × 3 tratamentos × 2 outcomes)
+│  │  │  └─ Gera resultados_bateria_iv.csv
+│  │  │
+│  │  └─ 8_Bateria_Completa_PIB_Pop.R     [Análise com PIB]
+│  │     └─ Versão expandida com dados de PIB
+│  │
+│  │  [QUANDO: Sempre que quiser rodar análise IV]
+│  │  [TEMPO: 15-40 minutos]
+│  │
+│  │
+│  ├─ 03-visualizacao/  [Gráficos e tabelas]
+│  │  │
+│  │  └─ 7_Visualizar_Resultados_IV.R
+│  │     ├─ Cria tabelas HTML formatadas
+│  │     ├─ Cria gráficos (box-plot, scatter, etc)
+│  │     └─ Exporta resumos por especificação/tratamento
+│  │
+│  │  [QUANDO: Após rodar análise]
+│  │  [TEMPO: 5 minutos]
+│  │
+│  │
+│  └─ exploratoria/     [Testes, desenvolvimento, EDA]
+│     │
+│     ├─ API opentopography01.R
+│     ├─ IV_Analise_Completa_SemMar.R
+│     ├─ LCP_Sintetica_Real_OD.R
+│     ├─ base_iv_sf.R
+│     ├─ 01_controles_clima.R
+│     ├─ 02_controles_solo.R
+│     ├─ 03_controles_rios.R
+│     └─ ... (outros scripts experimentais)
+│
+│     [NOTA: Scripts de desenvolvimento. Não precisa executar]
+│
+│
+├─ 03-RESULTADOS/ (Outputs das análises)
+│
+│  ├─ csv/
+│  │  └─ resultados_bateria_iv_pib_pop.csv ⭐ PRINCIPAL
+│  │     │
+│  │     Colunas-chave:
+│  │     ├─ coef_ss        Coeficiente (2º estágio)
+│  │     ├─ p_value        Significância estatística
+│  │     ├─ f_stat         Força do instrumento (>10 = bom)
+│  │     ├─ especificacao  Qual amostra foi usada
+│  │     ├─ tratamento     Qual variável endógena
+│  │     └─ outcome        População 2003 ou 2010
+│  │
+│  │
+│  ├─ graficos/
+│  │  └─ event_study_did.png
+│  │     (mais gráficos serão gerados por 7_Visualizar_Resultados_IV.R)
+│  │
+│  │
+│  └─ tabelas/
+│     ├─ Tabela1_PrimeirosEstagios.html
+│     ├─ Tabela2_ResultadosPrincipais.html
+│     ├─ Tabela3_Robustez.html
+│     └─ Resultados_Regressoes_Ferrovias.xlsx
+│
+│
+├─ 04-DOCUMENTACAO/ (Leia quando tiver dúvidas)
+│
+│  ├─ 📖 README_BASES_DADOS.md
+│  │     └─ O que há em cada base de dados
+│  │     └─ Estrutura e schema
+│  │
+│  ├─ 📖 README_BATERIA_TESTES_IV.md
+│  │     └─ Detalhes técnicos da econometria
+│  │     └─ Como interpretar F-statístico, p-values, etc
+│  │
+│  ├─ 📖 INDICE_COMPLETO.md
+│  │     └─ Referência técnica completa
+│  │
+│  ├─ 📖 Dicionário de Dados Projeto Ferrovi.txt
+│  │     └─ Lista de TODAS as variáveis
+│  │
+│  └─ ... (guias, checklists, etc)
+│
+│
+├─ 05-GEOMETRIAS/ (Dados geoespaciais)
+│
+│  ├─ ferrovias_cronologicas.gpkg
+│  │  └─ Rede ferroviária real com datas de construção
+│  │
+│  ├─ Variavel_Instrumental_LCP_Ferroviario.gpkg
+│  ├─ Variavel_Instrumental_LCP_OD_Real.gpkg
+│  ├─ Variavel_Instrumental_LCP_OD_SemMar.gpkg
+│  │  └─ Redes sintéticas (instrumento)
+│  │
+│  └─ Rotas_*.gpkg
+│     └─ Rotas O-D (real e sintética)
+│
+│  [NOTA: Use com st_read() do pacote sf]
+│
+│
+└─ 06-ANEXOS/ (Histórico, logs, conversas)
+
+   ├─ conversation-export*.md
+   │  └─ Histórico de conversas
+   │
+   ├─ favoritos_25_03_2026_1940.html.html
+   │
+   └─ download_log.txt
+
+
+════════════════════════════════════════════════════════════════════════════
+
+🎯 COMO COMEÇAR - FLUXO VISUAL
+
+   [1. Ler README.md]
+              ↓
+   [2. Verificar dados em 01-dados/processados/]
+              ↓
+   [3. Executar QUICK_START_BATERIA_IV.R]
+              ↓
+   [4. Ver resultados em 03-resultados/csv/]
+              ↓
+   [5. Gerar gráficos com 7_Visualizar_Resultados_IV.R]
+
+
+════════════════════════════════════════════════════════════════════════════
+
+📊 VARIÁVEIS PRINCIPAIS (Para Referência Rápida)
+
+   TRATAMENTOS (Variáveis Endógenas):
+   ├─ dist_rail_real_YYYY       (km até ferrovia)
+   ├─ dummy_atendida_real_YYYY  (1 se ≤25km)
+   └─ densidade_real_YYYY       (km de ferrovia / 1000km²)
+
+   INSTRUMENTOS (Exógenos):
+   ├─ dist_rail_sintetica_km
+   ├─ dummy_atendida_sintetica
+   └─ densidade_sintetica
+
+   OUTCOMES (Resultados):
+   ├─ 2003  (população censo 2003)
+   └─ 2010  (população censo 2010)
+
+   CONTROLES:
+   ├─ clima (temperatura, precipitação, etc)
+   ├─ solo (tipo, fertilidade, etc)
+   ├─ rios (proximidade, largura, etc)
+   └─ state_abbr (estado - para efeitos fixos)
+
+
+════════════════════════════════════════════════════════════════════════════
+
+⏱️ TEMPOS DE EXECUÇÃO (Estimativas)
+
+   Preparar dados (0_MASTER_*.R)        → 20-30 min
+   Rodar análise rápida (QUICK_START)   → 30-40 min
+   Rodar análise completa (6_Bateria)   → 15 min
+   Gerar gráficos (7_Visualizar)        → 5 min
+
+   TOTAL (do zero):                     → ~60-90 min
+
+
+════════════════════════════════════════════════════════════════════════════
+
+✅ CHECKLIST RÁPIDO
+
+   [ ] README.md lido?
+   [ ] Arquivo INDEX.md consultado para atalhos?
+   [ ] base_completa_integrada.csv existe em 01-dados/processados/?
+   [ ] Pronto para executar QUICK_START_BATERIA_IV.R?
+
+
+════════════════════════════════════════════════════════════════════════════
+Última atualização: 13 maio 2026
+Status: ✅ Projeto completamente reorganizado e pronto para uso
+════════════════════════════════════════════════════════════════════════════
