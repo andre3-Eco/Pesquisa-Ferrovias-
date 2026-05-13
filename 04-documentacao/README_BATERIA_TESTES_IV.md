@@ -5,7 +5,7 @@
 Estes scripts executam uma **bateria abrangente de análises econométricas IV (2SLS)** para sua pesquisa sobre ferrovias, testando diferentes:
 
 - **Tipos de tratamento**: distância, dummy de atendimento, densidade
-- **Outcomes**: população (2003, 2010), PIB (se disponível)
+- **Outcomes**: população (2003, 2010), PIB 
 - **Especificações**: amostra completa, com efeitos fixos, com restrições espaciais
 - **Restrições amostrais**: excluindo extremidades de ferrovias
 
@@ -24,7 +24,7 @@ Executa toda a análise IV. O que faz:
 ✅ Executa 2º estágio (2SLS) com instrumentos  
 ✅ Exporta resultados em CSV  
 
-**Tempo estimado:** 10-30 minutos (depende da quantidade de dados e outcomes)
+**Tempo estimado:** 10-30 minutos 
 
 **Resultado principal:** `resultados_bateria_iv.csv`
 

@@ -6,8 +6,7 @@
 #   - Rede sintética (LCP): coluna estática dist_rail_sintetica_km
 #   - Rede real cronológica: colunas dist_rail_real_YYYY para cada ano
 # ==============================================================================
-#   - Rede real cronológica: colunas dist_rail_real_YYYY para cada ano
-# ==============================================================================
+
 
 # 1. PACOTES E CONFIGURAÇÕES ---------------------------------------------------
 library(sf)

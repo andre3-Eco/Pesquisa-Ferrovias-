@@ -101,11 +101,7 @@ base <- readRDS("base_completa_integrada.rds")
 # → Abra: README_BASES_DADOS.md
 # → Ou: base_completa_data_dictionary.csv
 
-# Para REFERÊNCIA RÁPIDA:
-# → Abra: GUIA_RAPIDO.txt
 
-# Para TROUBLESHOOTING:
-# → Abra: GUIA_RAPIDO.txt (seção Problemas Comuns)
 
 # ============================================================================
 # ❓ VARIÁVEIS PRINCIPAIS
@@ -164,43 +160,4 @@ resultados <- base %>%
 #
 # Se SIM em todas: você está pronto! 🎉
 
-# ============================================================================
-# 🔥 DÚVIDAS FREQUENTES
-# ============================================================================
 
-# P: Quanto tempo leva para criar as bases?
-# R: ~60 minutos (Script 3 é pesado). NÃO INTERROMPA.
-
-# P: Preciso criar novamente toda vez que abro o R?
-# R: NÃO! Crie uma única vez. Depois apenas carregue com readRDS.
-
-# P: Qual base usar?
-# R: Sempre use: base_completa_integrada.rds ou .csv (já integra tudo)
-
-# P: Posso alterar o limiar de 25 km?
-# R: Sim! Edit o script 2_Criar_Base_Dummy_Atendimento.R, linha ~20
-
-# P: Os dados são de que período?
-# R: Real: 1858-2003 (cronológico). Sintética: estática.
-
-# P: As distâncias são em linha reta ou pela rede?
-# R: Real: pela rede (distância mais próxima). Sintética: também pela rede.
-
-# P: Posso usar para análises de impacto?
-# R: SIM! Use dummy_atendida_real_YYYY como tratamento.
-#    Use dist_rail_sintetica_km como instrumento.
-
-# ============================================================================
-# 💾 ÚLTIMA DICA: SALVE SEUS RESULTADOS
-# ============================================================================
-
-# Depois de fazer análises, salve em novo arquivo:
-
-# meus_resultados <- tibble(...)
-# write.csv(meus_resultados, "meus_resultados_2026_05.csv")
-
-# Não sobrescreva os arquivos originais!
-
-# ============================================================================
-# Tudo pronto! Comece a analisar! 🚀
-# ============================================================================
