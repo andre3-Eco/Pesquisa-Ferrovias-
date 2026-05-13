@@ -14,7 +14,7 @@ install_if_missing(required_packages)
 # 1. CONFIGURAÇÕES
 # ============================================================================
 
-api_key <- "6919a0a3e4871ea6a09b7d16febf83fc"
+api_key <- "Chave-API"
 dem_type <- "COP30"
 output_format <- "GTiff"
 base_url <- "https://portal.opentopography.org/API/globaldem"
@@ -26,12 +26,13 @@ TIMEOUT_SEC <- 900        # Timeout: 15 minutos por request
 MAX_RETRIES <- 5          # Número máximo de tentativas
 MIN_FILE_SIZE <- 50000    # Tamanho mínimo válido: 50 KB
 
-# Área de interesse: Nordeste do Brasil
+# Área de interesse: Nesse caso Nordeste do Brasil
 bbox <- list(south = -18.5, north = -1.0, west = -48.5, east = -34.5)
 
 # ============================================================================
 # 2. CRIAR GRID DE BLOCOS 2° x 2°
 # ============================================================================
+#   Subdivide uma área geográfica delimitada (bounding box) em uma grade (grid) de blocos menores, baseando-se em intervalos definidos de latitude e longitude.
 
 create_fine_grid <- function(bbox, lat_step, lon_step) {
   lats <- seq(bbox$south, bbox$north, by = lat_step)
@@ -256,7 +257,7 @@ rasters <- lapply(valid_files, terra::rast)
 # Transforma a lista numa coleção espacial otimizada em C++
 r_collection <- terra::sprc(rasters)
 
-cat("⚙️ Iniciando o merge... (Isso pode demorar dependendo do seu HD/SSD)\n")
+cat("⚙️ Iniciando o merge... \n")
 # O merge real acontece aqui
 mde_final <- terra::merge(r_collection)
 
@@ -264,7 +265,7 @@ mde_final <- terra::merge(r_collection)
 output_file <- "alt_nordeste_completo_COP30_30m.tif"
 cat(sprintf("\n💾 Salvando o mosaico final: %s\n", output_file))
 
-# Exportação pesada. O PREDICTOR=2 e COMPRESS=DEFLATE garantem que o arquivo 
+# Exportação pesada.
 terra::writeRaster(
   mde_final,
   filename = output_file,
@@ -273,9 +274,9 @@ terra::writeRaster(
   progress = TRUE
 )
 
-cat("\n🎉 SUCESSO! Mosaico gerado.\n")
+cat("\n SUCESSO! Mosaico gerado.\n")
 cat(sprintf("📏 Dimensões: %d x %d células\n", nrow(mde_final), ncol(mde_final)))
-cat("⚠️ Nota: Os blocos que falharam no download aparecerão como áreas vazias (NA).\n")
+
 
 
 
