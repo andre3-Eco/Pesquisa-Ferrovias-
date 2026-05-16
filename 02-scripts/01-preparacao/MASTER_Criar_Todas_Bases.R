@@ -32,7 +32,7 @@ cat(strrep("-", 80), "\n\n")
 tempo_inicio_1 <- Sys.time()
 
 tryCatch({
-  source(paste0(data.wd, "/1_Criar_Base_Distancias.R"), echo = FALSE)
+  source(paste0(data.wd, "/02-scripts/01-preparacao/1_Criar_Base_Distancias.R"), echo = FALSE)
   
   tempo_fim_1 <- Sys.time()
   tempo_1 <- difftime(tempo_fim_1, tempo_inicio_1, units = "secs")
@@ -54,7 +54,7 @@ cat(strrep("-", 80), "\n\n")
 tempo_inicio_2 <- Sys.time()
 
 tryCatch({
-  source(paste0(data.wd, "/2_Criar_Base_Dummy_Atendimento.R"), echo = FALSE)
+  source(paste0(data.wd, "/02-scripts/01-preparacao/2_Criar_Base_Dummy_Atendimento.R"), echo = FALSE)
   
   tempo_fim_2 <- Sys.time()
   tempo_2 <- difftime(tempo_fim_2, tempo_inicio_2, units = "secs")
@@ -76,7 +76,7 @@ cat(strrep("-", 80), "\n\n")
 tempo_inicio_3 <- Sys.time()
 
 tryCatch({
-  source(paste0(data.wd, "/3_Criar_Base_Densidade_Ferrovias.R"), echo = FALSE)
+  source(paste0(data.wd, "/02-scripts/01-preparacao/3_Criar_Base_Densidade_Ferrovias.R"), echo = FALSE)
   
   tempo_fim_3 <- Sys.time()
   tempo_3 <- difftime(tempo_fim_3, tempo_inicio_3, units = "secs")
@@ -98,7 +98,7 @@ cat(strrep("-", 80), "\n\n")
 tempo_inicio_4 <- Sys.time()
 
 tryCatch({
-  source(paste0(data.wd, "/4_Integrar_Bases_Completas.R"), echo = FALSE)
+  source(paste0(data.wd, "/02-scripts/01-preparacao/4_Integrar_Bases_Completas.R"), echo = FALSE)
   
   tempo_fim_4 <- Sys.time()
   tempo_4 <- difftime(tempo_fim_4, tempo_inicio_4, units = "secs")
@@ -110,37 +110,4 @@ tryCatch({
   stop("Parado na etapa 4")
 })
 
-# ==============================================================================
-# RESUMO FINAL
-# ==============================================================================
-tempo_total <- difftime(Sys.time(), tempo_inicio_1, units = "secs")
 
-cat(strrep("=", 80), "\n")
-cat("🎉 TODAS AS BASES FORAM CRIADAS COM SUCESSO!\n")
-cat(strrep("=", 80), "\n\n")
-
-cat("TEMPO TOTAL: %.1f segundos (%.1f minutos)\n\n", tempo_total, as.numeric(tempo_total)/60)
-
-cat("ARQUIVOS CRIADOS:\n")
-cat("  ✓ base_distancias_amcs_nordeste_semmar.csv\n")
-cat("  ✓ base_dummy_atendimento_ferrovias.csv\n")
-cat("  ✓ base_dummy_atendimento_simples.csv\n")
-cat("  ✓ base_densidade_ferrovias.csv\n")
-cat("  ✓ base_densidade_simplificada.csv\n")
-cat("  ✓ base_completa_integrada.csv\n")
-cat("  ✓ base_completa_integrada.rds\n")
-cat("  ✓ base_completa_data_dictionary.csv\n\n")
-
-cat("PRÓXIMOS PASSOS:\n")
-cat("  1. Verificar os arquivos criados no diretório\n")
-cat("  2. Abrir base_completa_integrada.csv para revisão\n")
-cat("  3. Executar análises econométricas com as bases\n")
-cat("  4. Usar em IV_Analise_Completa_SemMar.R ou scripts similares\n\n")
-
-cat("PARA RECARREGAR A BASE INTEGRADA:\n")
-cat("  # Em um novo script ou sessão:\n")
-cat("  base_completa <- read.csv('base_completa_integrada.csv')\n")
-cat("  # ou\n")
-cat("  base_completa <- readRDS('base_completa_integrada.rds')\n\n")
-
-cat("Finalizado em:", format(Sys.time(), "%d/%m/%Y %H:%M:%S"), "\n\n")

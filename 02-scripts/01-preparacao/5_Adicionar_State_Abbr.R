@@ -22,7 +22,7 @@ library(geobr)
 cat("ETAPA 1: Carregando base integrada...\n\n")
 
 base_completa <- read_csv(
-  paste0(data.wd, "/base_completa_integrada.csv"),
+  paste0(data.wd, "/01-dados/processados/base_completa_integrada.csv"),
   show_col_types = FALSE
 )
 
@@ -141,30 +141,13 @@ cat(sprintf("  ✓ Primeiras 5 colunas: %s\n",
 cat("\nETAPA 6: Exportando base atualizada...\n\n")
 
 # Salvar em CSV
-arquivo_csv <- paste0(data.wd, "/base_completa_integrada.csv")
+arquivo_csv <- paste0(data.wd, "/01-dados/processados/base_completa_integrada.csv")
 write_csv(base_completa, arquivo_csv)
 cat(sprintf("  ✓ CSV atualizado: %s\n", arquivo_csv))
 
 # Salvar em RDS
-arquivo_rds <- paste0(data.wd, "/base_completa_integrada.rds")
+arquivo_rds <- paste0(data.wd, "/01-dados/processados/base_completa_integrada.rds")
 saveRDS(base_completa, arquivo_rds)
 cat(sprintf("  ✓ RDS atualizado: %s\n", arquivo_rds))
 
-# ==============================================================================
-# SEÇÃO 7: RESUMO FINAL
-# ==============================================================================
 
-cat("\n", strrep("=", 80), "\n")
-cat("✅ COLUNA state_abbr ADICIONADA COM SUCESSO!\n")
-cat(strrep("=", 80), "\n\n")
-
-cat("RESUMO:\n\n")
-cat(sprintf("  Base agora contém: %d linhas × %d colunas\n", 
-            nrow(base_completa), ncol(base_completa)))
-cat(sprintf("  Estados: %d\n", n_distinct(base_completa$state_abbr)))
-cat(sprintf("  Valores ausentes (NA): %d\n", sum(is.na(base_completa$state_abbr))))
-
-cat("\n  Estrutura de colunas principais:\n")
-cat(sprintf("    code_amc | state_abbr | area_km2 | dist_rail_sintetica_km | ...\n"))
-
-cat("\nFinalizado em:", format(Sys.time(), "%d/%m/%Y %H:%M:%S"), "\n\n")

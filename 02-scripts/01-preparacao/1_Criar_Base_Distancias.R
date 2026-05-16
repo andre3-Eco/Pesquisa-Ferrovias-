@@ -36,7 +36,7 @@ cat(sprintf("    ✓ %d AMCs do Nordeste carregadas\n\n", nrow(amcs_nordeste)))
 ## 2b. Ferrovias Reais (cronológicas)
 cat("  → Carregando ferrovias reais cronológicas...\n")
 ferrovias_reais <- st_read(
-  paste0(data.wd, "/Dados pesquisa (Ferrovias)/ferrovias_cronologicas.gpkg"),
+  paste0(data.wd, "/05-geometrias/ferrovias_cronologicas.gpkg"),
   quiet = TRUE
 )
 
@@ -45,7 +45,7 @@ cat(sprintf("    ✓ %d segmentos de ferrovias reais carregados\n\n", nrow(ferro
 ## 2c. Ferrovias Sintéticas (LCP)
 cat("  → Carregando rede sintética (LCP sem mar)...\n")
 ferrovias_sinteticas <- st_read(
-  paste0(data.wd, "/Dados pesquisa (Ferrovias)/Rotas_LCP_OD_Real_SemMar.gpkg"),
+  paste0(data.wd, "/05-geometrias/Rotas_LCP_OD_Real_SemMar.gpkg"),
   quiet = TRUE
 )
 
@@ -126,12 +126,6 @@ base_distancias <- amc_pontos |>
   select(code_amc, dist_rail_sintetica_km, starts_with("dist_rail_real_")) |>
   as.data.frame()
 
-cat(sprintf("  ✓ Base final contém:\n")
-cat(sprintf("    - %d AMCs\n", nrow(base_distancias))
-cat(sprintf("    - %d colunas\n", ncol(base_distancias))
-cat(sprintf("    - 1 coluna sintética + %d colunas reais cronológicas\n\n",
-            ncol(base_distancias) - 2))
-
 # Verificar missings
 missing_count <- base_distancias |>
   summarise(across(everything(), ~sum(is.na(.)))) |>
@@ -149,28 +143,10 @@ if (nrow(missing_count) == 0) {
 # 8. EXPORTAÇÃO ---------------------------------------------------------------
 cat("Etapa 7: Exportando base de dados...\n\n")
 
-output_file <- paste0(data.wd, "/base_distancias_amcs_nordeste_semmar.csv")
+output_file <- paste0(data.wd, "/01-dados/processados/base_distancias_amcs_nordeste_semmar.csv")
 
 write_csv(base_distancias, output_file)
 
 cat(sprintf("  ✓ Arquivo salvo: %s\n\n", basename(output_file)))
 
-# 9. SUMÁRIO FINAL -----------------------------------------------------------
-cat("========================================================================\n")
-cat("✅ BASE DE DISTÂNCIAS CRIADA COM SUCESSO!\n")
-cat("========================================================================\n\n")
 
-cat("RESUMO DA BASE:\n")
-cat(sprintf("  • Arquivo: base_distancias_amcs_nordeste_semmar.csv\n"))
-cat(sprintf("  • Linhas: %d AMCs\n", nrow(base_distancias))
-cat(sprintf("  • Colunas: %d\n\n", ncol(base_distancias))
-
-cat("VARIÁVEIS:\n")
-cat("  • code_amc: Código único da AMC\n")
-cat("  • dist_rail_sintetica_km: Distância até rede sintética (estática)\n")
-cat("  • dist_rail_real_YYYY: Distância até rede real acumulada até ano YYYY\n\n")
-
-cat("Próximos passos:\n")
-cat("  1. Executar: 2_Criar_Base_Dummy_Atendimento.R\n")
-cat("  2. Executar: 3_Criar_Base_Densidade_Ferrovias.R\n")
-cat("  3. Usar as bases em análises econométricas\n\n")

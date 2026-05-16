@@ -23,7 +23,7 @@ sf_use_s2(FALSE)
 
 # 2. PARÂMETRO: DEFINIR LIMIAR DE DISTÂNCIA (em km) ---------------------------
 # AMCs com distância até ferrovia ≤ limiar são consideradas "atendidas"
-LIMIAR_KM <- 25  # Você pode ajustar esse valor
+LIMIAR_KM <- 25  
 # Opções comuns: 10 km (muito restritivo), 25 km (moderado), 50 km (permissivo)
 
 cat(sprintf("Limiar de distância definido: %.0f km\n", LIMIAR_KM))
@@ -44,7 +44,7 @@ cat(sprintf("    ✓ %d AMCs do Nordeste carregadas\n\n", nrow(amcs_nordeste)))
 ## 3b. Ferrovias Reais (cronológicas)
 cat("  → Carregando ferrovias reais cronológicas...\n")
 ferrovias_reais <- st_read(
-  paste0(data.wd, "/Dados pesquisa (Ferrovias)/ferrovias_cronologicas.gpkg"),
+  paste0(data.wd, "/05-geometrias/ferrovias_cronologicas.gpkg"),
   quiet = TRUE
 )
 
@@ -53,7 +53,7 @@ cat(sprintf("    ✓ %d segmentos de ferrovias reais carregados\n\n", nrow(ferro
 ## 3c. Ferrovias Sintéticas
 cat("  → Carregando rede sintética (LCP sem mar)...\n")
 ferrovias_sinteticas <- st_read(
-  paste0(data.wd, "/Dados pesquisa (Ferrovias)/Rotas_LCP_OD_Real_SemMar.gpkg"),
+  paste0(data.wd, "/05-geometrias/Rotas_LCP_OD_Real_SemMar.gpkg"),
   quiet = TRUE
 )
 
@@ -80,8 +80,10 @@ cat(sprintf("  ✓ %d centróides criados\n\n", nrow(amc_pontos)))
 # 6. DUMMY PARA REDE SINTÉTICA -----------------------------------------------
 cat("Etapa 4: Criando dummy para rede sintética...\n\n")
 
+# Criar uma malha contínua a partir de vários polígonos da rede sintética 
 malha_sintet_unida <- st_union(ferro_sintet_utm)
 
+# Calculo das distâncias entre geometrias, converte o resultado para quilômetros.
 distancias_sintet <- st_distance(amc_pontos, malha_sintet_unida)
 distancias_sintet_km <- as.numeric(distancias_sintet) / 1000
 
@@ -91,7 +93,10 @@ amc_pontos$dummy_atendida_sintetica <- as.integer(distancias_sintet_km <= LIMIAR
 # Medida contínua: inversa da distância (utilidade decresce com distância)
 amc_pontos$cobertura_continua_sintetica <- 1 / (1 + distancias_sintet_km)
 
+# Soma todos os valores da coluna
 atendidas_sintet <- sum(amc_pontos$dummy_atendida_sintetica)
+
+#Percentagem de pontos atendidos.
 pct_atendidas_sintet <- 100 * mean(amc_pontos$dummy_atendida_sintetica)
 
 cat(sprintf("  ✓ Coluna 'dummy_atendida_sintetica' criada\n"))
@@ -195,7 +200,7 @@ cat("\n")
 cat("Etapa 8: Exportando bases de dados...\n\n")
 
 # Base com dummies (binária)
-output_dummy <- paste0(data.wd, "/base_dummy_atendimento_ferrovias.csv")
+output_dummy <- paste0(data.wd, "/01-dados/processados/base_dummy_atendimento_ferrovias.csv")
 write_csv(base_dummy, output_dummy)
 cat(sprintf("  ✓ Base com dummies: %s\n", basename(output_dummy)))
 
@@ -203,37 +208,8 @@ cat(sprintf("  ✓ Base com dummies: %s\n", basename(output_dummy)))
 base_dummy_only <- base_dummy |>
   select(code_amc, dummy_atendida_sintetica, starts_with("dummy_atendida_real_"))
 
-output_dummy_only <- paste0(data.wd, "/base_dummy_atendimento_simples.csv")
+output_dummy_only <- paste0(data.wd, "/01-dados/processados/base_dummy_atendimento_simples.csv")
 write_csv(base_dummy_only, output_dummy_only)
 cat(sprintf("  ✓ Base simplificada (só dummies): %s\n\n", basename(output_dummy_only)))
 
-# 11. SUMÁRIO FINAL -----------------------------------------------------------
-cat("========================================================================\n")
-cat("✅ BASE DE DUMMY DE ATENDIMENTO CRIADA COM SUCESSO!\n")
-cat("========================================================================\n\n")
 
-cat("RESUMO DAS BASES:\n")
-cat(sprintf("  • Limiar de atendimento: %.0f km\n", LIMIAR_KM))
-cat(sprintf("  • Total de AMCs: %d\n\n", nrow(base_dummy)))
-
-cat("ARQUIVO 1: base_dummy_atendimento_ferrovias.csv\n")
-cat(sprintf("  • %d colunas (inclui medidas contínuas)\n", ncol(base_dummy)))
-cat("  • Variáveis:\n")
-cat("    - code_amc\n")
-cat("    - dummy_atendida_sintetica: 0/1 (rede sintética)\n")
-cat("    - cobertura_continua_sintetica: [0,1]\n")
-cat("    - dummy_atendida_real_YYYY: 0/1 (rede real até YYYY)\n")
-cat("    - cobertura_continua_real_YYYY: [0,1]\n\n")
-
-cat("ARQUIVO 2: base_dummy_atendimento_simples.csv\n")
-cat("  • Versão compacta com apenas as dummies\n")
-cat("  • Mais adequada para modelos econométricos\n\n")
-
-cat("COMO USAR:\n")
-cat("  1. Para análise causal: use dummy_atendida_real_YYYY\n")
-cat("  2. Para gradação de impacto: use cobertura_continua_real_YYYY\n")
-cat("  3. Combine com outras bases usando code_amc como chave\n\n")
-
-cat("Próximos passos:\n")
-cat("  1. Verificar: 3_Criar_Base_Densidade_Ferrovias.R\n")
-cat("  2. Integrar bases em análises econométricas\n\n")

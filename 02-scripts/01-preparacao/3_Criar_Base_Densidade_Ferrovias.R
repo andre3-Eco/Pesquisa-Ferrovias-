@@ -42,7 +42,7 @@ cat(sprintf("    ✓ %d AMCs do Nordeste carregadas\n\n", nrow(amcs_nordeste)))
 ## 2b. Ferrovias Reais (cronológicas)
 cat("  → Carregando ferrovias reais cronológicas...\n")
 ferrovias_reais <- st_read(
-  paste0(data.wd, "/Dados pesquisa (Ferrovias)/ferrovias_cronologicas.gpkg"),
+  paste0(data.wd, "/05-geometrias/ferrovias_cronologicas.gpkg"),
   quiet = TRUE
 )
 
@@ -51,7 +51,7 @@ cat(sprintf("    ✓ %d segmentos de ferrovias reais carregados\n\n", nrow(ferro
 ## 2c. Ferrovias Sintéticas
 cat("  → Carregando rede sintética (LCP sem mar)...\n")
 ferrovias_sinteticas <- st_read(
-  paste0(data.wd, "/Dados pesquisa (Ferrovias)/Rotas_LCP_OD_Real_SemMar.gpkg"),
+  paste0(data.wd, "/05-geometrias/Rotas_LCP_OD_Real_SemMar.gpkg"),
   quiet = TRUE
 )
 
@@ -246,51 +246,15 @@ if (nrow(missing_count) == 0) {
 # 10. EXPORTAÇÃO ---------------------------------------------------------------
 cat("Etapa 9: Exportando base de dados...\n\n")
 
-output_file <- paste0(data.wd, "/base_densidade_ferrovias.csv")
+output_file <- paste0(data.wd, "/01-dados/processados/base_densidade_ferrovias.csv")
 write_csv(base_densidade, output_file)
 cat(sprintf("  ✓ Arquivo salvo: %s\n\n", basename(output_file)))
 
-# Versão compacta com apenas densidades (para análises principais)
+# Versão compacta com apenas densidades (para análises principais), Não inclui os comprimentos absolutos das ferrovias
 base_dens_only <- base_densidade |>
   select(code_amc, area_km2, densidade_sintetica, starts_with("densidade_real_"))
 
-output_dens_only <- paste0(data.wd, "/base_densidade_simplificada.csv")
+output_dens_only <- paste0(data.wd, "/01-dados/processados/base_densidade_simplificada.csv")
 write_csv(base_dens_only, output_dens_only)
 cat(sprintf("  ✓ Base simplificada (só densidades): %s\n\n", basename(output_dens_only)))
 
-# 11. SUMÁRIO FINAL -----------------------------------------------------------
-cat("========================================================================\n")
-cat("✅ BASE DE DENSIDADE DE FERROVIAS CRIADA COM SUCESSO!\n")
-cat("========================================================================\n\n")
-
-cat("RESUMO DAS BASES:\n")
-cat(sprintf("  • Total de AMCs: %d\n", nrow(base_densidade)))
-cat(sprintf("  • Período de análise: %d a %d\n\n", min(anos_disponiveis), max(anos_disponiveis)))
-
-cat("ARQUIVO 1: base_densidade_ferrovias.csv\n")
-cat(sprintf("  • %d colunas (completa)\n", ncol(base_densidade)))
-cat("  • Variáveis:\n")
-cat("    - code_amc\n")
-cat("    - area_km2: Área da AMC\n")
-cat("    - comprimento_sintetico_km: km de ferrovia sintética\n")
-cat("    - densidade_sintetica: km sintética por 1000 km²\n")
-cat("    - comprimento_real_YYYY: km de ferrovia real (até YYYY)\n")
-cat("    - densidade_real_YYYY: km real por 1000 km² (até YYYY)\n\n")
-
-cat("ARQUIVO 2: base_densidade_simplificada.csv\n")
-cat("  • Versão compacta com apenas áreas e densidades\n")
-cat("  • Mais adequada para modelos econométricos\n\n")
-
-cat("INTERPRETAÇÃO:\n")
-cat("  • densidade = (comprimento em km / área em km²) × 1000\n")
-cat("  • Densidade 0: nenhuma ferrovia na AMC\n")
-cat("  • Densidade 100: 100 km de ferrovia por 1000 km² (10 km por 100 km²)\n\n")
-
-cat("COMO USAR:\n")
-cat("  1. Para análise causal: use densidade_real_YYYY\n")
-cat("  2. Para variável instrumental: combine com distância\n")
-cat("  3. Para controles: use área_km2 e densidade_sintetica\n\n")
-
-cat("Próximos passos:\n")
-cat("  1. Integrar as 3 bases usando code_amc como chave\n")
-cat("  2. Realizar análises econométricas\n\n")

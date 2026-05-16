@@ -24,7 +24,7 @@ cat("ETAPA 1: Carregando as três bases componentes...\n\n")
 # Base de distâncias
 cat("  • Carregando base de distâncias...")
 base_distancias <- read_csv(
-  paste0(data.wd, "/base_distancias_amcs_nordeste_semmar.csv"),
+  paste0(data.wd, "/01-dados/processados/base_distancias_amcs_nordeste_semmar.csv"),
   show_col_types = FALSE
 )
 cat(sprintf(" OK (%d linhas, %d colunas)\n", nrow(base_distancias), ncol(base_distancias)))
@@ -32,7 +32,7 @@ cat(sprintf(" OK (%d linhas, %d colunas)\n", nrow(base_distancias), ncol(base_di
 # Base de dummy
 cat("  • Carregando base de dummy...")
 base_dummy <- read_csv(
-  paste0(data.wd, "/base_dummy_atendimento_ferrovias.csv"),
+  paste0(data.wd, "/01-dados/processados/base_dummy_atendimento_ferrovias.csv"),
   show_col_types = FALSE
 )
 cat(sprintf(" OK (%d linhas, %d colunas)\n", nrow(base_dummy), ncol(base_dummy)))
@@ -40,7 +40,7 @@ cat(sprintf(" OK (%d linhas, %d colunas)\n", nrow(base_dummy), ncol(base_dummy))
 # Base de densidade
 cat("  • Carregando base de densidade...")
 base_densidade <- read_csv(
-  paste0(data.wd, "/base_densidade_ferrovias.csv"),
+  paste0(data.wd, "/01-dados/processados/base_densidade_ferrovias.csv"),
   show_col_types = FALSE
 )
 cat(sprintf(" OK (%d linhas, %d colunas)\n", nrow(base_densidade), ncol(base_densidade)))
@@ -221,95 +221,13 @@ cat("\n")
 cat("ETAPA 6: Exportando base integrada...\n\n")
 
 # Salvar em CSV
-arquivo_csv <- paste0(data.wd, "/base_completa_integrada.csv")
+arquivo_csv <- paste0(data.wd, "/01-dados/processados/base_completa_integrada.csv")
 write_csv(base_completa_integrada, arquivo_csv)
 cat(sprintf("  ✓ CSV salvo: %s\n", arquivo_csv))
 
 # Salvar em RDS (mais eficiente para R)
-arquivo_rds <- paste0(data.wd, "/base_completa_integrada.rds")
+arquivo_rds <- paste0(data.wd, "/01-dados/processados/base_completa_integrada.rds")
 saveRDS(base_completa_integrada, arquivo_rds)
 cat(sprintf("  ✓ RDS salvo: %s\n", arquivo_rds))
 
-# ==============================================================================
-# SEÇÃO 7: CRIAR DICIONÁRIO DE DADOS
-# ==============================================================================
 
-cat("\nETAPA 7: Criando dicionário de dados...\n\n")
-
-dicionario <- data.frame(
-  Coluna = colnames(base_completa_integrada),
-  Tipo = sapply(base_completa_integrada, class),
-  Descricao = c(
-    "Código único da AMC",
-    "Área da AMC em km²",
-    rep("", ncol(base_completa_integrada) - 2)
-  ),
-  stringsAsFactors = FALSE
-)
-
-# Preenchimento automático de descrições baseado em nomes
-dicionario$Descricao <- sapply(dicionario$Coluna, function(col) {
-  if (col == "code_amc") return("Código único da AMC")
-  if (col == "area_km2") return("Área da AMC em km²")
-  if (grepl("dist_rail_sintetica", col)) return("Distância até rede sintética LCP (km)")
-  if (grepl("dist_rail_real_", col)) {
-    ano <- gsub("dist_rail_real_", "", col)
-    return(sprintf("Distância até rede real até %s (km)", ano))
-  }
-  if (grepl("dummy_atendida_sintetica", col)) return("Dummy: 1 se ≤25km de rede sintética")
-  if (grepl("dummy_atendida_real_", col)) {
-    ano <- gsub("dummy_atendida_real_", "", col)
-    return(sprintf("Dummy: 1 se ≤25km de rede real até %s", ano))
-  }
-  if (grepl("cobertura_continua_sintetica", col)) return("Cobertura contínua (inverso de distância) - sintética")
-  if (grepl("cobertura_continua_real_", col)) {
-    ano <- gsub("cobertura_continua_real_", "", col)
-    return(sprintf("Cobertura contínua (inverso de distância) - real até %s", ano))
-  }
-  if (grepl("comprimento_sintetico", col)) return("Comprimento de ferrovia sintética na AMC (km)")
-  if (grepl("comprimento_real_", col)) {
-    ano <- gsub("comprimento_real_", "", col)
-    return(sprintf("Comprimento de ferrovia real até %s na AMC (km)", ano))
-  }
-  if (grepl("densidade_sintetica", col)) return("Densidade de ferrovia sintética (km/1000km²)")
-  if (grepl("densidade_real_", col)) {
-    ano <- gsub("densidade_real_", "", col)
-    return(sprintf("Densidade de ferrovia real até %s (km/1000km²)", ano))
-  }
-  return("")
-})
-
-arquivo_dict <- paste0(data.wd, "/base_completa_data_dictionary.csv")
-write_csv(dicionario, arquivo_dict)
-cat(sprintf("  ✓ Dicionário salvo: %s\n", arquivo_dict))
-
-cat("\n")
-
-# ==============================================================================
-# SEÇÃO 8: RESUMO FINAL
-# ==============================================================================
-
-cat(strrep("=", 80), "\n")
-cat("✅ BASE INTEGRADA CRIADA COM SUCESSO!\n")
-cat(strrep("=", 80), "\n\n")
-
-cat("RESUMO:\n\n")
-cat(sprintf("  Base final: %d AMCs × %d variáveis\n", nrow(base_completa_integrada), ncol(base_completa_integrada)))
-cat("\n  Arquivos criados:\n")
-cat(sprintf("    • %s\n", basename(arquivo_csv)))
-cat(sprintf("    • %s\n", basename(arquivo_rds)))
-cat(sprintf("    • %s\n", basename(arquivo_dict)))
-
-cat("\n  Estrutura de variáveis:\n")
-cat(sprintf("    • 1 identificador (code_amc)\n"))
-cat(sprintf("    • 1 controle (area_km2)\n"))
-cat(sprintf("    • 3 sintéticas (distância, dummy, densidade)\n"))
-cat(sprintf("    • ~%d reais cronológicas (1858-2003)\n", 
-            (ncol(base_completa_integrada) - 5) / 3))
-
-cat("\n  Uso recomendado:\n")
-cat("    base <- read.csv('base_completa_integrada.csv')\n")
-cat("    # ou\n")
-cat("    base <- readRDS('base_completa_integrada.rds')\n")
-
-cat("\nFinalizado em:", format(Sys.time(), "%d/%m/%Y %H:%M:%S"), "\n\n")
