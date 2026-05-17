@@ -12,8 +12,8 @@ library(tidyverse)
 library(geobr)
 
 # 2. Caminhos ------------------------------------------------------------------
-DIR_PROJETO  <- "C:/Users/André Elias/Documents/Dados pesquisa (Ferrovias)"
-DIR_CLIMA    <- file.path(DIR_PROJETO, "02_dados_espaciais/RASTER_CLIMA")
+DIR_PROJETO  <- "C:/Users/André Elias/Documents/Pesquisa (Ferrovias)"
+DIR_CLIMA    <- file.path(DIR_PROJETO, "02_dados_espaciais/raster_clima")
 DIR_BIO      <- file.path(DIR_CLIMA, "bio_10m_esri/bio")
 DIR_PREC     <- file.path(DIR_CLIMA, "prec_10m_esri/prec")
 DIR_TMEAN    <- file.path(DIR_CLIMA, "tmean_10m_esri/tmean")
@@ -130,16 +130,3 @@ write_csv(controles_clima, SAIDA_CSV)
 saveRDS(controles_clima,   SAIDA_RDS)
 cat("  Salvo em:", SAIDA_CSV, "\n")
 cat("  Salvo em:", SAIDA_RDS, "\n")
-
-# 10. Dicionário das principais variáveis --------------------------------------
-cat("\n=== DICIONÁRIO (principais variáveis) ===\n")
-cat("bio_1  : Temperatura Média Anual (°C)\n")
-cat("bio_4  : Sazonalidade da Temperatura (desvio padrão × 100)\n")
-cat("bio_7  : Amplitude Térmica Anual (°C)\n")
-cat("bio_12 : Precipitação Anual Total (mm)\n")
-cat("bio_15 : Sazonalidade da Precipitação (coef. de variação)\n")
-cat("prec_X : Precipitação média do mês X (mm)\n")
-cat("tmean_X: Temperatura média do mês X (°C)\n")
-cat("\nNota para regressão: bio_1, bio_12 e bio_15 capturam\n")
-cat("a maior parte da variação climática com menor multicolinearidade.\n")
-cat("Se incluir todas as variáveis, omita uma categoria de referência.\n")

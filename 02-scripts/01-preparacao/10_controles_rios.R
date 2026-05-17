@@ -11,7 +11,7 @@ library(tidyverse)
 library(geobr)
 
 # 2. Caminhos ------------------------------------------------------------------
-DIR_PROJETO  <- "C:/Users/André Elias/Documents/Dados pesquisa (Ferrovias)"
+DIR_PROJETO  <- "C:/Users/André Elias/Documents/Pesquisa (Ferrovias)"
 RIOS_SHP     <- file.path(
   DIR_PROJETO,
   "02_dados_espaciais/VETORES_AMBIENTAIS/GEOFT_BHO_REF_RIO/GEOFT_BHO_REF_RIO.shp"

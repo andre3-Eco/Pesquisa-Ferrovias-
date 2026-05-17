@@ -11,7 +11,7 @@ library(tidyverse)
 library(geobr)
 
 # 2. Caminhos ------------------------------------------------------------------
-DIR_PROJETO  <- "C:/Users/André Elias/Documents/Dados pesquisa (Ferrovias)"
+DIR_PROJETO  <- "C:/Users/André Elias/Documents/Pesquisa (Ferrovias)"
 SOLOS_SHP    <- file.path(
   DIR_PROJETO,
   "02_dados_espaciais/VETORES_AMBIENTAIS/brasil_solos_5m_20201104/brasil_solos_5m_20201104.shp"
