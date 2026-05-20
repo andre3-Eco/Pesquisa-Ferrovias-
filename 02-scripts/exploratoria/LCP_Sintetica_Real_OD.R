@@ -20,9 +20,9 @@ if (!exists("data.wd")) data.wd <- getwd()
 
 # Caminhos
 input_cost_file <- paste0(data.wd, "/cost_raster_ferrovias_ne_1880_1920_90m.tif")
-ferrovias_gpkg  <- paste0(data.wd, "/Dados pesquisa (Ferrovias)/ferrovias_cronologicas.gpkg")
-amcs_gpkg       <- paste0(data.wd, "/Dados pesquisa (Ferrovias)/ferrovias_cronologicas.gpkg")
-output_gpkg     <- paste0(data.wd, "/Dados pesquisa (Ferrovias)/Rotas_LCP_OD_Real_SemMar.gpkg")
+ferrovias_gpkg  <- paste0(data.wd, "/05-geometrias/ferrovias_cronologicas.gpkg")
+amcs_gpkg       <- paste0(data.wd, "/05-geometrias/ferrovias_cronologicas.gpkg")
+output_gpkg     <- paste0(data.wd, "/05-geometrias/Rotas_LCP_OD_Real.gpkg")
 
 # ==============================================================================
 # 2. PREPARAÇÃO DO RASTER DE CUSTO COM MÁSCARA DE TERRA
@@ -57,6 +57,8 @@ library(geobr)
 amcs_nordeste <- read_comparable_areas(start_year = 1970, end_year = 2010) |>
   filter(substr(list_code_muni_2010, 1, 1) == "2")
 
+amcs_nordeste <- amcs_geometria
+  
 land_poly <- st_union(amcs_nordeste) |>
   st_transform(target_crs_raster)
 
@@ -71,45 +73,81 @@ condutancia_mascarada <- terra::mask(
 
 # ==============================================================================
 # 3. EXTRAÇÃO DOS PARES O-D DAS FERROVIAS REAIS
+# Lógica: todas as linhas com mesmo `id` formam uma ferrovia completa.
+# `cod_part` marca as partes/entroncamentos — não devem ser usados como pontas.
+# Os terminais verdadeiros são os pontos que aparecem como início ou fim de
+# exatamente UM segmento (grau 1 na rede), identificados com tolerância de 50 m.
 # ==============================================================================
-cat("Extraindo pontos de início e fim das ferrovias reais...\n")
+cat("Lendo ferrovias e identificando terminais verdadeiros por ID...\n")
 ferrovias_reais <- st_read(ferrovias_gpkg, quiet = TRUE)
+crs_ferrovias   <- st_crs(ferrovias_reais)
+snap_tol        <- 50  # metros — tolerância para fundir coordenadas de entroncamentos
 
-# ORIGENS: primeiro ponto do primeiro segmento (cod_part mínimo) de cada ferrovia
-origens_reais <- ferrovias_reais |>
+od_pairs <- ferrovias_reais |>
+  arrange(id, cod_part) |>
   group_by(id) |>
-  filter(cod_part == min(cod_part)) |>
-  ungroup()
+  group_map(function(df_id, key) {
 
-origens_pts <- suppressWarnings(st_cast(origens_reais, "POINT")) |>
-  group_by(id) |>
-  slice(1) |>
-  ungroup() |>
-  st_transform(target_crs_raster)
+    # Extrai primeiro e último vértice de cada segmento (MULTILINESTRING → pontos)
+    pts_list <- lapply(seq_len(nrow(df_id)), function(i) {
+      coords <- st_coordinates(st_cast(st_geometry(df_id[i, ]), "POINT"))[, 1:2]
+      rbind(coords[1, ], coords[nrow(coords), ])
+    })
+    todos <- as.data.frame(do.call(rbind, pts_list))
+    names(todos) <- c("X", "Y")
 
-# DESTINOS: último ponto do último segmento (cod_part máximo) de cada ferrovia
-destinos_reais <- ferrovias_reais |>
-  group_by(id) |>
-  filter(cod_part == max(cod_part)) |>
-  ungroup()
+    # Agrupa pontos próximos numa grade de snap_tol metros
+    todos$Xr <- round(todos$X / snap_tol) * snap_tol
+    todos$Yr <- round(todos$Y / snap_tol) * snap_tol
 
-destinos_pts <- suppressWarnings(st_cast(destinos_reais, "POINT")) |>
-  group_by(id) |>
-  slice(n()) |>
-  ungroup() |>
-  st_transform(target_crs_raster)
+    # Terminais = células da grade visitadas exatamente 1 vez (não são entroncamentos)
+    terminais <- todos |>
+      dplyr::count(Xr, Yr) |>
+      dplyr::filter(n == 1) |>
+      # Recupera coordenadas originais do primeiro ponto que caiu nessa célula
+      dplyr::left_join(
+        todos |> dplyr::distinct(Xr, Yr, .keep_all = TRUE) |> dplyr::select(Xr, Yr, X, Y),
+        by = c("Xr", "Yr")
+      )
 
-# Filtrar pares com distância mínima de 5 km (evita rotas degeneradas)
-dist_od <- as.numeric(st_distance(origens_pts, destinos_pts, by_element = TRUE)) / 1000
+    n_term <- nrow(terminais)
+    if (n_term < 2) {
+      cat(sprintf("  [id=%d %s] Apenas %d terminal — ignorado.\n",
+                  key$id[1], df_id$Nome[1], n_term))
+      return(NULL)
+    }
 
-cat(sprintf("Total de ferrovias: %d\n", nrow(origens_pts)))
-cat(sprintf("Excluídas (O ≈ D, dist < 5 km): %d\n", sum(dist_od < 5)))
+    # Cria um par O-D para cada combinação de terminais (C(n,2))
+    combos <- combn(n_term, 2, simplify = FALSE)
+    pares  <- lapply(seq_along(combos), function(k) {
+      idx <- combos[[k]]
+      data.frame(
+        id        = key$id[1],
+        Nome      = df_id$Nome[1],
+        ano_inaug = min(df_id$ano_inaug, na.rm = TRUE),
+        par_idx   = k,
+        n_pares   = length(combos),
+        X_orig    = terminais$X[idx[1]],
+        Y_orig    = terminais$Y[idx[1]],
+        X_dest    = terminais$X[idx[2]],
+        Y_dest    = terminais$Y[idx[2]],
+        stringsAsFactors = FALSE
+      )
+    })
+    do.call(rbind, pares)
+  }) |>
+  dplyr::bind_rows()
 
-ids_validos    <- which(dist_od >= 5)
-origens_valid  <- origens_pts[ids_validos, ]
-destinos_valid <- destinos_pts[ids_validos, ]
+# Filtra pares com distância < 5 km (evita rotas degeneradas)
+od_pairs <- od_pairs |>
+  dplyr::mutate(
+    dist_km = sqrt((X_orig - X_dest)^2 + (Y_orig - Y_dest)^2) / 1000
+  ) |>
+  dplyr::filter(dist_km >= 5)
 
-cat(sprintf("Pares O-D válidos: %d\n\n", length(ids_validos)))
+cat(sprintf("IDs carregados: %d  |  Pares O-D gerados: %d  |  Válidos (≥5 km): %d\n\n",
+            n_distinct(ferrovias_reais$id), nrow(od_pairs) + sum(od_pairs$dist_km < 5),
+            nrow(od_pairs)))
 
 # ==============================================================================
 # 4. FUNÇÃO DE SNAPPING: move pontos para a célula de terra mais próxima
@@ -133,22 +171,36 @@ snap_to_local_land <- function(pt, local_raster) {
 
 # ==============================================================================
 # 5. CÁLCULO DAS ROTAS LCP (JANELA MÓVEL + MÁSCARA DE TERRA)
+# Itera sobre od_pairs: cada linha é um par O-D derivado dos terminais reais.
 # ==============================================================================
-cat(sprintf("Iniciando cálculo de %d rotas LCP...\n\n", nrow(origens_valid)))
+cat(sprintf("Iniciando cálculo de %d rotas LCP...\n\n", nrow(od_pairs)))
 
 lcp_list <- list()
 
-for (i in seq_len(nrow(origens_valid))) {
-  pt_start_raw <- origens_valid[i, ]
-  pt_end_raw   <- destinos_valid[i, ]
-  nome_rota    <- pt_start_raw$Nome
+for (i in seq_len(nrow(od_pairs))) {
+  par       <- od_pairs[i, ]
+  nome_rota <- sprintf("%s [par %d/%d]", par$Nome, par$par_idx, par$n_pares)
 
-  cat(sprintf("Rota [%d/%d] — %s: ", i, nrow(origens_valid), nome_rota))
+  cat(sprintf("Rota [%d/%d] — %s: ", i, nrow(od_pairs), nome_rota))
 
-  # Janela móvel (bounding box + buffer 1.2° ≈ 130 km)
-  # terra::extend(..., 5) adiciona 5 células de margem para evitar pontos na borda
+  # Constrói sf points em UTM (CRS da ferrovia → CRS do raster)
+  pt_start_raw <- st_sf(
+    id        = par$id,
+    Nome      = par$Nome,
+    ano_inaug = par$ano_inaug,
+    geometry  = st_sfc(st_point(c(par$X_orig, par$Y_orig)), crs = crs_ferrovias)
+  ) |> st_transform(target_crs_raster)
+
+  pt_end_raw <- st_sf(
+    id        = par$id,
+    Nome      = par$Nome,
+    ano_inaug = par$ano_inaug,
+    geometry  = st_sfc(st_point(c(par$X_dest, par$Y_dest)), crs = crs_ferrovias)
+  ) |> st_transform(target_crs_raster)
+
+  # Janela móvel (bounding box dos dois pontos + buffer 130 km)
   pts_union      <- st_union(pt_start_raw, pt_end_raw)
-  route_envelope <- st_buffer(pts_union, dist = 1.2)
+  route_envelope <- st_buffer(pts_union, dist = 130000)
 
   local_cond <- tryCatch({
     cropped <- terra::crop(condutancia_mascarada, terra::vect(route_envelope))
@@ -174,9 +226,10 @@ for (i in seq_len(nrow(origens_valid))) {
   if (!is.null(path)) {
     path <- path |>
       mutate(
-        id        = pt_start_raw$id,
-        Nome      = nome_rota,
-        ano_inaug = pt_start_raw$ano_inaug,
+        id        = par$id,
+        Nome      = par$Nome,
+        par_idx   = par$par_idx,
+        ano_inaug = par$ano_inaug,
         tipo_rota = "LCP_OD_SemMar"
       )
     lcp_list[[length(lcp_list) + 1]] <- path
