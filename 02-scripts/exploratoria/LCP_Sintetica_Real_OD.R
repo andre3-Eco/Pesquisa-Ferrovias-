@@ -1,7 +1,6 @@
 # ==============================================================================
-# REDE FERROVIÁRIA SINTÉTICA (LCP) COM PARES O-D REAIS — SEM CRUZAR O MAR
-# Usa os pontos de início e fim das ferrovias históricas reais como pares O-D.
-# Máscara de terra aplicada ao raster de condutância para evitar rotas pelo mar.
+# REDE FERROVIÁRIA SINTÉTICA (LCP) COM PARES O-D REAIS (LÓGICA RAIZ-PONTA)
+# CORREÇÃO DA SEÇÃO 5: Tratamento de NAs, Snapping Otimizado e Diagnóstico
 # ==============================================================================
 
 # 1. AMBIENTE E PACOTES --------------------------------------------------------
@@ -18,10 +17,8 @@ invisible(lapply(libraries, require, character.only = TRUE))
 
 if (!exists("data.wd")) data.wd <- getwd()
 
-# Caminhos
 input_cost_file <- paste0(data.wd, "/cost_raster_ferrovias_ne_1880_1920_90m.tif")
 ferrovias_gpkg  <- paste0(data.wd, "/05-geometrias/ferrovias_cronologicas.gpkg")
-amcs_gpkg       <- paste0(data.wd, "/05-geometrias/ferrovias_cronologicas.gpkg")
 output_gpkg     <- paste0(data.wd, "/05-geometrias/Rotas_LCP_OD_Real.gpkg")
 
 # ==============================================================================
@@ -31,11 +28,10 @@ cat("Lendo raster de custo...\n")
 cost_raster_terra <- rast(input_cost_file)
 
 if (is.na(crs(cost_raster_terra)) || crs(cost_raster_terra) == "") {
-  crs(cost_raster_terra) <- "EPSG:31983"
+  crs(cost_raster_terra) <- "EPSG:4674" # Assume SIRGAS 2000 se não houver metadado
 }
 target_crs_raster <- st_crs(cost_raster_terra)
 
-# Agrega para ~270m (eficiência computacional)
 cat("Agregando raster para 270m...\n")
 cost_raster_opt <- terra::aggregate(cost_raster_terra, fact = 3, fun = "mean", na.rm = TRUE)
 
@@ -46,123 +42,118 @@ cost_raster_opt <- terra::ifel(
   cost_raster_opt
 )
 
-# Raster de condutância base (inverso do custo)
 condutancia_base <- terra::ifel(cost_raster_opt < max_cost_value, 1 / cost_raster_opt, 0)
 
-# --------------------------------------------------------------------------
-# MÁSCARA DE TERRA: zera condutância no oceano usando os polígonos das AMCs
-# --------------------------------------------------------------------------
-cat("Aplicando máscara de terra (oceano intransitável)...\n")
+cat("Gerando polígono continental com Recuo Costeiro...\n")
 library(geobr)
-amcs_nordeste <- read_comparable_areas(start_year = 1970, end_year = 2010) |>
-  filter(substr(list_code_muni_2010, 1, 1) == "2")
 
-amcs_nordeste <- amcs_geometria
-  
-land_poly <- st_union(amcs_nordeste) |>
-  st_transform(target_crs_raster)
+if(exists("amcs_geometria")) {
+  amcs_nordeste <- amcs_geometria 
+} else {
+  amcs_nordeste <- read_comparable_areas(start_year = 1970, end_year = 2010) |>
+    filter(substr(list_code_muni_2010, 1, 1) == "2")
+}
 
-land_vect <- terra::vect(land_poly)
+# 1. Funde os municípios e previne erros topológicos
+land_poly <- st_union(amcs_nordeste) |> 
+  st_transform(target_crs_raster) |>
+  st_make_valid() 
 
+# 2. O RIGOR: Buffer Negativo corrigido (Graus vs Metros)
+if (st_is_longlat(target_crs_raster)) {
+  # Se for Lat/Lon: 1 grau de latitude equivale a ~111.320 metros
+  recuo_dist <- -2500 / 111320 
+  cat(sprintf("CRS geográfico detetado. Aplicando recuo de %.4f graus (~2.5 km)...\n", abs(recuo_dist)))
+} else {
+  # Se for UTM projetado:
+  recuo_dist <- -2500
+  cat("CRS métrico detetado. Aplicando recuo de 2500 metros...\n")
+}
+
+land_poly_rigoroso <- st_buffer(land_poly, dist = recuo_dist)
+land_vect <- terra::vect(land_poly_rigoroso)
+
+cat("Aplicando máscara definitiva na condutância...\n")
 condutancia_mascarada <- terra::mask(
-  condutancia_base,
-  land_vect,
-  inverse     = FALSE,
-  updatevalue = 0
+  condutancia_base, land_vect, inverse = FALSE
 )
 
 # ==============================================================================
-# 3. EXTRAÇÃO DOS PARES O-D DAS FERROVIAS REAIS
-# Lógica: todas as linhas com mesmo `id` formam uma ferrovia completa.
-# `cod_part` marca as partes/entroncamentos — não devem ser usados como pontas.
-# Os terminais verdadeiros são os pontos que aparecem como início ou fim de
-# exatamente UM segmento (grau 1 na rede), identificados com tolerância de 50 m.
+# 3. EXTRAÇÃO DOS PARES O-D (LÓGICA RAIZ PARA AS PONTAS)
 # ==============================================================================
-cat("Lendo ferrovias e identificando terminais verdadeiros por ID...\n")
+cat("Lendo ferrovias e extraindo Origem Histórica e Destinos por ramal...\n")
 ferrovias_reais <- st_read(ferrovias_gpkg, quiet = TRUE)
 crs_ferrovias   <- st_crs(ferrovias_reais)
-snap_tol        <- 50  # metros — tolerância para fundir coordenadas de entroncamentos
+snap_tol        <- 50 
 
 od_pairs <- ferrovias_reais |>
   arrange(id, cod_part) |>
-  group_by(id) |>
-  group_map(function(df_id, key) {
-
-    # Extrai primeiro e último vértice de cada segmento (MULTILINESTRING → pontos)
+  group_by(id, Nome) |>
+  group_modify(~ {
+    df_id <- .x
+    
     pts_list <- lapply(seq_len(nrow(df_id)), function(i) {
-      coords <- st_coordinates(st_cast(st_geometry(df_id[i, ]), "POINT"))[, 1:2]
-      rbind(coords[1, ], coords[nrow(coords), ])
-    })
-    todos <- as.data.frame(do.call(rbind, pts_list))
-    names(todos) <- c("X", "Y")
-
-    # Agrupa pontos próximos numa grade de snap_tol metros
-    todos$Xr <- round(todos$X / snap_tol) * snap_tol
-    todos$Yr <- round(todos$Y / snap_tol) * snap_tol
-
-    # Terminais = células da grade visitadas exatamente 1 vez (não são entroncamentos)
-    terminais <- todos |>
-      dplyr::count(Xr, Yr) |>
-      dplyr::filter(n == 1) |>
-      # Recupera coordenadas originais do primeiro ponto que caiu nessa célula
-      dplyr::left_join(
-        todos |> dplyr::distinct(Xr, Yr, .keep_all = TRUE) |> dplyr::select(Xr, Yr, X, Y),
-        by = c("Xr", "Yr")
-      )
-
-    n_term <- nrow(terminais)
-    if (n_term < 2) {
-      cat(sprintf("  [id=%d %s] Apenas %d terminal — ignorado.\n",
-                  key$id[1], df_id$Nome[1], n_term))
-      return(NULL)
-    }
-
-    # Cria um par O-D para cada combinação de terminais (C(n,2))
-    combos <- combn(n_term, 2, simplify = FALSE)
-    pares  <- lapply(seq_along(combos), function(k) {
-      idx <- combos[[k]]
+      coords <- st_coordinates(st_geometry(df_id[i, ]))
+      p1 <- coords[1, 1:2]              
+      p2 <- coords[nrow(coords), 1:2]   
+      
       data.frame(
-        id        = key$id[1],
-        Nome      = df_id$Nome[1],
-        ano_inaug = min(df_id$ano_inaug, na.rm = TRUE),
-        par_idx   = k,
-        n_pares   = length(combos),
-        X_orig    = terminais$X[idx[1]],
-        Y_orig    = terminais$Y[idx[1]],
-        X_dest    = terminais$X[idx[2]],
-        Y_dest    = terminais$Y[idx[2]],
-        stringsAsFactors = FALSE
+        cod_part  = df_id$cod_part[i],
+        ano_inaug = df_id$ano_inaug[i],
+        is_start  = c(TRUE, FALSE), 
+        X = c(p1[1], p2[1]),
+        Y = c(p1[2], p2[2])
       )
     })
-    do.call(rbind, pares)
-  }) |>
-  dplyr::bind_rows()
+    todos_pts <- bind_rows(pts_list)
+    
+    todos_pts <- todos_pts |>
+      mutate(Xr = round(X / snap_tol) * snap_tol, Yr = round(Y / snap_tol) * snap_tol)
+    
+    terminais <- todos_pts |>
+      group_by(Xr, Yr) |>
+      filter(n() == 1) |>
+      ungroup()
+    
+    if (nrow(terminais) < 2) return(data.frame())
+    
+    ano_raiz <- min(terminais$ano_inaug, na.rm = TRUE)
+    candidatos_origem <- terminais |> filter(ano_inaug == ano_raiz)
+    origem <- candidatos_origem |> arrange(desc(is_start)) |> slice(1)
+    destinos <- terminais |> filter(!(Xr == origem$Xr & Yr == origem$Yr))
+    
+    if (nrow(destinos) == 0) return(data.frame())
+    
+    pares <- destinos |>
+      mutate(
+        X_orig = origem$X, Y_orig = origem$Y, ano_orig = origem$ano_inaug,
+        X_dest = X, Y_dest = Y, ano_dest = ano_inaug,
+        par_idx = row_number(), n_pares = n()
+      ) |>
+      select(cod_part_dest = cod_part, ano_orig, ano_dest, par_idx, n_pares, 
+             X_orig, Y_orig, X_dest, Y_dest)
+    
+    return(pares)
+  }) |> ungroup()
 
-# Filtra pares com distância < 5 km (evita rotas degeneradas)
 od_pairs <- od_pairs |>
-  dplyr::mutate(
-    dist_km = sqrt((X_orig - X_dest)^2 + (Y_orig - Y_dest)^2) / 1000
-  ) |>
-  dplyr::filter(dist_km >= 5)
+  mutate(dist_km = sqrt((X_orig - X_dest)^2 + (Y_orig - Y_dest)^2) / 1000) |>
+  filter(dist_km >= 5)
 
-cat(sprintf("IDs carregados: %d  |  Pares O-D gerados: %d  |  Válidos (≥5 km): %d\n\n",
-            n_distinct(ferrovias_reais$id), nrow(od_pairs) + sum(od_pairs$dist_km < 5),
-            nrow(od_pairs)))
+cat(sprintf("\nIDs válidos: %d  |  Rotas Raiz-Ponta geradas: %d\n\n",
+            n_distinct(od_pairs$id), nrow(od_pairs)))
 
 # ==============================================================================
-# 4. FUNÇÃO DE SNAPPING: move pontos para a célula de terra mais próxima
+# 4. FUNÇÃO DE SNAPPING OTIMIZADA PARA NAs
 # ==============================================================================
-# Necessário porque origens/destinos costeiros podem cair em células com
-# condutância = 0 (oceano), impedindo a criação do grafo pelo leastcostpath.
-# O snap é feito DENTRO do raster local (já cropado) para garantir consistência.
-
 snap_to_local_land <- function(pt, local_raster) {
   val <- tryCatch(terra::extract(local_raster, terra::vect(pt))[[2]], error = function(e) NA)
-  if (!is.na(val) && val > 0) return(pt)  # já está em terra
-
-  land_pts <- terra::as.points(terra::ifel(local_raster > 0, local_raster, NA))
+  if (!is.na(val) && val > 0) return(pt)
+  
+  # CORREÇÃO: Pega apenas os pixels válidos (terra firme) com na.rm = TRUE
+  land_pts <- terra::as.points(local_raster, na.rm = TRUE)
   if (length(land_pts) == 0) return(NULL)
-
+  
   dists   <- terra::distance(terra::vect(pt), land_pts)
   nearest <- st_as_sf(land_pts[which.min(dists)])
   st_geometry(pt) <- st_geometry(st_transform(nearest, st_crs(pt)))
@@ -170,67 +161,63 @@ snap_to_local_land <- function(pt, local_raster) {
 }
 
 # ==============================================================================
-# 5. CÁLCULO DAS ROTAS LCP (JANELA MÓVEL + MÁSCARA DE TERRA)
-# Itera sobre od_pairs: cada linha é um par O-D derivado dos terminais reais.
+# 5. CÁLCULO DAS ROTAS LCP (COM DIAGNÓSTICO DE ERRO)
 # ==============================================================================
 cat(sprintf("Iniciando cálculo de %d rotas LCP...\n\n", nrow(od_pairs)))
-
 lcp_list <- list()
 
 for (i in seq_len(nrow(od_pairs))) {
   par       <- od_pairs[i, ]
-  nome_rota <- sprintf("%s [par %d/%d]", par$Nome, par$par_idx, par$n_pares)
-
+  nome_rota <- sprintf("%s [Ramal %d/%d - %d]", par$Nome, par$par_idx, par$n_pares, par$ano_dest)
+  
   cat(sprintf("Rota [%d/%d] — %s: ", i, nrow(od_pairs), nome_rota))
-
-  # Constrói sf points em UTM (CRS da ferrovia → CRS do raster)
+  
   pt_start_raw <- st_sf(
-    id        = par$id,
-    Nome      = par$Nome,
-    ano_inaug = par$ano_inaug,
-    geometry  = st_sfc(st_point(c(par$X_orig, par$Y_orig)), crs = crs_ferrovias)
+    id = par$id, Nome = par$Nome, cod_part = par$cod_part_dest, 
+    ano_dest = par$ano_dest, geometry = st_sfc(st_point(c(par$X_orig, par$Y_orig)), crs = crs_ferrovias)
   ) |> st_transform(target_crs_raster)
-
+  
   pt_end_raw <- st_sf(
-    id        = par$id,
-    Nome      = par$Nome,
-    ano_inaug = par$ano_inaug,
-    geometry  = st_sfc(st_point(c(par$X_dest, par$Y_dest)), crs = crs_ferrovias)
+    id = par$id, Nome = par$Nome, cod_part = par$cod_part_dest, 
+    ano_dest = par$ano_dest, geometry = st_sfc(st_point(c(par$X_dest, par$Y_dest)), crs = crs_ferrovias)
   ) |> st_transform(target_crs_raster)
-
-  # Janela móvel (bounding box dos dois pontos + buffer 130 km)
+  
   pts_union      <- st_union(pt_start_raw, pt_end_raw)
   route_envelope <- st_buffer(pts_union, dist = 130000)
-
+  
   local_cond <- tryCatch({
     cropped <- terra::crop(condutancia_mascarada, terra::vect(route_envelope))
-    terra::extend(cropped, 5)
+    terra::extend(cropped, 5) # Estende a borda com NA
   }, error = function(e) NULL)
-
-  if (is.null(local_cond)) { cat("Falha no recorte.\n"); next }
-
-  # Snap dos pontos para terra no raster local
+  
+  if (is.null(local_cond)) { cat("Falha no recorte da janela local.\n"); next }
+  
   pt_start <- snap_to_local_land(pt_start_raw, local_cond)
   pt_end   <- snap_to_local_land(pt_end_raw,   local_cond)
-
-  if (is.null(pt_start) || is.null(pt_end)) { cat("Snap falhou.\n"); next }
-
-  # Criar grafo e calcular rota
+  
+  if (is.null(pt_start) || is.null(pt_end)) { cat("Falha no Snapping para terra firme.\n"); next }
+  
+  # LIMPEZA DOS ATRIBUTOS: Extrair apenas a geometria para não bugar o leastcostpath
+  p_origem_limpo  <- pt_start |> select(geometry)
+  p_destino_limpo <- pt_end   |> select(geometry)
+  
   path <- tryCatch({
     local_cs <- leastcostpath::create_cs(local_cond, neighbours = 16)
-    leastcostpath::create_lcp(x = local_cs, origin = pt_start, destination = pt_end)
+    leastcostpath::create_lcp(x = local_cs, origin = p_origem_limpo, destination = p_destino_limpo)
   }, error = function(e) {
-    cat(sprintf("Erro: %s ", e$message)); NULL
+    # SE FALHAR AGORA, ELE GRITA O ERRO!
+    cat(sprintf("\n    [ERRO INTERNO LCP]: %s", e$message))
+    return(NULL)
   })
-
+  
   if (!is.null(path)) {
     path <- path |>
       mutate(
         id        = par$id,
         Nome      = par$Nome,
-        par_idx   = par$par_idx,
-        ano_inaug = par$ano_inaug,
-        tipo_rota = "LCP_OD_SemMar"
+        cod_part  = par$cod_part_dest,
+        ano_inaug = par$ano_dest, 
+        tipo_rota = "LCP_OD_Raiz_Ponta"
       )
     lcp_list[[length(lcp_list) + 1]] <- path
     cat("✅\n")
@@ -243,9 +230,8 @@ for (i in seq_len(nrow(od_pairs))) {
 # 6. EXPORTAÇÃO
 # ==============================================================================
 cat("\n")
-
 if (length(lcp_list) == 0) {
-  cat("⚠️ NENHUMA ROTA FOI GERADA. Verifique os arquivos de entrada.\n")
+  cat("⚠️ NENHUMA ROTA FOI GERADA. O algoritmo LCP não encontrou caminhos válidos.\n")
 } else {
   instrumento_final <- do.call(rbind, lcp_list)
   write_sf(instrumento_final, output_gpkg, delete_layer = TRUE)

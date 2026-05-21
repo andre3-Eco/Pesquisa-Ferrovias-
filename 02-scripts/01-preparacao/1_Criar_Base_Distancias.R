@@ -28,6 +28,8 @@ cat("Etapa 1: Carregando dados geoespaciais...\n\n")
 cat("  → Baixando AMCs (1970-2010) do IPEA...\n")
 amcs_70_10 <- read_comparable_areas(start_year = 1970, end_year = 2010)
 
+amcs_70_10 <- amcs_geometria
+
 amcs_nordeste <- amcs_70_10 |>
   filter(substr(list_code_muni_2010, 1, 1) == "2")
 
@@ -45,7 +47,7 @@ cat(sprintf("    ✓ %d segmentos de ferrovias reais carregados\n\n", nrow(ferro
 ## 2c. Ferrovias Sintéticas (LCP)
 cat("  → Carregando rede sintética (LCP sem mar)...\n")
 ferrovias_sinteticas <- st_read(
-  paste0(data.wd, "/05-geometrias/Rotas_LCP_OD_Real_SemMar.gpkg"),
+  paste0(data.wd, "/05-geometrias/Rotas_LCP_OD_Real.gpkg"),
   quiet = TRUE
 )
 

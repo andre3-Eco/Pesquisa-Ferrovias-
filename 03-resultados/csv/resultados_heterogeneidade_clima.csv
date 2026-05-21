@@ -1,0 +1,5 @@
+tratamento,outcome,coef_zona_mata,pval_zona_mata,coef_interacao_semiarido,pval_interacao,efeito_total_semiarido,f_stat_instrumentos
+Distância (km),População (2003),-0.0021,1e-4,0.0028,0.086,7e-4,NA
+Distância (km),População (2010),-0.002,3e-4,0.0026,0.1091,6e-4,NA
+Dummy Atendimento,População (2003),0.8555,0,-0.5983,0.082,0.2571,NA
+Dummy Atendimento,População (2010),0.8932,0,-0.6183,0.0758,0.2749,NA

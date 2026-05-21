@@ -53,7 +53,7 @@ cat(sprintf("    ✓ %d segmentos de ferrovias reais carregados\n\n", nrow(ferro
 ## 3c. Ferrovias Sintéticas
 cat("  → Carregando rede sintética (LCP sem mar)...\n")
 ferrovias_sinteticas <- st_read(
-  paste0(data.wd, "/05-geometrias/Rotas_LCP_OD_Real_SemMar.gpkg"),
+  paste0(data.wd, "/05-geometrias/Rotas_LCP_OD_Real.gpkg"),
   quiet = TRUE
 )
 

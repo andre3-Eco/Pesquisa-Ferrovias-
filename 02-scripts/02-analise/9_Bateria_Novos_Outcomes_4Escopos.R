@@ -62,6 +62,10 @@ cat(strrep("=", 80), "\n\n")
 
 cat("SEÇÃO 1: Carregando e integrando bases...\n")
 
+base_completa <- read_csv("01-dados/processados/base_completa_integrada.csv")
+base_iv_sf <- amcs_geometria |>
+  inner_join(base_completa, by = "code_amc")
+
 if (!exists("base_iv_sf")) stop("'base_iv_sf' não encontrado. Execute o pipeline de preparação primeiro.")
 if (!exists("extremidades")) stop("'extremidades' não encontrado. Execute 6_Bateria_Testes_Etapas_I_II.R primeiro.")
 
