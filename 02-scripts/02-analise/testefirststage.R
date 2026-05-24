@@ -42,7 +42,7 @@ codes_pontas <- lista_amcs_pontas$amcs_codigo |>
 
 # Filtrar base (Apenas 1985 para teste geral, <= 200km, sem pontas)
 df_fs <- base_mestre |>
-  filter(dist_rail_real_1985 <= 200) |>
+  filter(dist_rail_real_2003 <= 100) |>
   filter(!(code_amc %in% codes_pontas))
 
 # Recalcular lag espacial para a amostra limpa
@@ -58,9 +58,9 @@ df_fs <- sf::st_drop_geometry(df_fs)
 controles_str <- "dist_sintetica_vizinhos + bio_1 + bio_12 + bio_15 + dist_rio_km + pct_solo_latossolos"
 
 tratamentos <- list(
-  list(nome = "Distância Contínua", endo = "dist_rail_real_1985", inst = "dist_rail_sintetica_km"),
-  list(nome = "Dummy de Atendimento", endo = "dummy_atendida_real_1985", inst = "dummy_atendida_sintetica"),
-  list(nome = "Densidade Ferroviária", endo = "densidade_real_1985", inst = "densidade_sintetica")
+  list(nome = "Distância Contínua", endo = "dist_rail_real_2003", inst = "dist_rail_sintetica_km"),
+  list(nome = "Dummy de Atendimento", endo = "dummy_atendida_real_2003", inst = "dummy_atendida_sintetica"),
+  list(nome = "Densidade Ferroviária", endo = "densidade_real_2003", inst = "densidade_sintetica")
 )
 
 resultados_fs <- data.frame()
@@ -119,3 +119,9 @@ tabela_fmt <- resultados_fs |>
 print(tabela_fmt, row.names = FALSE)
 cat("\nSignificância: *** p<0.01, ** p<0.05, * p<0.10")
 cat("\nRegra de Bolso: O F-Stat deve ser preferencialmente superior a 10 (Regra de Staiger-Stock).\n")
+
+
+
+
+
+

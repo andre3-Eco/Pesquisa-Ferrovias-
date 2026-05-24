@@ -1,0 +1,24 @@
+\begin{table}
+\centering
+\begin{talltblr}[         %% tabularray outer open
+caption={Primeiro Estágio: Validação da Dummy de Tratamento},
+]                     %% tabularray outer close
+{                     %% tabularray inner open
+colspec={Q[]Q[]Q[]Q[]Q[]},
+hline{2}={1-5}{solid, black, 0.05em},
+hline{1}={1-5}{solid, black, 0.08em},
+hline{10}={1-5}{solid, black, 0.08em},
+column{2-5}={}{halign=c},
+column{1}={}{halign=l},
+}                     %% tabularray inner close
+& M1 & M2 & M3 & M4 \\
+Dummy Sintética & \num{0.313} & \num{0.232} & \num{0.216} & \num{0.215} \\
+& (\num{0.029}) & (\num{0.037}) & (\num{0.037}) & (\num{0.037}) \\
+Observações & 1147 & 1147 & 1147 & 1146 \\
+F-Statistic (Instrumento) & 114.20 & 39.13 & 34.25 & 33.73 \\
+Efeito Fixo UF & Sim & Sim & Sim & Sim \\
+Lag Espacial & Não & Sim & Sim & Sim \\
+Clima & Não & Não & Sim & Sim \\
+Hidrografia e Solo & Não & Não & Não & Sim \\
+\end{talltblr}
+\end{table}
