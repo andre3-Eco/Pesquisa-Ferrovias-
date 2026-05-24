@@ -3,7 +3,7 @@ library(sf)
 
 snap_tol <- 50
 
-# 1. Extrair os pontos terminais (adaptado da sua Seção 3)
+# 1. Extrair os pontos terminais 
 terminais_df <- ferrovias_reais |>
   arrange(id, cod_part) |>
   group_by(id, Nome) |> 

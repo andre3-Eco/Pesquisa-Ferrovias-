@@ -1,0 +1,182 @@
+code_amc,list_name_muni_2010,id_ferrovia,nome_ferrovia,ano_virou_ponta,ano_deixou_ser_ponta,anos_totais_como_ponta,status_atual
+3001,"2100055,2100550,2101970,2102903,2103158,2103174,2103257,2103752,2104305,2104552,2105302,2105427,2105658,2106201,2106326,2110856,2111532,2112852",34,Estrada de Ferro Carajás (EFC),1985,2003,3,Ponta Final
+3018,"2101251,2109601",6,E.F. São Luiz-Teresina,1919,1919,1,Ponta Temporária
+3035,"2102556,2109007,2111052",34,Estrada de Ferro Carajás (EFC),1996,2003,2,Ponta Final
+3038,"2103000,2111078",6,E.F. São Luiz-Teresina,1895,1920,21,Ponta Temporária
+3059,"2105401,2106755",6,E.F. São Luiz-Teresina,1920,1920,1,Ponta Temporária
+3096,2111300,6,E.F. São Luiz-Teresina,1919,2003,37,Ponta Final
+3096,2111300,34,Estrada de Ferro Carajás (EFC),1985,2003,3,Ponta Final
+3101,2112209,6,E.F. São Luiz-Teresina,1895,2003,56,Ponta Final
+3101,2112209,19,E.F. Central do Piauí,1966,2003,6,Ponta Final
+4001,"2200053,2201739,2205151,2207801,2208650",42,E.F. Petrolina-Teresina,1969,2003,5,Ponta Final
+4007,"2200400,2202737,2207793",8,Ferrovia Teresina-Fortaleza,1972,2003,4,Ponta Final
+4021,"2201507,2201960,2202000,2202539,2202653,2205409,2206696,2208304,2208403,2209872,2210052",19,E.F. Central do Piauí,1937,2003,22,Ponta Final
+4028,"2201919,2202083,2204659,2205706,2207702",19,E.F. Central do Piauí,1920,2003,36,Ponta Final
+4029,"2201945,2202208,2202711,2205276,2206753,2210656",19,E.F. Central do Piauí,1966,1966,1,Ponta Temporária
+4041,"2202703,2202729",19,E.F. Central do Piauí,1923,2003,33,Ponta Final
+4104,"2300754,2306405,2308377",15,Linha Norte (CE - Consolidada),1940,1949,6,Ponta Temporária
+4116,2301802,13,Linha Sul (CE - Consolidada),1923,1924,2,Ponta Temporária
+4117,"2301851,2303931,2305266,2311306",13,Linha Sul (CE - Consolidada),1891,1892,2,Ponta Temporária
+4120,"2302057,2302602",14,E.F. de Sobral,1882,2003,66,Ponta Final
+4121,2302107,13,Linha Sul (CE - Consolidada),1882,1888,7,Ponta Temporária
+4142,2304103,8,Ferrovia Teresina-Fortaleza,1972,2003,4,Ponta Final
+4142,2304103,14,E.F. de Sobral,1912,2003,44,Ponta Final
+4143,2304202,13,Linha Sul (CE - Consolidada),1926,2003,30,Ponta Final
+4148,"2304350,2312908",14,E.F. de Sobral,1882,2003,66,Ponta Final
+4148,"2304350,2312908",15,Linha Norte (CE - Consolidada),1950,2003,15,Ponta Final
+4149,2304400,13,Linha Sul (CE - Consolidada),1873,2003,71,Ponta Final
+4149,2304400,15,Linha Norte (CE - Consolidada),1940,2003,21,Ponta Final
+4156,"2304954,2306256,2309706",13,Linha Sul (CE - Consolidada),1873,1881,5,Ponta Temporária
+4162,"2305506,2311355",13,Linha Sul (CE - Consolidada),1910,1916,7,Ponta Temporária
+4165,"2305803,2310951",14,E.F. de Sobral,1894,1911,13,Ponta Temporária
+4181,2307502,13,Linha Sul (CE - Consolidada),1917,2003,39,Ponta Final
+4183,"2307635,2311405",13,Linha Sul (CE - Consolidada),1894,1896,3,Ponta Temporária
+4224,2312700,13,Linha Sul (CE - Consolidada),1900,1908,8,Ponta Temporária
+5002,"2400208,2401107,2401453,2402501,2408003,2410256,2413359",4,E.F. Mossoró-Souza,1915,2003,41,Ponta Final
+5002,"2400208,2401107,2401453,2402501,2408003,2410256,2413359",5,E.F. Central do Rio Grande do Norte,1962,2003,7,Ponta Final
+5003,2400307,5,E.F. Central do Rio Grande do Norte,1933,1961,18,Ponta Temporária
+5005,2400505,4,E.F. Mossoró-Souza,1948,1950,3,Ponta Temporária
+5008,"2400802,2403756",5,E.F. Central do Rio Grande do Norte,1933,2003,25,Ponta Final
+5023,2402204,18,E.F. Natal a Nova Cruz,1882,1882,1,Ponta Temporária
+5024,2402303,4,E.F. Mossoró-Souza,1929,1934,5,Ponta Temporária
+5026,2402600,5,E.F. Central do Rio Grande do Norte,1906,1906,1,Ponta Temporária
+5044,2404309,4,E.F. Mossoró-Souza,1926,1927,2,Ponta Temporária
+5048,"2404705,2404853",5,E.F. Central do Rio Grande do Norte,1949,2003,16,Ponta Final
+5059,2405801,5,E.F. Central do Rio Grande do Norte,1910,1912,3,Ponta Temporária
+5069,2406700,5,E.F. Central do Rio Grande do Norte,1918,2003,38,Ponta Final
+5082,2408102,5,E.F. Central do Rio Grande do Norte,1906,2003,49,Ponta Final
+5082,2408102,18,E.F. Natal a Nova Cruz,1881,2003,67,Ponta Final
+5084,2408300,16,E.F. Conde d'Eu,1904,2003,51,Ponta Final
+5084,2408300,18,E.F. Natal a Nova Cruz,1883,2003,65,Ponta Final
+5093,2409308,4,E.F. Mossoró-Souza,1936,1947,6,Ponta Temporária
+5097,2409605,5,E.F. Central do Rio Grande do Norte,1913,1917,5,Ponta Temporária
+5121,2412203,18,E.F. Natal a Nova Cruz,1881,1881,1,Ponta Temporária
+5127,2412807,5,E.F. Central do Rio Grande do Norte,1949,2003,16,Ponta Final
+5138,2413904,5,E.F. Central do Rio Grande do Norte,1907,1908,2,Ponta Temporária
+6003,2500304,16,E.F. Conde d'Eu,1901,2003,53,Ponta Final
+6009,"2512077,2500700",13,Linha Sul (CE - Consolidada),1923,2003,33,Ponta Final
+6011,"2500775,2509156,2513984,2516201,2517209",4,E.F. Mossoró-Souza,1951,2003,14,Ponta Final
+6011,"2500775,2509156,2513984,2516201,2517209",13,Linha Sul (CE - Consolidada),1926,1931,4,Ponta Temporária
+6030,"2502151,2504009",13,Linha Sul (CE - Consolidada),1958,2003,9,Ponta Final
+6030,"2502151,2504009",17,Ramal de Campina Grande,1907,2003,48,Ponta Final
+6035,2502706,16,E.F. Conde d'Eu,1913,2003,43,Ponta Final
+6040,2503209,16,E.F. Conde d'Eu,1883,2003,65,Ponta Final
+6046,2503704,13,Linha Sul (CE - Consolidada),1926,2003,30,Ponta Final
+6047,"2503753,2512101,2513927,2513968",13,Linha Sul (CE - Consolidada),1932,1941,7,Ponta Temporária
+6053,"2504157,2516003",16,E.F. Conde d'Eu,1925,2003,31,Ponta Final
+6062,2504900,16,E.F. Conde d'Eu,1883,1883,1,Ponta Temporária
+6081,2506905,1,E.F. Recife a Limoeiro,1901,2003,53,Ponta Final
+6081,2506905,16,E.F. Conde d'Eu,1907,2003,48,Ponta Final
+6081,2506905,17,Ramal de Campina Grande,1907,2003,48,Ponta Final
+6110,2509800,16,E.F. Conde d'Eu,1884,2003,64,Ponta Final
+6120,2510808,13,Linha Sul (CE - Consolidada),1944,1957,10,Ponta Temporária
+6126,"2511509,2514453",16,E.F. Conde d'Eu,1884,1906,16,Ponta Temporária
+6129,2511806,16,E.F. Conde d'Eu,1913,2003,43,Ponta Final
+7002,2600104,10,Linha Centro (Consolidada),1949,1953,4,Ponta Temporária
+7003,2600203,42,E.F. Petrolina-Teresina,1932,1966,21,Ponta Temporária
+7008,2600708,1,E.F. Recife a Limoeiro,1887,1887,1,Ponta Temporária
+7014,2601201,10,Linha Centro (Consolidada),1912,2003,44,Ponta Final
+7016,2601409,44,E.F. Sul de Pernambuco,1912,2003,44,Ponta Final
+7024,2602209,1,E.F. Recife a Limoeiro,1934,2003,24,Ponta Final
+7031,2602902,44,E.F. Sul de Pernambuco,1858,2003,75,Ponta Final
+7040,2603702,44,E.F. Sul de Pernambuco,1885,2003,59,Ponta Final
+7042,"2603900,2611533",10,Linha Centro (Consolidada),1955,1956,2,Ponta Temporária
+7044,"2604007,2608453",1,E.F. Recife a Limoeiro,1881,2003,67,Ponta Final
+7045,2604106,10,Linha Centro (Consolidada),1895,1905,7,Ponta Temporária
+7047,2604205,44,E.F. Sul de Pernambuco,1882,1884,3,Ponta Temporária
+7053,2604809,44,E.F. Sul de Pernambuco,1907,2003,48,Ponta Final
+7057,"2605152,2611101",26,E.F. Bahia ao São Francisco,1896,2003,55,Ponta Final
+7057,"2605152,2611101",42,E.F. Petrolina-Teresina,1932,2003,26,Ponta Final
+7058,2605202,44,E.F. Sul de Pernambuco,1860,2003,74,Ponta Final
+7066,2606002,44,E.F. Sul de Pernambuco,1887,2003,61,Ponta Final
+7070,2606408,10,Linha Centro (Consolidada),1894,1894,1,Ponta Temporária
+7074,2606903,10,Linha Centro (Consolidada),1948,2003,17,Ponta Final
+7085,2607901,10,Linha Centro (Consolidada),1885,2003,63,Ponta Final
+7088,"2608057,2611002",3,Estrada de Ferro Paulo Afonso,1883,2003,65,Ponta Final
+7098,2608909,1,E.F. Recife a Limoeiro,1882,1933,42,Ponta Temporária
+7103,2609501,1,E.F. Recife a Limoeiro,1882,1886,5,Ponta Temporária
+7108,2610004,44,E.F. Sul de Pernambuco,1862,1881,7,Ponta Temporária
+7116,2610905,10,Linha Centro (Consolidada),1906,1911,5,Ponta Temporária
+7121,2611606,1,E.F. Recife a Limoeiro,1881,2003,67,Ponta Final
+7121,2611606,10,Linha Centro (Consolidada),1885,2003,63,Ponta Final
+7121,2611606,44,E.F. Sul de Pernambuco,1858,2003,75,Ponta Final
+7123,2611804,44,E.F. Sul de Pernambuco,1907,1911,4,Ponta Temporária
+7127,2612208,10,Linha Centro (Consolidada),1962,2003,7,Ponta Final
+7143,2613909,10,Linha Centro (Consolidada),1957,2003,10,Ponta Final
+7145,2614105,10,Linha Centro (Consolidada),1933,2003,25,Ponta Final
+7155,2615300,1,E.F. Recife a Limoeiro,1888,1900,7,Ponta Temporária
+7165,2616407,10,Linha Centro (Consolidada),1886,1892,5,Ponta Temporária
+8003,"2700300,2702355",12,Ramal de Colégio,1949,1949,1,Ponta Temporária
+8025,2702405,3,Estrada de Ferro Paulo Afonso,1882,1882,1,Ponta Temporária
+8027,"2702553,2706307",12,Ramal de Colégio,1933,1948,9,Ponta Temporária
+8044,2704302,11,E.F. Central de Alagoas,1884,2003,64,Ponta Final
+8071,2707107,3,Estrada de Ferro Paulo Afonso,1882,2003,66,Ponta Final
+8075,2707503,12,Ramal de Colégio,1950,2003,15,Ponta Final
+8076,2707602,12,Ramal de Colégio,1912,1932,19,Ponta Temporária
+8077,2707701,12,Ramal de Colégio,1911,2003,45,Ponta Final
+8092,2709301,11,E.F. Central de Alagoas,1884,2003,64,Ponta Final
+8092,2709301,44,E.F. Sul de Pernambuco,1894,2003,57,Ponta Final
+8093,2709400,12,Ramal de Colégio,1911,1911,1,Ponta Temporária
+9012,2801306,28,E.F. Leste Brasileiro (BA),1916,2003,40,Ponta Final
+9031,2803302,28,E.F. Leste Brasileiro (BA),1916,2003,40,Ponta Final
+9058,2805901,28,E.F. Leste Brasileiro (BA),1913,2003,43,Ponta Final
+10008,"2900702,2902054",26,E.F. Bahia ao São Francisco,1863,1876,4,Ponta Temporária
+10012,2901106,69,E.F. de Santo Amaro (Recôncavo),1905,2003,50,Ponta Final
+10016,"2901353,2930105",7,E.F. Central da Bahia,1917,2003,39,Ponta Final
+10016,"2901353,2930105",26,E.F. Bahia ao São Francisco,1887,2003,61,Ponta Final
+10021,2901809,7,E.F. Central da Bahia,1917,2003,39,Ponta Final
+10023,"2901957,2917607",29,Ramal de Jequié,1924,1926,3,Ponta Temporária
+10040,"2903276,2930501",26,E.F. Bahia ao São Francisco,1880,1886,7,Ponta Temporária
+10056,2904605,7,E.F. Central da Bahia,1947,2003,18,Ponta Final
+10062,2905107,7,E.F. Central da Bahia,1918,1919,2,Ponta Temporária
+10071,"2906006,2932457",7,E.F. Central da Bahia,1917,2003,39,Ponta Final
+10075,2906501,28,E.F. Leste Brasileiro (BA),1905,2003,50,Ponta Final
+10081,"2906873,2917508,2923357,2925931,2929370,2933158",7,E.F. Central da Bahia,1920,1922,3,Ponta Temporária
+10087,"2907301,2925956,2933174",7,E.F. Central da Bahia,1881,1882,2,Ponta Temporária
+10087,"2907301,2925956,2933174",29,Ramal de Jequié,1885,1907,16,Ponta Temporária
+10096,2908200,7,E.F. Central da Bahia,1876,2003,69,Ponta Final
+10102,2908804,7,E.F. Central da Bahia,1927,2003,29,Ponta Final
+10112,2909802,29,Ramal de Jequié,1881,2003,67,Ponta Final
+10122,2910800,7,E.F. Central da Bahia,1876,2003,69,Ponta Final
+10123,"2910859,2924603",7,E.F. Central da Bahia,1917,1917,1,Ponta Temporária
+10135,2911907,7,E.F. Central da Bahia,1883,2003,65,Ponta Final
+10152,2913606,27,E.F. Ilhéus-Conquista,1911,2003,45,Ponta Final
+10159,2914307,7,E.F. Central da Bahia,1921,2003,35,Ponta Final
+10163,2914703,7,E.F. Central da Bahia,1926,1950,16,Ponta Temporária
+10164,"2914802,2918555",27,E.F. Ilhéus-Conquista,1913,2003,43,Ponta Final
+10166,2915007,7,E.F. Central da Bahia,1923,2003,33,Ponta Final
+10172,2915502,27,E.F. Ilhéus-Conquista,1934,2003,24,Ponta Final
+10184,2916708,29,Ramal de Jequié,1923,1923,1,Ponta Temporária
+10197,2918001,29,Ramal de Jequié,1927,2003,29,Ponta Final
+10199,2918209,29,Ramal de Jequié,1914,1915,2,Ponta Temporária
+10205,2918803,29,Ramal de Jequié,1910,1912,3,Ponta Temporária
+10218,"2919926,2927408",26,E.F. Bahia ao São Francisco,1860,2003,74,Ponta Final
+10225,2920601,30,Ramal de Nazaré,1941,2003,20,Ponta Final
+10227,2920809,7,E.F. Central da Bahia,1888,2003,60,Ponta Final
+10229,2921005,28,E.F. Leste Brasileiro (BA),1915,2003,41,Ponta Final
+10240,2922102,7,E.F. Central da Bahia,1937,1950,8,Ponta Temporária
+10241,2922201,30,Ramal de Nazaré,1875,1882,5,Ponta Temporária
+10242,2922409,29,Ramal de Jequié,1913,1913,1,Ponta Temporária
+10243,2922508,30,Ramal de Nazaré,1875,2003,70,Ponta Final
+10265,2924801,7,E.F. Central da Bahia,1923,1936,11,Ponta Temporária
+10278,2926806,7,E.F. Central da Bahia,1949,2003,16,Ponta Final
+10287,2927903,29,Ramal de Jequié,1922,1922,1,Ponta Temporária
+10292,"2928604,2929750",28,E.F. Leste Brasileiro (BA),1912,2003,44,Ponta Final
+10292,"2928604,2929750",69,E.F. de Santo Amaro (Recôncavo),1883,2003,65,Ponta Final
+10293,2928703,29,Ramal de Jequié,1885,1951,50,Ponta Temporária
+10293,2928703,30,Ramal de Nazaré,1883,2003,65,Ponta Final
+10297,2929008,7,E.F. Central da Bahia,1881,2003,67,Ponta Final
+10297,2929008,69,E.F. de Santo Amaro (Recôncavo),1923,2003,33,Ponta Final
+10299,2929206,28,E.F. Leste Brasileiro (BA),1912,2003,44,Ponta Final
+10299,2929206,69,E.F. de Santo Amaro (Recôncavo),1910,2003,46,Ponta Final
+10301,2929404,29,Ramal de Jequié,1908,1908,1,Ponta Temporária
+10302,2929503,28,E.F. Leste Brasileiro (BA),1905,2003,50,Ponta Final
+10302,2929503,69,E.F. de Santo Amaro (Recôncavo),1906,2003,49,Ponta Final
+10303,2929602,29,Ramal de Jequié,1881,1951,54,Ponta Temporária
+10312,2930709,26,E.F. Bahia ao São Francisco,1860,2003,74,Ponta Final
+10312,2930709,28,E.F. Leste Brasileiro (BA),1905,2003,50,Ponta Final
+10319,2931400,69,E.F. de Santo Amaro (Recôncavo),1892,2003,58,Ponta Final
+10322,2931707,69,E.F. de Santo Amaro (Recôncavo),1883,2003,59,Ponta Final
+10325,2932101,29,Ramal de Jequié,1916,1921,6,Ponta Temporária
+10326,2932200,27,E.F. Ilhéus-Conquista,1931,2003,27,Ponta Final
+10330,2932705,27,E.F. Ilhéus-Conquista,1913,1929,16,Ponta Temporária

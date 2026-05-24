@@ -79,7 +79,7 @@ condutancia_mascarada <- terra::mask(
 )
 
 # ==============================================================================
-# 3. EXTRAÇÃO DOS PARES O-D (LÓGICA RAIZ PARA AS PONTAS)
+# 3. EXTRAÇÃO DOS PARES O-D 
 # ==============================================================================
 cat("Lendo ferrovias e extraindo Origem Histórica e Destinos por ramal...\n")
 ferrovias_reais <- st_read(ferrovias_gpkg, quiet = TRUE)
@@ -161,7 +161,7 @@ snap_to_local_land <- function(pt, local_raster) {
 }
 
 # ==============================================================================
-# 5. CÁLCULO DAS ROTAS LCP (COM DIAGNÓSTICO DE ERRO)
+# 5. CÁLCULO DAS ROTAS LCP 
 # ==============================================================================
 cat(sprintf("Iniciando cálculo de %d rotas LCP...\n\n", nrow(od_pairs)))
 lcp_list <- list()
@@ -237,4 +237,47 @@ if (length(lcp_list) == 0) {
   write_sf(instrumento_final, output_gpkg, delete_layer = TRUE)
   cat(sprintf("🎉 Conclusão! %d rotas salvas em:\n   %s\n",
               nrow(instrumento_final), output_gpkg))
+}
+
+
+# ==============================================================================
+# 7. CRIAÇÃO DO PAINEL DE REDES SINTÉTICAS CUMULATIVAS (ANO A ANO)
+# ==============================================================================
+cat("\nGerando painel cumulativo de redes sintéticas ano a ano...\n")
+
+if (exists("instrumento_final") && nrow(instrumento_final) > 0) {
+  
+  # 1. Identificar todos os anos únicos em que um trecho foi inaugurado
+  anos_disponiveis <- sort(unique(instrumento_final$ano_inaug))
+  lista_redes_anuais <- list()
+  
+  # 2. Loop para "congelar" a malha em cada ano da história
+  for (ano in anos_disponiveis) {
+    
+    # Filtra as rotas sintéticas que já deveriam existir até este ano
+    malha_cumulativa <- instrumento_final |>
+      filter(ano_inaug <= ano) |>
+      mutate(
+        ano_malha = ano, # Identificador do "corte no tempo"
+        id_malha_ano = paste0(id, "_", ano) # Chave única combinando ferrovia e ano
+      )
+    
+    lista_redes_anuais[[as.character(ano)]] <- malha_cumulativa
+  }
+  
+  # 3. Empilhar todas as malhas anuais em um único objeto espacial
+  painel_sintetico_final <- bind_rows(lista_redes_anuais) |>
+    arrange(ano_malha, id, ano_inaug)
+  
+  # 4. Exportação do Painel
+  output_painel <- paste0(data.wd, "/05-geometrias/Painel_LCP_Cumulativo.gpkg")
+  write_sf(painel_sintetico_final, output_painel, delete_layer = TRUE)
+  
+  cat(sprintf("✓ Painel cumulativo criado com sucesso!\n"))
+  cat(sprintf("  - Total de recortes temporais (anos): %d\n", length(anos_disponiveis)))
+  cat(sprintf("  - Total de segmentos empilhados: %d\n", nrow(painel_sintetico_final)))
+  cat(sprintf("  - Arquivo salvo em: %s\n", output_painel))
+  
+} else {
+  cat("⚠️ Painel cumulativo não gerado porque o 'instrumento_final' está vazio.\n")
 }
