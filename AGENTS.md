@@ -14,11 +14,11 @@
 
 **Unidade:** AMCs do Nordeste (~700)
 
-**Metodologia:** 24 regressões (4 especificações × 3 tratamentos × 2 outcomes)
+**Metodologia:** 24 regressões (4 especificações × 3 tratamentos × 2 outcomes) + análises de persistência histórica e testes por ano
 
 ---
 
-## 📁 Estrutura do Projeto (Reorganizada 13/05/2026)
+## 📁 Estrutura do Projeto (Atualizada 27/05/2026)
 
 ```
 Pesquisa (Ferrovias)/
@@ -30,20 +30,20 @@ Pesquisa (Ferrovias)/
 │
 ├── 01-dados/
 │   ├── brutos/               (4 arquivos: população, PIB, etc)
-│   └── processados/          (19 arquivos: bases integradas, controles)
+│   └── processados/          (25+ arquivos: bases integradas, controles, interpolados, sintéticos)
 │
 ├── 02-scripts/
 │   ├── 01-preparacao/        (9 scripts: criar bases)
 │   ├── 02-analise/           (3 scripts: 2SLS, análise IV)
 │   ├── 03-visualizacao/      (1 script: gráficos e tabelas)
-│   └── exploratoria/         (19 scripts: testes e desenvolvimento)
+│   └── exploratoria/         (24+ scripts: testes e desenvolvimento)
 │
 ├── 03-resultados/
-│   ├── csv/                  (resultados_bateria_iv_pib_pop.csv)
-│   ├── graficos/             (event_study_did.png)
+│   ├── csv/                  (resultados_bateria_iv_pib_pop.csv, first_stage_sintetica_vs_real_por_ano.csv, etc.)
+│   ├── graficos/             (event_study_did.png, heatmap_*.png)
 │   └── tabelas/              (HTML + XLSX formatados)
 │
-├── 04-documentacao/          (README, guias, dicionários)
+├── 04-documentacao/          (README, guias, dicionários, DATA_DICTIONARIES.md)
 ├── 05-geometrias/            (GeoPackage com dados espaciais)
 └── 06-anexos/                (histórico, logs, conversas)
 ```
@@ -115,16 +115,20 @@ base <- read.csv("01-dados/processados/base_completa_integrada.csv")
 - `densidade_real_YYYY` - Densidade: km de ferrovia / 1000 km²
 
 ### **Instrumentos (Exógenos)**
-- `dist_rail_sintetica_km` - Distância até rede sintética LCP
-- `dummy_atendida_sintetica` - Dummy baseado em rede sintética
-- `densidade_sintetica` - Densidade baseada em rede sintética
+- `dist_rail_sintetica_km` - Distância até rede sintética LCP (time-invariant)
+- `dummy_atendida_sintetica` - Dummy baseado em rede sintética (time-invariant)
+- `densidade_sintetica` - Densidade baseada em rede sintética (time-invariant)
+- `dist_rail_sintetica_YYYY` - Distância até rede sintética acumulada até ano YYYY (from CRIAR_BASE_SINTETICA_CRONOLOGICA.R)
+- `dummy_atendida_sintetica_YYYY` - Dummy sintético por ano
+- `densidade_sintetica_YYYY` - Densidade sintética por ano
 
 ### **Outcomes**
 - `2003` - População no censo 2003
 - `2010` - População no censo 2010
+- Outcomes interpolados: `pib_1920`, `pib_1939`, `pib_1949`, `pib_1959`, etc. (from SPATIAL_INTERPOLACAO_OUTCOMES.R)
 
 ### **Controles**
-- `dist_sintetica_vizinhos` - Lag espacial (vizinhança Queen)
+- `dist_sintetica_vizinhos` - Lag espacial (vizinhança Queen) da distância sintética
 - Variáveis de clima, solo, rios
 - `state_abbr` - UF (para efeitos fixos)
 
@@ -149,13 +153,13 @@ base <- read.csv("01-dados/processados/base_completa_integrada.csv")
 - População 2003
 - População 2010
 
-**Total:** 4 × 3 × 2 = **24 regressões**
+**Total:** 4 × 3 × 2 = **24 regressões** (básica IV/2SLS)
 
 ---
 
 ## 📊 Interpretação dos Resultados
 
-**Arquivo:** `03-resultados/csv/resultados_bateria_iv_pib_pop.csv`
+**Arquivo Principal:** `03-resultados/csv/resultados_bateria_iv_pib_pop.csv`
 
 **Colunas-chave:**
 - `coef_ss` - Coeficiente (2º estágio)
@@ -222,6 +226,19 @@ INTERPRETAÇÃO:
 |--------|------|
 | `7_Visualizar_Resultados_IV.R` | Gráficos PNG + Tabelas HTML |
 
+### **02-scripts/exploratoria/** (Testes e desenvolvimento - NOVOS)
+
+| Script | O que faz | Tempo | Saída |
+|--------|-----------|-------|-------|
+| `SPATIAL_INTERPOLACAO_OUTCOMES.R` | Interpola valores faltantes em outcomes históricos usando IDW | 10-15 min | `01-dados/processados/outcomes/interpolados/outcomes_amc_ne_interpolado.*` |
+| `CRIAR_BASE_SINTETICA_CRONOLOGICA.R` | Cria variáveis sintéticas por ano (dist, dummy, dens, compr) | 20-30 min | `01-dados/processados/base_sintetica_cronologica.*` |
+| `FIRST_STAGE_SYNTHETIC_VS_REAL_BY_YEAR.R` | Primeira etapa: sintético → real por ano | 15-20 min | `03-resultados/csv/first_stage_sintetica_vs_real_por_ano.csv` |
+| `SECOND_STAGE_PIB_YEARLY_TREATMENT.R` | Segunda etapa: PIB ~ tratamentos sintéticos por ano | 20-25 min | `03-resultados/csv/second_stage_pib_tratamentos_sinteticos_por_ano.csv` |
+| `PERSISTENCIA_SEM_PONTAS.R` | Análise de persistência: PIB_2010 ~ tratamentos sintéticos históricos (sem pontas) | 10-15 min | `03-resultados/csv/second_stage_persistencia_pib2010_sem_pontas.csv` |
+| `testefirststage.R` | Diagnóstico do primeiro estágio (versão original) | 5 min | console output |
+| `PERSISTÊNCIA HISTÓRICA.R` | Impacto de longo prazo (versão original) | 10 min | `03-resultados/csv/second_stage_persistencia_pib2010.csv` |
+| `SElimiares.R` | Testa diferentes limiares de distância (dummy 1969) | 15 min | `03-resultados/csv/resultados_2estagio_limiares_dummy_1969.csv` |
+
 ---
 
 ## 📚 Documentação
@@ -234,6 +251,7 @@ INTERPRETAÇÃO:
 | `04-documentacao/README_BASES_DADOS.md` | Detalhes das bases | 10 min |
 | `04-documentacao/README_BATERIA_TESTES_IV.md` | Econometria | 15 min |
 | `04-documentacao/INDICE_COMPLETO.md` | Referência | 20 min |
+| `04-documentacao/DATA_DICTIONARIES.md` | Dicionário completo das variáveis | 15 min |
 
 ---
 
@@ -247,6 +265,10 @@ fixest         # regressões IV (2SLS)
 readxl         # Excel
 broom          # limpar outputs de modelos
 purrr          # functional programming
+spdep          # lag espacial
+gstat          # interpolação IDW (novos scripts)
+viridis        # paletas de cores para mapas
+patchwork      # combinar gráficos
 ```
 
 ### **Metodologia Estatística**
@@ -305,17 +327,72 @@ y_outcome ~ y_endógena_predito + controles
 └─ tabelas/ (HTML, XLSX)
 ```
 
+**Novos fluxos de dados:**
+
+*Interpolacão de Outcomes:*
+```
+outcomes_amc_wide.csv
+        ↓
+SPATIAL_INTERPOLACAO_OUTCOMES.R
+        ↓
+outcomes/outcomes_amc_ne_interpolado.*
+```
+
+*Variáveis Sintéticas por Ano:*
+```
+Rotas_LCP_OD_Real.gpkg
+        ↓
+CRIAR_BASE_SINTETICA_CRONOLOGICA.R
+        ↓
+base_sintetica_cronologica.*
+```
+
+*Análise de Primeiro Estágio por Ano:*
+```
+base_completa_integrada.* + base_sintetica_cronologica.*
+        ↓
+FIRST_STAGE_SYNTHETIC_VS_REAL_BY_YEAR.R
+        ↓
+first_stage_sintetica_vs_real_por_ano.csv
+```
+
+*Análise de Segundo Estágio por Ano:*
+```
+outcomes/outcomes_amc_ne_interpolado.* + base_sintetica_cronologica.*
+        ↓
+SECOND_STAGE_PIB_YEARLY_TREATMENT.R
+        ↓
+second_stage_pib_tratamentos_sinteticos_por_ano.csv
+```
+
+*Análise de Persistência (Sem Pontas):*
+```
+outcomes/outcomes_amc_ne_interpolado.* + base_sintetica_cronologica.* + amcs_geometria.rds
+        ↓
+PERSISTENCIA_SEM_PONTAS.R
+        ↓
+second_stage_persistencia_pib2010_sem_pontas.csv
+```
+
 ---
 
 ## 💡 Próximos Passos Sugeridos
 
-1. **Executar Quick Start** → Resultados preliminares (30 min)
-2. **Revisar Force do Instrumento** → Garantir F > 10
-3. **Análise de Robustez** → Testar especificações alternativas
-4. **Heterogeneidade Espacial** → Impactos por região
-5. **Event Study** → Impacto temporal de inaugurações ferroviárias
-6. **Mecanismos** → Canais de transmissão (comércio, migração)
-7. **Externalidades Espaciais** → Spillovers para vizinhos
+### **CURTO PRAZO (Baseado em Replication Package)**
+1. **Adicionar polinômio espacial** → Controlar gradientes (GUIA §5.2)
+2. **Testar instrumento fake** → Validar exogeneidade (GUIA §8)
+3. **Compilar F-stats em tabela** → Transparência (GUIA §7.2)
+4. **Rodar replication.R** → Benchmark (GUIA §1)
+
+### **MÉDIO PRAZO**
+5. **Análise de Robustez** → Especificações alternativas
+6. **Event Study** → Impacto temporal de inaugurações (seu projeto pode inovar!)
+7. **Spillovers espaciais** → Externalidades (você já tem vizinhos_esp!)
+
+### **LONGO PRAZO**
+8. **Heterogeneidade Espacial** → Impactos por região
+9. **Mecanismos** → Canais de transmissão (comércio, migração)
+10. **Integração PIB sectorial** → Seu projeto é mais rico que replication!
 
 ---
 
@@ -351,13 +428,78 @@ A rede sintética (LCP) deve ter F > 10 para ser considerada forte. Se F < 5, os
 
 ---
 
-## 📝 Última Atualização
+## 📚 Análise de Replication Package (14 maio 2026)
 
-- **Data:** 13 maio 2026
-- **Status:** ✅ Projeto reorganizado em estrutura clara
-- **Versão:** 2.0 (estrutura de pastas atualizada)
-- **Próxima revisão:** Após primeira bateria de análises
+**Benchmark encontrado:** "Old But Gold: Colonial Roads and Persistence of Agglomeration in Brazil" (Journal of Urban Economics)
+
+**Compatibilidade:** ALTA ✅
+- Mesmo método IV/2SLS
+- Mesmo software fixest
+- Múltiplas amostras (seu projeto melhor: 4 vs. 2)
+- PIB como outcome (seu projeto mais rico)
+
+**Documentação gerada (4 arquivos):**
+1. `RELATORIO_REPLICATION_PACKAGE.md` (20 min) - Visão geral
+2. `GUIA_PRATICO_INTEGRACAO.md` (60 min) - Implementação passo-a-passo
+3. `TABELA_COMPARATIVA.md` (10 min) - Quick reference
+4. `INDICE_REPLICATION_PACKAGE.md` (5 min) - Navigation
+
+**Localização dados:** `C:\Users\André Elias\Documents\replication-package`
+
+**Recomendações:**
+- Implementar melhorias (8-12h): polinômio espacial, fake IV, F-stats
+- Seu projeto está metodologicamente correto!
+- Tempo bem investido: validação + publicabilidade
 
 ---
 
-**Para iniciar:** Abra `README.md` ou execute `QUICK_START_BATERIA_IV.R`
+## 📝 Última Atualização
+
+- **Data:** 27 maio 2026
+- **Status:** ✅ Projeto sólido + Novas análises de interpolação, variáveis sintéticas por ano e persistência
+- **Versão:** 2.2 (expansão de análises temporais)
+- **Próxima revisão:** Após validação dos novos scripts (1-2 semanas)
+
+---
+
+## 📖 Dicionário de Dados
+
+Ver arquivo completo em: `04-documentacao/DATA_DICTIONARIES.md`
+
+Resumo das principais bases:
+
+### **base_completa_integrada.***
+- Variáveis principais para análise IV/2SLS tradicional
+- ~1700 colunas incluindo distâncias, dummies, densidades reais e sintéticas (time-invariant)
+- Outcomes: população 2003, 2010
+- Controles: clima, solo, rios, estado
+
+### **outcomes_amc_ne_interpolado.* (NOVO)**
+- PIB e outros outcomes interpolados para anos históricos (1920-2010)
+- Inclui variáveis como: pib_1920, pib_1939, pib_1949, pib_1959, pibi_*, pibag_*, pibse_*, pibg_*
+- Valores faltantes preenchidos usando interpolação inversa da distância ponderada (IDW)
+- Base para análises de PIB ao longo do tempo
+
+### **base_sintetica_cronologica.* (NOVO)**
+- Variáveis sintéticas por ano de inauguração (1858-2003)
+- Para cada ano: dist_rail_sintetica_YYYY, dummy_atendida_sintetica_YYYY, densidade_sintetica_YYYY, comprimento_sintetico_YYYY
+- Permite analisar o efeito instrumental ao longo do tempo
+- Criada a partir de Rotas_LCP_OD_Real.gpkg
+
+### **first_stage_sintetica_vs_real_por_ano.csv (NOVO)**
+- Resultados da primeira etapa: real_Y ~ sintético + controles | estado
+- Mostra F-statistic para cada ano e tratamento (distância, dummy, densidade)
+- Indica em quais anos o instrumento sintético é forte o suficiente
+
+### **second_stage_pib_tratamentos_sinteticos_por_ano.csv (NOVO)**
+- Resultados da segunda etapa: PIB_Y ~ tratamento sintético_Y + controles | estado
+- Efeitos dos tratamentos sintéticos anuais no PIB do mesmo ano
+- Disponível para dummy e densidade
+
+### **second_stage_persistencia_pib2010_sem_pontas.csv (NOVO)**
+- Análise de persistência: log(pib_2010) ~ tratamento sintético_Y + controles | estado
+- Para cada ano Y, mostra o efeito histórico do tratamento sintético no PIB de 2010
+- Remove AMCs das pontas (como nas análises SELIMIARES.R)
+- Permite ver se efeitos históricos de ferrovias persistem até 2010
+
+---

@@ -1,7 +1,7 @@
-╔════════════════════════════════════════════════════════════════════════════╗
+╔══════════════════════════════════════════════════════════════════════════════╗
 ║            PESQUISA SOBRE IMPACTO DE FERROVIAS NO NORDESTE                 ║
 ║                     ESTRUTURA VISUAL DO PROJETO                            ║
-╚════════════════════════════════════════════════════════════════════════════╝
+╚══════════════════════════════════════════════════════════════════════════════╝
 
 
 📦 RAIZ DO PROJETO (Pesquisa (Ferrovias)/)
@@ -43,9 +43,20 @@
 │     ├─ [Dados históricos e dicionário]
 │     ├─ base_distancias_historicas_anual.csv
 │     ├─ base_completa_data_dictionary.csv
-│     └─ df_econometria_final_R.csv
-│
-│     [NOTA: Estes são OUTPUTS dos scripts de preparação]
+│     ├─ df_econometria_final_R.csv
+│     │
+│     ├─ [NOVAS BASES INTERPOLADAS E SINTÉTICAS]
+│     │  ├─ outcomes/                     ← Resultados de interpolação
+│     │  │  ├─ interpolados/
+│     │  │  │  ├─ outcomes_amc_ne_interpolado.csv  ← PIB e outcomes históricos interpolados (IDW)
+│     │  │  │  └─ outcomes_amc_ne_interpolado.rds  ← Versão RDS (rápida)
+│     │  │  └─ outcomes_amc_wide.*               ← Outcomes originais (wide format)
+│     │  │
+│     │  └─ base_sintetica_cronologica.*       ← Variáveis sintéticas por ano
+│     │     ├─ base_sintetica_cronologica.csv  ← Dist, dummy, dens, compr por ano
+│     │     └─ base_sintetica_cronologica.rds  ← Versão RDS (rápida)
+│     │
+│     └─ [NOTA: Estes são OUTPUTS dos scripts de preparação e interpolação]
 │
 │
 ├─ 02-SCRIPTS/ (Organize por tipo de análise)
@@ -96,45 +107,74 @@
 │  │  [TEMPO: 5 minutos]
 │  │
 │  │
-│  └─ exploratoria/     [Testes, desenvolvimento, EDA]
+│  └─ exploratoria/     [Testes, desenvolvimento, EDA - ATUALIZADO]
 │     │
-│     ├─ API opentopography01.R
-│     ├─ IV_Analise_Completa_SemMar.R
-│     ├─ LCP_Sintetica_Real_OD.R
-│     ├─ base_iv_sf.R
-│     ├─ 01_controles_clima.R
-│     ├─ 02_controles_solo.R
-│     ├─ 03_controles_rios.R
-│     └─ ... (outros scripts experimentais)
-│
-│     [NOTA: Scripts de desenvolvimento. Não precisa executar]
-│
-│
+│     ├─ [INTERPOLAÇÃO E VARIÁVEIS TEMPORAIS]
+│     │  ├─ SPATIAL_INTERPOLACAO_OUTCOMES.R        ← Interpola outcomes faltantes (IDW)
+│     │  ├─ CRIAR_BASE_SINTETICA_CRONOLOGICA.R     ← Cria variáveis sintéticas por ano
+│     │  └─ FIRST_STAGE_SYNTHETIC_VS_REAL_BY_YEAR.R← Primeira etapa: sintético → real por ano
+│  │
+│  │
+│  │  ├─ [SEGUNDA ETAPA E PERSISTÊNCIA]
+│  │  ├─ SECOND_STAGE_PIB_YEARLY_TREATMENT.R   ← Segunda etapa: PIB ~ tratamentos sintéticos/ano
+│  │  ├─ PERSISTENCIA_SEM_PONTAS.R             ← Persistência histórica: PIB_2010 ~ tratamentos históricos
+│  │  └─ testefirststage.R                     ← Diagnóstico do primeiro estágio (original)
+│  │
+│  │
+│  │  ├─ [ANÁLISES ORIGINAIS]
+│  │  ├─ PERSISTÊNCIA HISTÓRICA.R              ← Impacto de longo prazo (versão original)
+│  │  ├─ SElimiares.R                             ← Testa diferentes limiares de distância (dummy 1969)
+│  │  ├─ API opentopography01.R
+│  │  ├─ 01_controles_clima.R
+│  │  ├─ 02_controles_solo.R
+│  │  ├─ 03_controles_rios.R
+│  │  ├─ base_iv_sf.R
+│  │  ├─ IV_Analise_Completa_SemMar.R
+│  │  ├─ LCP_Sintetica_Real_OD.R
+│  │  ├─ Dados pesquisa.R
+│  │  ├─ First stage.R
+│  │  ├─ Second stage.R
+│  │  ├─ Inland Hubs03.R
+│  │  ├─ LCP04.R
+│  │  ├─ LCPtest.R
+│  │  ├─ calculo distan.R
+│  │  ├─ Calculo distância ferrovias.R
+│  │  ├─ Raster de custo (Ferrovias)02.R
+│  │  ├─ Rastercusto.R
+│  │  ├─ REDE FERROVIÁRIA SINTÉTICA (LCP) COM PARES O-D REAIS.R
+│  │  └─ ... (scripts experimentais)
+│  │
+│  │  [NOTA: Scripts de desenvolvimento e novas análises. Execute conforme necessidade]
+│  │
+│  │
 ├─ 03-RESULTADOS/ (Outputs das análises)
 │
 │  ├─ csv/
-│  │  └─ resultados_bateria_iv_pib_pop.csv ⭐ PRINCIPAL
-│  │     │
-│  │     Colunas-chave:
-│  │     ├─ coef_ss        Coeficiente (2º estágio)
-│  │     ├─ p_value        Significância estatística
-│  │     ├─ f_stat         Força do instrumento (>10 = bom)
-│  │     ├─ especificacao  Qual amostra foi usada
-│  │     ├─ tratamento     Qual variável endógena
-│  │     └─ outcome        População 2003 ou 2010
-│  │
+│  │  ├─ resultados_bateria_iv_pib_pop.csv ⭐ PRINCIPAL (IV/2SLS tradicional)
+│  │  │     │
+│  │  │     Colunas-chave:
+│  │  │     ├─ coef_ss        Coeficiente (2º estágio)
+│  │  │     ├─ p_value        Significância estatística
+│  │  │     ├─ f_stat         Força do instrumento (>10 = bom)
+│  │  │     ├─ especificacao  Qual amostra foi usada
+│  │  │     ├─ tratamento     Qual variável endógena
+│  │  │     └─ outcome        População 2003 ou 2010
+│  │  │
+│  │  ├─ [NOVOS RESULTADOS POR ANO]
+│  │  ├─ first_stage_sintetica_vs_real_por_ano.csv      ← Primeira etapa: sintético → real por ano (F-stat por ano)
+│  │  ├─ second_stage_pib_tratamentos_sinteticos_por_ano.csv  ← Segunda etapa: PIB ~ tratamentos sintéticos/ano
+│  │  ├─ second_stage_persistencia_pib2010_sem_pontas.csv ← Persistência histórica (sem pontas)
+│  │  └─ Outros resultados específicos...
 │  │
 │  ├─ graficos/
-│  │  └─ event_study_did.png
-│  │     (mais gráficos serão gerados por 7_Visualizar_Resultados_IV.R)
-│  │
+│  │  ├─ event_study_did.png
+│  │  └─ heatmap_*.png                    ← Mapas de calor da interpolação IDW (novos)
 │  │
 │  └─ tabelas/
 │     ├─ Tabela1_PrimeirosEstagios.html
 │     ├─ Tabela2_ResultadosPrincipais.html
 │     ├─ Tabela3_Robustez.html
 │     └─ Resultados_Regressoes_Ferrovias.xlsx
-│
 │
 ├─ 04-DOCUMENTACAO/ (Leia quando tiver dúvidas)
 │
@@ -152,12 +192,15 @@
 │  ├─ 📖 Dicionário de Dados Projeto Ferrovi.txt
 │  │     └─ Lista de TODAS as variáveis
 │  │
+│  ├─ 📖 DATA_DICTIONARIES.md               ← NOVO: Dicionário completo das variáveis
+│  │     └─ Descrição detalhada de todas as variáveis do projeto
+│  │
 │  └─ ... (guias, checklists, etc)
 │
 │
 ├─ 05-GEOMETRIAS/ (Dados geoespaciais)
 │
-│  ├─ ferrovias_cronologicas.gpkg
+│  ├─ ferrovas_cronologicas.gpkg
 │  │  └─ Rede ferroviária real com datas de construção
 │  │
 │  ├─ Variavel_Instrumental_LCP_Ferroviario.gpkg
@@ -172,7 +215,7 @@
 │
 │
 └─ 06-ANEXOS/ (Histórico, logs, conversas)
-
+   │
    ├─ conversation-export*.md
    │  └─ Histórico de conversas
    │
@@ -181,69 +224,4 @@
    └─ download_log.txt
 
 
-════════════════════════════════════════════════════════════════════════════
-
-🎯 COMO COMEÇAR - FLUXO VISUAL
-
-   [1. Ler README.md]
-              ↓
-   [2. Verificar dados em 01-dados/processados/]
-              ↓
-   [3. Executar QUICK_START_BATERIA_IV.R]
-              ↓
-   [4. Ver resultados em 03-resultados/csv/]
-              ↓
-   [5. Gerar gráficos com 7_Visualizar_Resultados_IV.R]
-
-
-════════════════════════════════════════════════════════════════════════════
-
-📊 VARIÁVEIS PRINCIPAIS (Para Referência Rápida)
-
-   TRATAMENTOS (Variáveis Endógenas):
-   ├─ dist_rail_real_YYYY       (km até ferrovia)
-   ├─ dummy_atendida_real_YYYY  (1 se ≤25km)
-   └─ densidade_real_YYYY       (km de ferrovia / 1000km²)
-
-   INSTRUMENTOS (Exógenos):
-   ├─ dist_rail_sintetica_km
-   ├─ dummy_atendida_sintetica
-   └─ densidade_sintetica
-
-   OUTCOMES (Resultados):
-   ├─ 2003  (população censo 2003)
-   └─ 2010  (população censo 2010)
-
-   CONTROLES:
-   ├─ clima (temperatura, precipitação, etc)
-   ├─ solo (tipo, fertilidade, etc)
-   ├─ rios (proximidade, largura, etc)
-   └─ state_abbr (estado - para efeitos fixos)
-
-
-════════════════════════════════════════════════════════════════════════════
-
-⏱️ TEMPOS DE EXECUÇÃO (Estimativas)
-
-   Preparar dados (0_MASTER_*.R)        → 20-30 min
-   Rodar análise rápida (QUICK_START)   → 30-40 min
-   Rodar análise completa (6_Bateria)   → 15 min
-   Gerar gráficos (7_Visualizar)        → 5 min
-
-   TOTAL (do zero):                     → ~60-90 min
-
-
-════════════════════════════════════════════════════════════════════════════
-
-✅ CHECKLIST RÁPIDO
-
-   [ ] README.md lido?
-   [ ] Arquivo INDEX.md consultado para atalhos?
-   [ ] base_completa_integrada.csv existe em 01-dados/processados/?
-   [ ] Pronto para executar QUICK_START_BATERIA_IV.R?
-
-
-════════════════════════════════════════════════════════════════════════════
-Última atualização: 13 maio 2026
-Status: ✅ Projeto completamente reorganizado e pronto para uso
-════════════════════════════════════════════════════════════════════════════
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════

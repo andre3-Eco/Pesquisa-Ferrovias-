@@ -5,3 +5,7 @@
 .DS_Store
 .quarto
 .positai
+cost_raster_ferrovias_ne_1880_1920_90m.tif
+01_dados_historicos
+02_dados_espaciais
+ambiente_trabalho_completo.RData
