@@ -1,0 +1,5 @@
+treatment_year,treatment_type,escopo,het_var,het_type,coefficient,p_value,f_stat,n_obs,r2
+1950,dummy,populacao,distancia_ao_porto_mais_proximo (padronizada),coastal_distance,3050.4772574346534,0.6694000980303568,1.7170126135034196e-51,588,0.09112034816729331
+1950,densidade,populacao,distancia_ao_porto_mais_proximo (padronizada),coastal_distance,-34.777539167620034,0.9755310229034247,1.6167768085818722e-28,588,0.2436170097203484
+1950,dummy,populacao,litoral (dist < 75km),coastal_distance,6647.373252178698,0.3052958455512986,1.6663907073479988e-39,588,0.08091560898586403
+1950,densidade,populacao,litoral (dist < 75km),coastal_distance,721.7055852983063,0.17215091508184766,4.70767399467611e-23,588,0.1926590218323676

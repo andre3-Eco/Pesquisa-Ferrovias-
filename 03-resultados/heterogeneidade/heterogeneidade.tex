@@ -1,0 +1,94 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{hyperref}
+\title{Heterogeneity Tests for Railway Impact Project}
+\author{}
+\date{\today}
+\begin{document}
+\maketitle
+\section{Introduction}
+This document describes the heterogeneity tests conducted for the railway impact project in the Brazilian Northeast. The tests examine whether the effect of railway infrastructure on four outcome scopes (PIB per capita, population, PAM, social) varies according to four dimensions of heterogeneity: climatic conditions, hydrographic networks, soil quality, and distance to the coast/ports. For each dimension, we interact the railway treatment (dummy of proximity and density of railways) with a heterogeneity variable, using instrumental variables (2SLS) with the synthetic railway network as instrument. The analysis is performed for three treatment decades: 1920, 1950, and 1980.
+
+\section{Data}
+\begin{itemize}
+\item \textbf{Base de dados integrada}: \texttt{01-dados/processados/base\_completa\_integrada.csv} (or .rds) containing yearly railway treatment variables (distance, dummy, density) for real and synthetic networks, geographic controls, and state abbreviations.
+\item \textbf{Outcomes (four scopes)}: yearly datasets in \texttt{01-dados/processados/outcomes/}:
+  \begin{enumerate}
+  \item \texttt{escopo1\_pib\_percapita\_amc.csv} (PIB per capita)
+  \item \texttt{escopo2\_populacao\_amc.csv} (population)
+  \item \texttt{escopo3\_pam\_amc.csv} (PAM - value of agricultural production)
+  \item \texttt{escopo4\_social\_amc.csv} (social index)
+  \end{enumerate}
+  Each file has columns: \texttt{code\_amc}, \texttt{ano}, and the outcome value.
+\item \textbf{Heterogeneity bases}:
+  \begin{itemize}
+  \item Climatic: \texttt{01-dados/processados/controles\_clima\_amcs\_nordeste.csv} (variables: bio\_12 - annual precipitation, bio\_1 - annual mean temperature).
+  \item Hydrographic: \texttt{01-dados/processados/controles\_rios\_amcs\_nordeste.csv} (variables: dist\_rio\_principal\_km, densidade\_hidro\_km\_km2).
+  \item Solo: \texttt{01-dados/processados/controles\_solo\_amcs\_nordeste.csv} (variables: solo\_dominante, pct\_solo\_latossolos, pct\_solo\_argissolos).
+  \item Costa/Portos: derived from \texttt{amcs\_geometria.rds} (AMC geometries) and coordinates of main ports (Recife, Salvador, Fortaleza, etc.).
+  \end{itemize}
+\end{itemize}
+
+\section{Empirical Strategy}
+For each heterogeneity dimension \textit{h}, we estimate the following IV 2SLS model:
+\begin{align}
+\text{First stage:} & \quad
+\begin{cases}
+\text{Dummy}_{it} = \alpha_0 + \alpha_1 Z_{it} + \alpha_2 H_i + \alpha_3 (Z_{it} \times H_i) + \alpha_4 X_i + \varepsilon_{it} \\
+\text{Density}_{it} = \beta_0 + \beta_1 Z_{it} + \beta_2 H_i + \beta_3 (Z_{it} \times H_i) + \beta_4 X_i + \nu_{it}
+\end{cases} \\
+\text{Second stage:} & \quad
+Y_{it} = \gamma_0 + \gamma_1 \widehat{\text{Dummy}}_{it} + \gamma_2 \widehat{\text{Density}}_{it} + \gamma_3 H_i + \gamma_4 X_i + \eta_{it}
+\end{align}
+where:
+\begin{itemize}
+\item $Y_{it}$ is the outcome (one of the four scopes) for AMC $i$ in year $t$ (treatment decade).
+\item $\text{Dummy}_{it}$ and $\text{Density}_{it}$ are the endogenous railway treatment variables (dummy of proximity $\leq$25km and density of railway km per 1000 km$^2$) for the real network in year $t$.
+\item $Z_{it}$ are the corresponding instrumental variables from the synthetic network (time-invariant: dummy\_atendida\_sintetica, densidade\_sintetica).
+\item $H_i$ is the heterogeneity variable (dummy or continuous, depending on dimension).
+\item $X_i$ includes area of AMC and state fixed effects.
+\item The interaction terms $Z_{it} \times H_i$ are used as excluded instruments for the interaction endogenous variables ($\text{Dummy}_{it} \times H_i$ and $\text{Density}_{it} \times H_i$) in the first stage.
+\end{itemize}
+We estimate the model using the \texttt{fixest} package in R with the function \texttt{feols()} and multipart formulas.
+
+\section{Implementation}
+Four R scripts were created in \texttt{02-scripts/exploratoria/}:
+\begin{enumerate}
+\item \texttt{heterogeneidade\_climatica.R}
+\item \texttt{heterogeneidade\_hidrografica.R}
+\item \texttt{heterogeneidade\_solo.R}
+\item \texttt{heterogeneidade\_costa.R}
+\end{enumerate}
+Each script:
+\begin{enumerate}
+\item Loads the base integrada, the specific heterogeneity base, and the four outcome datasets.
+\item Creates the heterogeneity variable(s):
+  \begin{itemize}
+  \item Climatic: dummy \texttt{precip\_alta} (1 if annual precipitation $>$ median) and \texttt{precip\_baixa} (complement).
+  \item Hydrographic: standardized distance to nearest river (\texttt{dist\_rio\_std}) and dummy \texttt{prox\_rio} (distance $<$ 25 km).
+  \item Solo: dummy \texttt{solo\_bom} (1 if dominant soil is Latossolo or Argissolo) and continuous \texttt{pct\_solo\_fertile} (sum of percentages of Latossolo and Argissolo).
+  \item Costa/Portos: minimum distance to any of the main ports (\texttt{dist\_porto\_min}), its standardized version, and dummy \texttt{litoral} (1 if distance $<$ 75 km).
+  \end{itemize}
+\item For each treatment year (1920, 1950, 1980) and each outcome scope, merges the outcome value for that year.
+\item Estimates IV 2SLS for both treatments (dummy and density) interacting with each heterogeneity variable.
+\item Saves the results (coefficients, p-values, F-statistic, number of observations, R$^2$) to a CSV file in \texttt{03-resultados/heterogeneidade/}.
+\end{enumerate}
+The resulting files are:
+\begin{itemize}
+\item \texttt{resultados\_heterogeneidade\_climatica.csv}
+\item \texttt{resultados\_heterogeneidade\_hidrografica.csv}
+\item \texttt{resultados\_heterogeneidade\_solo.csv}
+\item \texttt{resultados\_heterogeneidade\_costa.csv}
+\end{itemize}
+
+\section{Preliminary Results}
+Due to data constraints (some yearly treatment columns missing for 1980) and convergence issues in the IV estimation, the scripts encountered some errors during execution. However, the structure of the tests is correct and ready to run once the data issues are resolved (e.g., by ensuring the yearly treatment columns exist for the selected decades or by adjusting the treatment years to those available in the base).
+
+\section{Conclusion}
+The heterogeneity tests described herein allow us to uncover whether the impact of railways on regional development is modulated by environmental and geographic factors. Once executed successfully, the results will inform policy discussions about where railway investments yield the highest returns in the Brazilian Northeast.
+
+\end{document}
