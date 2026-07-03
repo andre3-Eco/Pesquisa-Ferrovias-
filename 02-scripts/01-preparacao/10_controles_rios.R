@@ -1,4 +1,5 @@
 # ==============================================================================
+#  Etapa 06.3
 #  CONTROLES HIDROGRÁFICOS POR AMC — Rede de Rios ANA (BHO)
 #  Projeto: Ferrovias Nordeste
 #  Saída:   controles_rios_amcs_nordeste.csv / .rds
@@ -24,7 +25,6 @@ SAIDA_RDS    <- file.path(DIR_PROJETO, "controles_rios_amcs_nordeste.rds")
 CRS_UTM <- 31984
 
 # 3. AMCs do Nordeste (via geobr) ----------------------------------------------
-cat("Carregando AMCs do Nordeste...\n")
 
 amcs_nordeste <- read_comparable_areas(start_year = 1970, end_year = 2010) |>
   filter(substr(list_code_muni_2010, 1, 1) == "2") |>
@@ -35,7 +35,6 @@ amcs_nordeste <- read_comparable_areas(start_year = 1970, end_year = 2010) |>
 cat("  AMCs carregadas:", nrow(amcs_nordeste), "\n")
 
 # 4. Rede Hidrográfica ANA (BHO) -----------------------------------------------
-cat("Carregando rede hidrográfica (ANA)...\n")
 
 rios_raw <- st_read(RIOS_SHP, quiet = TRUE)
 
@@ -65,7 +64,6 @@ cat("  Distribuição por nível:\n")
 print(count(st_drop_geometry(rios), nivel_rio))
 
 # 6. Reprojetar e Recortar para o Nordeste ------------------------------------
-cat("Reprojetando e recortando para o bbox do Nordeste...\n")
 
 bbox_ne <- st_bbox(amcs_nordeste)
 
@@ -76,8 +74,6 @@ rios_utm <- rios |>
 cat("  Feições após recorte:", nrow(rios_utm), "\n")
 
 # 7. Distância do Centroide de Cada AMC ao Rio Mais Próximo -------------------
-cat("Calculando distâncias ao rio mais próximo...\n")
-cat("  (Pode levar alguns minutos)\n")
 
 centroides <- st_centroid(amcs_nordeste)
 
@@ -98,8 +94,7 @@ dist_df <- tibble(
 
 cat("  Distâncias calculadas.\n")
 
-# 8. Interseção Rios × AMCs (comprimentos e contagens) ------------------------
-cat("Executando interseção rios × AMCs...\n")
+# 8. Interseção Rios × AMCs ------------------------
 
 sf_use_s2(FALSE)
 
@@ -114,7 +109,6 @@ sf_use_s2(TRUE)
 cat("  Segmentos resultantes:", nrow(rios_in_amcs), "\n")
 
 # 9. Estatísticas por AMC ------------------------------------------------------
-cat("Calculando estatísticas hidrográficas por AMC...\n")
 
 area_amc_km2 <- tibble(
   code_amc     = amcs_nordeste$code_amc,
@@ -145,7 +139,6 @@ stats_rios <- stats_rios |>
   select(-area_amc_km2)
 
 # 10. Consolidar base final ----------------------------------------------------
-cat("Consolidando base...\n")
 
 controles_rios <- area_amc_km2 |>
   left_join(dist_df,    by = "code_amc") |>
@@ -205,21 +198,20 @@ cat("  Salvo em:", SAIDA_CSV, "\n")
 cat("  Salvo em:", SAIDA_RDS, "\n")
 
 # 13. Dicionário das variáveis -------------------------------------------------
-cat("\n=== DICIONÁRIO DE VARIÁVEIS ===\n")
-cat("area_amc_km2          : Área total da AMC (km²)\n")
-cat("dist_rio_km           : Distância do centroide ao rio mais próximo (km)\n")
-cat("dist_rio_principal_km : Distância do centroide ao rio principal mais próximo (km)\n")
-cat("comp_total_rios_km    : Comprimento total de rios dentro da AMC (km)\n")
-cat("comp_rios_principais_km: Comprimento de rios principais dentro da AMC (km)\n")
-cat("pct_comp_principal    : % do comprimento total que é de rios principais\n")
-cat("comp_maior_rio_km     : Comprimento do maior segmento de rio na AMC (km)\n")
-cat("densidade_hidro_km_km2: Densidade hidrográfica (km de rio / km² de área)\n")
-cat("n_rios_distintos      : Nº de rios com nome diferente na AMC\n")
-cat("n_segmentos_rios      : Nº total de segmentos hidrográficos na AMC\n")
-cat("otto_min              : Menor código Otto da AMC (menor = rio mais importante)\n")
-cat("\nNota: A hierarquia Otto classifica rios em:\n")
-cat("  principal  (≤ 7 dígitos): grandes rios/bacias\n")
-cat("  medio      (8–9 dígitos): rios de porte médio\n")
-cat("  tributario (≥ 10 dígitos): pequenos cursos\n")
-cat("\nNota para regressão: dist_rio_km e densidade_hidro_km_km2 são os controles\n")
-cat("mais diretos para capturar transporte hidroviário alternativo às ferrovias.\n")
+# area_amc_km2          : Área total da AMC (km²)
+# dist_rio_km           : Distância do centroide ao rio mais próximo (km)
+# dist_rio_principal_km : Distância do centroide ao rio principal mais próximo (km)\n
+# comp_total_rios_km    : Comprimento total de rios dentro da AMC (km)\n
+# comp_rios_principais_km: Comprimento de rios principais dentro da AMC (km)\n
+# pct_comp_principal    : % do comprimento total que é de rios principais\n
+# comp_maior_rio_km     : Comprimento do maior segmento de rio na AMC (km)\n
+# densidade_hidro_km_km2: Densidade hidrográfica (km de rio / km² de área)
+# n_rios_distintos      : Nº de rios com nome diferente na AMC
+# n_segmentos_rios      : Nº total de segmentos hidrográficos na AMC
+# otto_min              : Menor código Otto da AMC (menor = rio mais importante
+# Nota: A hierarquia Otto classifica rios em:
+# principal  (≤ 7 dígitos): grandes rios/bacias
+# medio      (8–9 dígitos): rios de porte médio
+# tributario (≥ 10 dígitos): pequenos cursos
+# Nota para regressão: dist_rio_km e densidade_hidro_km_km2 são os controles
+# mais diretos para capturar transporte hidroviário alternativo às ferrovias.

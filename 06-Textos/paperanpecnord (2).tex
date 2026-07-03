@@ -1,0 +1,698 @@
+
+\documentclass[12pt,a4paper]{article}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{newtxtext,newtxmath}
+\usepackage[brazilian,english]{babel}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{placeins}
+\usepackage{booktabs}
+\usepackage[font=footnotesize,labelfont=bf]{caption}
+\usepackage{tabularray}
+\UseTblrLibrary{booktabs}
+\usepackage{array}
+\usepackage{siunitx}
+\sisetup{detect-all, input-symbols = ()}
+\usepackage{enumitem}
+\usepackage{indentfirst}
+\usepackage{titlesec}
+\usepackage{natbib}
+\usepackage[hidelinks]{hyperref}
+
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0pt}
+\renewcommand{\baselinestretch}{1.0}
+\setlist[itemize]{leftmargin=1.25cm,itemsep=0pt,topsep=2pt}
+\setlist[enumerate]{leftmargin=1.25cm,itemsep=0pt,topsep=2pt}
+\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
+\setlength{\floatsep}{6pt plus 2pt minus 2pt}
+\setlength{\intextsep}{6pt plus 2pt minus 2pt}
+\setlength{\abovecaptionskip}{3pt}
+\setlength{\belowcaptionskip}{2pt}
+\captionsetup[table]{skip=3pt}
+\captionsetup[figure]{skip=3pt}
+\setlength{\aboverulesep}{0.25ex}
+\setlength{\belowrulesep}{0.25ex}
+\titleformat{\section}{\normalfont\bfseries\normalsize}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalfont\bfseries\normalsize}{\thesubsection.}{0.5em}{}
+\titlespacing*{\section}{0pt}{12pt}{6pt}
+\titlespacing*{\subsection}{0pt}{10pt}{4pt}
+
+\newcommand{\titulo}{Motores a Vapor no Sertão: Infraestrutura de Transporte e Adoção Tecnológica de Longo Prazo no Nordeste Brasileiro (1870--2010)}
+\newcommand{\area}{Área de interesse: Área 1 -- Economia Regional}
+\newcommand{\palavraschave}{Ferrovias; Nordeste; desenvolvimento regional; adoção tecnológica; dependência de trajetória}
+\newcommand{\keywords}{Railways; Northeast Brazil; regional development; technology adoption; path dependence}
+\newcommand{\jel}{O14; O18; N76; R11}
+
+\begin{document}
+\selectlanguage{brazilian}
+
+\begin{titlepage}
+\thispagestyle{empty}
+\begin{center}
+\textbf{\area}
+
+\vspace{1.2cm}
+
+{\bfseries\titulo\par}
+\end{center}
+
+\vspace{1.2cm}
+
+\noindent\textbf{Autor 1}\par
+\noindent Nome completo: André Elias Lopes\par
+\noindent Título acadêmico: Mestrando\par
+\noindent Afiliação institucional: PIMES - Universidade Federal de Pernambuco (UFPE)\par
+\noindent Endereço eletrônico: andre.elias@ufpe.com\par
+\noindent Telefone: 87-9 9197 5842\par
+
+
+\vspace{0.8cm}
+
+\noindent\textbf{Autor 2}\par
+\noindent Nome completo: Diego Firmino Costa da Silva\par
+\noindent Título acadêmico: Doutorado\par
+\noindent Afiliação institucional: Departamento de Economia -- UFRPE e PIMES--UFPE\par
+\noindent Endereço eletrônico: diego.firmino@ufrpe.br\par
+\noindent Telefone: 81-9 8228 7013\par
+
+
+\vfill
+\begin{center}
+\today
+\end{center}
+\end{titlepage}
+
+\newpage
+\setcounter{page}{1}
+\thispagestyle{plain}
+
+\begin{center}
+\textbf{\area}
+
+\vspace{0.8cm}
+
+{\bfseries\titulo\par}
+\end{center}
+
+\vspace{0.5cm}
+
+\noindent\textbf{Resumo}\par
+\noindent Este artigo estima o efeito de longo prazo da exposição ferroviária histórica sobre desenvolvimento econômico, dinâmica populacional, produção agrícola e indicadores sociais nos municípios do Nordeste brasileiro. O método combina modelos de variáveis instrumentais em dois estágios com um instrumento de caminho de menor custo (Least Cost Path, LCP), construído a partir de relevo, declividade e barreiras naturais, para enfrentar a seleção espacial da malha ferroviária. Os dados reúnem Áreas Mínimas Comparáveis, malha ferroviária histórica, traçado sintético por LCP, Censos Demográficos, Contas Regionais, Produção Agrícola Municipal, Atlas do Desenvolvimento Humano e controles geográficos, climáticos, hidrográficos e pedológicos. A especificação principal inclui efeitos fixos de estado, lag espacial e blocos sucessivos de controles naturais, comparando localidades historicamente expostas e não expostas à infraestrutura ferroviária. Os resultados mostram efeitos positivos e persistentes sobre PIB total, PIB per capita, população, urbanização, valor da produção agrícola, IDHM e renda per capita, além de redução da pobreza, com evidência adicional de que os efeitos são mais fortes em limiares de exposição próximos à malha ferroviária.
+
+\vspace{0.3cm}
+\noindent\textbf{Palavras-chave:} \palavraschave.
+
+\vspace{0.5cm}
+\selectlanguage{english}
+\noindent\textbf{Abstract}\par
+\noindent This paper estimates the long-run effect of historical railway exposure on economic development, population dynamics, agricultural production, and social indicators in municipalities of Northeast Brazil. The method combines two-stage instrumental-variable models with a Least Cost Path (LCP) instrument, built from terrain, slope, and natural barriers, to address spatial selection in railway placement. The data combine Minimum Comparable Areas, the historical railway network, the synthetic LCP, Demographic Censuses, Regional Accounts, Municipal Agricultural Production, the Human Development Atlas, and geographic, climatic, hydrographic, and soil controls. The main specification includes state fixed effects, spatial lags, and successive blocks of natural controls, comparing localities historically exposed and not exposed to railway infrastructure. The results show positive and persistent effects on total GDP, GDP per capita, population, urbanization, agricultural production value, MHDI, and income per capita, as well as poverty reduction, with additional evidence that the effects are stronger at exposure thresholds close to the railway network.
+
+\vspace{0.3cm}
+\noindent\textbf{Keywords:} \keywords.
+
+\vspace{0.3cm}
+\noindent\textbf{JEL Classification:} \jel.
+\selectlanguage{brazilian}
+
+\newpage
+
+\section{Introdução}
+
+A trajetória histórica do Nordeste brasileiro combina isolamento físico, semiárido, desigualdade fundiária, baixa densidade industrial e forte dependência de intervenções públicas contra os efeitos das secas. Essa trajetória criou uma economia regional distinta do eixo cafeeiro e industrial do Sul-Sudeste.
+
+A partir desse contexto, mobilizamos a literatura internacional de infraestrutura como fonte de mecanismos úteis, mas evitamos aplicá-la de forma mecânica. Estudos para os Estados Unidos, Índia, Europa e África mostram que ferrovias podem alterar preços, urbanização, produtividade, valor da terra e distribuição espacial da população \citep{fogel1964,donaldsonhornbeck2016,donaldson2018,berger2017,jedwab2016}. No Nordeste, esses mecanismos operam em um ambiente específico. A ferrovia não conectava apenas mercados consolidados. Em muitos casos, ela ligava portos, capitais e sertões marcados por baixa densidade produtiva e alta vulnerabilidade climática. Por isso, o problema empírico é entender como uma infraestrutura de transporte transforma regiões onde a restrição inicial não é apenas distância, mas também isolamento, baixa capitalização e fragilidade institucional.
+
+Enfatizamos o caso nordestino justamente porque sua experiência ferroviária difere da trajetória cafeeira do Sudeste, onde os trilhos frequentemente acompanharam uma economia exportadora rentável e articulada à concentração industrial posterior \citep{cano1977,summerhill2003}. No Nordeste, a malha teve funções mais heterogêneas: escoamento de açúcar, algodão, couro e outros produtos primários, mas também integração do interior, resposta a secas, ocupação territorial e ligação entre portos e sertões \citep{crockatt1893,summerhill2003}. Essa combinação permite perguntar se ferrovias geraram efeitos persistentes mesmo fora de uma fronteira exportadora em rápida expansão.
+
+Argumentamos que esses efeitos potenciais não se limitavam à redução de fretes. Em áreas de baixa capitalização, mercados fragmentados e infraestrutura terrestre precária, os trilhos podiam facilitar a entrada de máquinas, motores, caldeiras, equipamentos têxteis, peças metálicas e outros bens de capital, além de favorecer oficinas, armazéns, pequenas fábricas e centralidades urbanas \citep{graham1968,eisenberg1974}. Assim, a ferrovia operava como infraestrutura de transporte e como canal de adoção tecnológica, com possíveis efeitos de aprendizado local, transbordamentos e persistência espacial por custos afundados e aglomeração, como sugerem \citet{berger2017} e \citet{jedwab2016}.
+
+Perguntamos se o acesso histórico à ferrovia alterou a trajetória econômica e social de longo prazo dos municípios nordestinos e trabalhamos com a hipótese de que sim. Municípios expostos à malha ferroviária teriam acumulado vantagens associadas à entrada de bens de capital, à ampliação de mercados, à formação de centralidades urbanas, à atração de população e à maior capacidade de conexão com redes regionais. A singularidade nordestina é crucial para essa hipótese. A região combinava clima adverso, relevo, distância, pobreza e fragilidade institucional. Esses fatores elevavam o custo de coordenação econômica. Também limitavam a ação privada. Se efeitos persistentes aparecem nesse contexto, a evidência é forte. Ela sugere que ferrovias podem operar como choques estruturantes mesmo fora dos grandes polos industriais ou agrícolas mais dinâmicos.
+
+Oferecemos três contribuições. Primeiro, deslocamos o foco da experiência ferroviária brasileira do Sudeste cafeeiro para o Nordeste e mostramos como uma região periférica agrega novas evidências à literatura internacional sobre infraestrutura e desenvolvimento de longo prazo. Segundo, propomos interpretar a ferrovia como uma ``máquina de aço'': uma infraestrutura que transportava produtos, mas também máquinas, técnicos, peças, rotinas produtivas e possibilidades de mecanização. Terceiro, combinamos uma base municipal harmonizada em Áreas Mínimas Comparáveis, seguindo a preocupação de \citet{ehrl2017} com mudanças de fronteiras municipais no Brasil, com instrumentos baseados em caminho de menor custo (Least Cost Path, LCP), explorando variação topográfica na probabilidade de exposição ferroviária para enfrentar a seleção espacial da infraestrutura.
+
+Essa estratégia é necessária porque ferrovias não foram distribuídas aleatoriamente, e a literatura mostra que estimativas ingênuas podem confundir efeito causal da infraestrutura com seleção prévia de localidades economicamente promissoras \citep{banerjee2012,donaldson2018,berger2017,jedwab2016}. Linhas podiam ser direcionadas a áreas politicamente relevantes, economicamente promissoras ou estrategicamente úteis. Para lidar com esse problema, utilizamos rotas sintéticas por LCP, construídas a partir de restrições físicas de relevo e barreiras naturais, como fonte de variação para predizer a exposição ferroviária real. A identificação se apoia na ideia de que, condicional a efeitos fixos de estado, lag espacial e controles geográficos, climáticos, hidrográficos e pedológicos, a proximidade ao LCP afeta os resultados contemporâneos principalmente por meio da infraestrutura efetivamente construída. Os resultados indicam efeitos positivos e persistentes sobre PIB total, PIB per capita, população, urbanização, produção agrícola, IDHM e renda per capita, além de redução da pobreza; os exercícios por limiares sugerem que esses efeitos são mais fortes nas áreas próximas à malha ferroviária. Organizamos esses resultados em atividade econômica, população, produção agrícola e indicadores sociais, permitindo avaliar múltiplos canais de persistência.
+
+Organizamos o restante do artigo da seguinte maneira. A seção seguinte apresenta o contexto histórico das ferrovias e do isolamento regional no Nordeste. A terceira seção discute a literatura sobre infraestrutura, desenvolvimento de longo prazo e identificação causal em estudos históricos. A quarta descreve os dados, a harmonização territorial e a construção das variáveis. A quinta apresenta a estratégia empírica. A sexta reporta os resultados. A sétima discute os mecanismos por trás dos resultados, conectando-os à literatura e ao contexto histórico regional. A última seção conclui com implicações para a pesquisa sobre infraestrutura, tecnologia, desigualdades regionais persistentes, aponta limitações pertinentes a esse estudo e direções futuras de pesquisas.
+
+\section{Contexto histórico: ferrovias e isolamento regional}
+
+Durante boa parte do século XIX, o interior nordestino era marcado por isolamento físico, baixa densidade de infraestrutura e forte dependência de rotas tradicionais. A interpretação clássica de \citet{furtado1959} sobre a formação econômica brasileira ajuda a situar esse problema: a economia nordestina foi estruturada a partir de ciclos primário-exportadores, forte concentração fundiária e baixa capacidade de diversificação produtiva. No caso açucareiro, \citet{eisenberg1974} mostra que a modernização em Pernambuco ocorreu de forma limitada e socialmente conservadora, com permanência de estruturas agrárias e dificuldades de difusão tecnológica para além de núcleos específicos. Assim, o atraso relativo da região não pode ser explicado apenas por clima ou distância, mas por uma combinação de especialização produtiva, concentração de recursos e infraestrutura insuficiente.
+
+A precariedade dos transportes era parte central desse equilíbrio. Antes da expansão ferroviária, o transporte por animais, carros de boi e navegação costeira ou fluvial limitada impunha custos elevados à integração regional. Distâncias relativamente curtas podiam se transformar em barreiras econômicas relevantes quando atravessavam áreas semiáridas, serras, rios intermitentes e estradas de baixa manutenção. \citet{graham1968}, ao discutir a modernização brasileira no século XIX, destaca que ferrovias, portos e capitais estrangeiros foram elementos decisivos da inserção do Brasil em circuitos comerciais modernos, mas essa modernização ocorreu de maneira desigual no território. No Nordeste, a infraestrutura avançou de forma seletiva, frequentemente conectando enclaves produtivos, capitais e portos, sem integrar plenamente o interior.
+
+A introdução das ferrovias representou uma ruptura tecnológica porque alterou a escala possível do transporte terrestre. A ferrovia ampliou a capacidade de carga, reduziu o tempo de viagem e permitiu transportar mercadorias volumosas a custos menores. Em regiões exportadoras, essa transformação facilitou o escoamento de produtos primários. No Nordeste, porém, a função ferroviária foi mais heterogênea. Algumas linhas serviram a zonas açucareiras e algodoeiras; outras foram vinculadas a políticas públicas de combate aos efeitos das secas; outras conectaram capitais, portos e cidades intermediárias. A literatura histórica sobre as ferrovias brasileiras mostra que a expansão da malha combinou interesses privados, garantias públicas e objetivos políticos, de modo que sua localização não pode ser interpretada como resultado puramente técnico ou puramente mercantil \citep{crockatt1893,summerhill2003}.
+
+A especificidade nordestina aparece com força nas chamadas ferrovias da seca. Em momentos de crise climática, especialmente após a Grande Seca de 1877--1879, obras públicas foram mobilizadas para empregar populações atingidas, reduzir tensões sociais e melhorar o abastecimento do interior. \citet{buckley2000} mostra que a política de combate às secas no Brasil combinou engenharia, tecnocracia e disputas políticas, transformando infraestrutura em instrumento de administração territorial. Nesse contexto, a ferrovia não era apenas um investimento econômico; era também uma resposta estatal à vulnerabilidade do semiárido. Essa origem diferencia parte da malha nordestina das ferrovias construídas exclusivamente para atender áreas de alta rentabilidade agrícola.
+
+A Grande Seca também teve importância demográfica e institucional. A crise expôs a fragilidade das rotas de abastecimento, intensificou migrações e reforçou a percepção de que o isolamento do sertão era um problema nacional. Obras de açudes, estradas e ferrovias passaram a ser defendidas como formas de fixar população, organizar mercados e reduzir a dependência de socorros emergenciais. A análise de \citet{buckley2000} é importante porque mostra que a infraestrutura no Nordeste foi frequentemente justificada por uma linguagem de salvação técnica e integração nacional. Para nossa análise, isso significa que a localização ferroviária pode refletir tanto potencial econômico quanto objetivos de política pública, engenharia e resposta a choques climáticos.
+
+Além das ferrovias da seca, a malha nordestina também esteve ligada a circuitos produtivos específicos. Em Pernambuco, Alagoas e Paraíba, por exemplo, ferrovias e ramais conectavam zonas açucareiras a portos e centros de beneficiamento. A interpretação de \citet{eisenberg1974} sobre a agroindústria açucareira ajuda a compreender por que a ferrovia podia reforçar estruturas produtivas existentes, mas também abrir espaço para novas atividades urbanas e industriais. No caso do algodão e de produtos do interior, a ferrovia ampliava a capacidade de escoamento e reduzia perdas associadas a transporte lento e irregular. Portanto, a mesma infraestrutura podia servir simultaneamente a exportação, abastecimento interno, circulação de pessoas e entrada de equipamentos.
+
+O efeito econômico da ferrovia não se restringia ao ponto de chegada dos trilhos. Estações criavam centralidades. Em torno delas surgiam armazéns, feiras, hotéis, oficinas, casas comerciais, serviços de transporte complementar e atividades administrativas. A estação também modificava expectativas: empreendedores podiam antecipar acesso mais barato a insumos, consumidores e equipamentos. A literatura de história urbana e regional sugere que esses pontos de conexão frequentemente se transformavam em nós de coordenação econômica, concentrando crédito, informação e serviços. Em uma região de baixa densidade infraestrutural, essa centralidade podia diferenciar fortemente municípios relativamente próximos.
+
+O mecanismo tecnológico é especialmente relevante. Máquinas a vapor, descaroçadores, prensas, caldeiras, equipamentos de beneficiamento e instrumentos industriais exigiam transporte seguro e capacidade de carga. Sem ferrovia, a instalação de equipamentos pesados no interior era inviável ou excessivamente cara. Com ferrovia, a fronteira de possibilidade produtiva se expandia. Essa interpretação complementa \citet{summerhill2005}: além de gerar poupança social por reduzir custos de transporte, a ferrovia podia alterar o conjunto de tecnologias acessíveis às localidades conectadas. O ganho, portanto, não era apenas transportar o mesmo produto mais barato, mas permitir que novas combinações produtivas se tornassem possíveis.
+
+Essa leitura também dialoga com a literatura de concentração regional no Brasil. \citet{cano1977} argumenta que a industrialização brasileira se concentrou em São Paulo por meio de encadeamentos produtivos, mercado interno, infraestrutura e acumulação de capital. O Nordeste, em contraste, enfrentou maior dificuldade para converter economias primárias em industrialização diversificada. Ao estudar ferrovias nordestinas, perguntamos se conexões históricas criaram vantagens locais dentro de uma região periférica, ainda que insuficientes para reverter a concentração nacional. Em outras palavras, a ferrovia pode não ter eliminado o atraso relativo do Nordeste, mas pode ter reorganizado sua hierarquia interna.
+
+\section{Literatura relacionada}
+
+A literatura sobre infraestrutura de transportes e desenvolvimento econômico pode ser organizada em seis vertentes complementares. Antes dos estudos ferroviários propriamente ditos, uma primeira base teórica vem da geografia econômica, da economia urbana e da literatura de retornos crescentes. \citet{myrdal1957} e \citet{hirschman1958} enfatizam que choques iniciais podem gerar processos cumulativos de concentração espacial por meio de encadeamentos produtivos, economias externas e efeitos de retroalimentação. Em chave mais formal, \citet{krugman1991} e \citet{fujita1999} mostram que custos de transporte, economias de escala e mobilidade de fatores podem produzir aglomeração e trajetórias regionais persistentes. Essa base é importante porque permite interpretar a ferrovia não apenas como redução de frete, mas como uma mudança na estrutura espacial de incentivos, capaz de deslocar firmas, trabalhadores e serviços para localidades conectadas.
+
+A segunda vertente é formada pelos estudos clássicos de história econômica que mensuram os ganhos de transporte a partir do conceito de poupança social. \citet{fogel1964}, ao estudar as ferrovias norte-americanas, mostrou que a importância de uma infraestrutura não deve ser inferida apenas pela sua presença física, mas pelo custo contrafactual de realizar o mesmo transporte por modais alternativos. Sua contribuição foi metodológica: transformar a discussão sobre ferrovias em um problema mensurável de custos, excedente e produtividade. Embora suas estimativas tenham relativizado a ideia de que as ferrovias eram indispensáveis para o crescimento dos Estados Unidos, o trabalho inaugurou uma agenda quantitativa que permanece central para estudos históricos de infraestrutura.
+
+No caso brasileiro, \citet{summerhill2003} e \citet{summerhill2005} aplicaram essa tradição ao analisar o papel das ferrovias entre o Império e a Primeira República. \citet{summerhill2003} enfatiza a relação entre governo, capital estrangeiro, garantias públicas e desenho institucional do setor ferroviário. O autor mostra que a expansão da malha não pode ser entendida apenas como resposta eficiente ao mercado, pois esteve vinculada a concessões, subsídios, riscos políticos e problemas de coordenação. Já \citet{summerhill2005} estima ganhos expressivos de poupança social para o Brasil, indicando que, em uma economia com alternativas de transporte precárias, as ferrovias podiam gerar benefícios proporcionalmente elevados. Para nossa análise, esses trabalhos demonstram que os efeitos ferroviários dependem do contexto institucional e das alternativas disponíveis, ponto especialmente relevante para o Nordeste. Essa ressalva dialoga com a interpretação histórica de \citet{furtado1959}, \citet{cano1977} e \citet{eisenberg1974}, segundo a qual a formação econômica regional brasileira foi marcada por especialização produtiva, concentração de renda, modernização desigual e forte assimetria entre o Nordeste e o eixo Sul-Sudeste. Também se aproxima de \citet{buckley2000}, para quem políticas técnicas e obras de infraestrutura no Nordeste frequentemente foram justificadas por uma linguagem de combate à seca, salvação regional e integração nacional. Assim, a ferrovia nordestina deve ser lida em um ambiente institucional distinto daquele da expansão cafeeira: ela combinou objetivos comerciais, políticos, territoriais e humanitários.
+
+Uma terceira vertente desloca o foco dos ganhos agregados para os efeitos locais e persistentes da infraestrutura. \citet{banerjee2012} analisam a experiência chinesa e exploram a proximidade a redes históricas de transporte para estimar impactos sobre renda e crescimento. O estudo mostra que infraestrutura pode afetar a localização da atividade econômica, mas também evidencia que os efeitos nem sempre são uniformes nem automaticamente transformadores. \citet{donaldson2018}, ao estudar as ferrovias coloniais na Índia, oferece uma das contribuições mais influentes dessa literatura. O autor combina dados de comércio, preços agrícolas e expansão ferroviária para mostrar que a redução de custos de transporte integrou mercados, diminuiu dispersões de preços e elevou renda real agrícola. A importância desse estudo está em conectar infraestrutura, comércio inter-regional e bem-estar por meio de um arcabouço quantitativo explícito.
+
+A evidência de \citet{jedwab2016} é útil porque trata de regiões pobres e periféricas. Os autores mostram que ferrovias coloniais em Gana e em outros países africanos tiveram efeitos permanentes sobre a distribuição espacial da atividade. A lógica é simples. A infraestrutura inicial coordenou cidades, serviços públicos e atividade econômica. Esse mecanismo conversa diretamente com o Nordeste. No sertão e em áreas interiores, uma estação podia concentrar feira, armazém, oficina, repartição pública e serviços. Assim, a teoria da persistência espacial ganha uma tradução empírica concreta: centralidades criadas pela ferrovia podiam sobreviver ao declínio do modal.
+
+\citet{berger2017} ajudam a qualificar essa leitura. Ao estudar a Suécia, os autores mostram que cidades conectadas cresceram mais e mantiveram vantagens no longo prazo. Mas eles também distinguem crescimento local de reorganização espacial. Essa distinção é central para o Nordeste. Uma linha férrea podia elevar o dinamismo de uma localidade conectada. Ao mesmo tempo, podia deslocar feiras, serviços e população de municípios próximos. Por isso, os resultados devem ser lidos como efeitos locais de exposição ferroviária e também como possível reorganização da rede urbana regional.
+
+Uma quarta vertente enfatiza acesso a mercados e efeitos de transbordamento. \citet{donaldsonhornbeck2016} mostram que ferrovias alteram a conexão de cada localidade com todos os demais mercados. \citet{reddingturner2015} sintetizam esse ponto: transporte afeta resultados locais por custos bilaterais, acessibilidade, realocação de atividade, valorização de ativos e efeitos de equilíbrio geral. No Nordeste, essa teoria precisa ser lida a partir da geografia regional. Uma AMC conectada não ganhava apenas uma redução de frete. Ela podia ganhar acesso a portos, capitais, feiras, fornecedores e mercados de trabalho. Também podia transmitir efeitos para áreas vizinhas. Por isso, distância, atendimento e densidade ferroviária são aproximações para diferentes formas de acesso regional. Estudos de rodovias, como \citet{baumsnow2007}, \citet{durantonturner2012} e \citet{michaels2008}, reforçam que os efeitos dependem da posição inicial de cada localidade na rede.
+
+Estudos recentes também mostram que os efeitos dependem do setor analisado. \citet{hornung2015}, ao examinar a expansão ferroviária na Prússia, destaca efeitos sobre crescimento urbano e difusão industrial. \citet{atack2010}, para os Estados Unidos, investigam como a chegada das ferrovias afetou urbanização e estrutura econômica local. Esses trabalhos são importantes porque deslocam a análise de um único outcome agregado para múltiplas margens de transformação: população, urbanização, indústria, produtividade e composição setorial. Essa abordagem inspira nossa estratégia de observar não apenas PIB ou população, mas também indicadores de tecnologia, estrutura produtiva e complexidade.
+
+A quinta vertente trata de tecnologia incorporada e capacidades produtivas. Esse é o mecanismo mais próximo deste artigo. Transporte não reduz apenas frete. Ele permite circular máquinas, técnicos, peças e insumos complementares. \citet{rosenberg1982} mostra que a mudança tecnológica depende de aprendizado e adaptação. \citet{david1985} e \citet{arthur1994} mostram que escolhas iniciais podem gerar dependência de trajetória. \citet{hirschman1958} destaca encadeamentos para frente e para trás. No Nordeste, esses conceitos têm conteúdo empírico claro. A chegada de caldeiras, motores, descaroçadores, máquinas têxteis ou equipamentos de beneficiamento podia mudar a fronteira tecnológica local. Também podia criar oficinas, trabalhadores especializados, manutenção e redes comerciais. Nossa contribuição é aplicar esse raciocínio a uma região onde o isolamento físico era uma barreira direta à mecanização.
+
+A sexta vertente é metodológica e trata da identificação causal em contextos históricos. Como ferrovias são frequentemente construídas em direção a áreas promissoras, estimativas simples podem superestimar seus efeitos. \citet{banerjee2012}, \citet{donaldson2018}, \citet{berger2017} e \citet{jedwab2016} usam diferentes estratégias para lidar com seleção: distância a redes planejadas, rotas históricas, caminho de menor custo (Least Cost Path, LCP), controles geográficos, efeitos fixos e testes placebo. A lógica comum é buscar variação na exposição à infraestrutura que não seja determinada diretamente pelo potencial econômico local. No presente artigo, essa preocupação motiva o uso de LCPs baseados em topografia e conexão entre nós relevantes.
+
+A literatura de diferenças em diferenças também passou por revisões importantes. \citet{callaway2021} mostram que, em contextos de tratamento escalonado, estimadores tradicionais de efeitos fixos podem produzir combinações inadequadas de grupos tratados e controles quando há heterogeneidade dos efeitos. Como a expansão ferroviária ocorreu em ondas, essa advertência é central. O uso de estimadores por grupo e tempo permite comparar municípios tratados em determinada coorte com unidades ainda não tratadas ou nunca tratadas, preservando interpretação causal mais clara. Assim, a contribuição metodológica recente não é apenas técnica: ela altera a forma de interpretar efeitos históricos de infraestrutura.
+
+Por fim, a literatura sobre harmonização territorial é indispensável para aplicações brasileiras. \citet{ehrl2017} mostra que a fragmentação municipal brasileira torna inadequadas comparações diretas entre municípios ao longo do tempo. A construção de Áreas Mínimas Comparáveis permite compatibilizar dados históricos e contemporâneos, reduzindo erros de mensuração. Essa contribuição é fundamental para nossa análise porque o tratamento ferroviário é histórico, enquanto muitos outcomes são observados em anos recentes. Sem harmonização, parte do efeito estimado poderia refletir mudanças administrativas, e não transformação econômica.
+
+\section{Dados e construção das variáveis}
+
+Para estimar os impactos de longo prazo da infraestrutura ferroviária, consolidamos uma base de dados espaciais, históricas e socioeconômicas para a região Nordeste do Brasil. Construímos essa base integrando informações do Instituto Brasileiro de Geografia e Estatística (IBGE), bases do Ipea, mapas ferroviários históricos georreferenciados, dados administrativos contemporâneos, indicadores sociais do Atlas do Desenvolvimento Humano e dados de elevação topográfica. O objetivo é produzir uma estrutura de dados compatível com a análise de longo prazo, conectando a exposição histórica à ferrovia a resultados observados principalmente no período contemporâneo.
+
+A base final tem natureza transversal, com variáveis históricas de tratamento e instrumentos espaciais associados a resultados recentes de desenvolvimento. A escolha por uma estratégia em corte transversal harmonizado decorre de duas limitações típicas de estudos históricos brasileiros. Primeiro, nem todas as variáveis socioeconômicas de interesse estão disponíveis de forma comparável desde o século XIX. Segundo, as fronteiras municipais mudaram intensamente ao longo do tempo. Por isso, a etapa de construção dos dados é parte central da identificação empírica: sem compatibilização espacial, a comparação entre localidades tratadas e não tratadas poderia refletir mudanças administrativas, e não efeitos persistentes da infraestrutura.
+
+
+A unidade espacial adotada são as Áreas Mínimas Comparáveis (AMCs). O uso de municípios contemporâneos como unidade de análise em estudos de longo prazo no Brasil é problemático devido à intensa fragmentação e emancipação municipal ocorrida ao longo do século XX. Municípios foram criados, divididos, agregados ou reclassificados, o que torna inadequado comparar diretamente limites atuais com eventos históricos de infraestrutura.
+
+Para garantir que as fronteiras geográficas permaneçam consistentes entre o período de construção das ferrovias e a observação dos resultados contemporâneos, os municípios foram agregados em AMCs de 1970, conforme a malha compatibilizada pelo IBGE/Ipea. A escolha de 1970 é substantiva: esse ano corresponde ao período de consolidação da rede ferroviária brasileira e ao início de seu declínio histórico relativo, antes da predominância plena do modal rodoviário. Essa agregação permite associar corretamente a exposição ferroviária histórica a resultados de população, renda, produção e bem-estar observados em anos recentes. O conjunto de dados final engloba as AMCs constituintes da região Nordeste, preservando comparabilidade espacial entre estados e reduzindo erros de mensuração causados por mudanças de limites municipais.
+
+A adoção das AMCs também facilita a integração entre camadas vetoriais e bases tabulares. Traçados ferroviários, rotas sintéticas de menor custo, distâncias geográficas e controles ambientais são calculados ou agregados para a mesma unidade espacial. Desse modo, cada observação corresponde a uma área territorial estável, com tratamento histórico, instrumento espacial, controles geográficos e outcomes contemporâneos.
+
+
+A variável de tratamento principal mede a exposição histórica à ferrovia. Em sua forma principal, usamos uma variável indicadora igual a 1 quando o centroide do AMC estava a menos de 25 quilômetros da rede ferroviária observada em 1970, e 0 caso contrário. A escolha da malha de 1970 segue a mesma lógica da unidade espacial: trata-se do momento em que a rede já estava consolidada historicamente e imediatamente anterior ao seu declínio relativo mais acentuado. Construímos o traçado da malha a partir da digitalização e do georreferenciamento de mapas ferroviários históricos, relatórios de concessão e bases vetoriais auditadas. Esse procedimento permite identificar quais polígonos de AMC os trilhos interceptaram e quais permaneceram fora da área diretamente conectada.
+
+A construção da camada ferroviária exige atenção especial porque bases contemporâneas podem misturar ferrovias efetivamente construídas, trechos abandonados, ramais privados, projetos não executados e linhas planejadas. Para reduzir esse problema, os traçados foram checados contra mapas históricos e documentos ferroviários. Trechos sem comprovação ou de natureza estritamente privada foram tratados separadamente, de modo a evitar que a variável de tratamento confunda infraestrutura pública de transporte com projetos cartográficos ou ramais industriais isolados.
+
+Para enfrentar a endogeneidade espacial da malha real, utilizamos um instrumento baseado em LCP. A ideia é construir uma ferrovia sintética via LCP que conecta pares de nós históricos de origem e destino, como portos, capitais, centros comerciais e áreas produtoras do interior, penalizando o deslocamento pela inclinação do terreno. Para isso, usamos dados de elevação topográfica obtidos na plataforma OpenTopography, a partir de Modelos Digitais de Elevação SRTM. O algoritmo seleciona rotas de menor atrito físico, isto é, trajetórias que seriam tecnicamente mais baratas sob critérios de engenharia.
+
+O instrumento final indica se a AMC está localizada na vizinhança dessa rota sintética de LCP, em raio de 25 quilômetros. A lógica é que a proximidade ao LCP prediz a probabilidade de receber ferrovia real, mas depende principalmente de condições topográficas e da posição entre nós históricos predeterminados. Essa estratégia não elimina todos os riscos de endogeneidade, mas reduz a influência de decisões políticas e econômicas locais na alocação da infraestrutura.
+
+
+A validade da estratégia de variáveis instrumentais baseia-se na construção de uma malha ferroviária puramente hipotética por LCP. Para garantir que esse traçado não reflita diretamente os determinantes econômicos locais, a malha sintética foi modelada assumindo que os custos de construção dependem exclusivamente de penalidades topográficas. O processamento espacial foi realizado em ambiente R e seguiu quatro etapas principais.
+
+Primeiro, foram obtidos Modelos Digitais de Elevação (DEM) de alta resolução para toda a região Nordeste do Brasil a partir da API do \textit{OpenTopography}, utilizando dados SRTM (\textit{Shuttle Radar Topography Mission}). Esse raster inicial fornece a altitude, em metros, de cada célula da malha territorial, permitindo representar a superfície física enfrentada por uma ferrovia hipotética.
+
+Segundo, convertemos o raster de elevação em um raster de declividade (\textit{slope}). A inclinação é uma restrição fundamental para a engenharia ferroviária, sobretudo para locomotivas do século XIX e início do século XX, que perdiam tração rapidamente em terrenos íngremes. Calculamos a declividade a partir da diferença altimétrica entre cada célula e suas células vizinhas, capturando a intensidade local dos aclives e declives.
+
+Terceiro, transformamos o raster de declividade em uma superfície de fricção, isto é, no raster de custo final. Seguindo a lógica da literatura de economia dos transportes e de estudos baseados em LCP, como \citet{berger2017} e \citet{donaldson2018}, aplicamos uma função de penalidade em que o custo de atravessar uma célula aumenta com sua declividade. Definimos os parâmetros principais desse processo para aproximar as restrições técnicas da época: resolução espacial de $30 \times 30$ metros; custo base $c_0$ normalizado para terrenos planos; penalidades de inclinação $(\alpha,\beta)$ que fazem o custo crescer de forma convexa com o relevo; e custo proibitivo $c_{\infty}$ para grandes rios, oceanos e lagos, forçando o algoritmo a contornar barreiras naturais relevantes.
+
+Quarto, convertemos a superfície de fricção em uma matriz de transição, representando o raster como um grafo de rede. Sobre esse grafo, aplicamos o algoritmo clássico de Dijkstra para identificar a rota contínua que minimiza o custo acumulado de construção entre nós históricos de origem e destino, tais como capitais costeiras, portos e polos produtivos no interior. Como resultado, obtemos uma geometria vetorial, em formato \textit{shapefile} ou \textit{geopackage}, que representa a ferrovia sintética definida exclusivamente por restrições naturais e topográficas.
+
+A partir dessa geometria, calculamos a distância do centroide das AMCs de 1970 até a malha sintética e construímos a variável instrumental. Como determinamos o traçado do LCP por relevo, barreiras naturais e conexão entre nós históricos, ele fornece uma fonte de variação plausivelmente exógena para a exposição ferroviária real, especialmente quando combinado com controles de clima, solo, distância ao litoral e efeitos fixos de estado.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.96\textwidth,height=0.50\textheight,keepaspectratio]{prism-uploads/Evolucao_Rede_1970.png}
+\caption{Malha ferroviária real e traçado sintético por LCP no Nordeste brasileiro}
+\label{fig:mapa_ferrovias_lcp}
+\end{figure}
+
+
+Extraímos os indicadores de desenvolvimento local contemporâneo principalmente dos Censos Demográficos, das Contas Regionais e de registros administrativos do IBGE, complementados por informações do Atlas do Desenvolvimento Humano. Agrupamos os outcomes em quatro dimensões principais.
+
+A primeira dimensão é a atividade econômica. Utilizamos o Produto Interno Bruto municipal, o PIB per capita e o Valor Adicionado Bruto total e setorial, agregados ao nível de AMC. Essas variáveis mensuram o tamanho da economia local, sua produtividade média e a composição setorial da produção. Se a ferrovia operou como vetor de tecnologia incorporada, espera-se que os efeitos sejam particularmente relevantes para atividade urbana, industrial e de serviços.
+
+A segunda dimensão é a dinâmica populacional. Consideramos população residente total, densidade populacional e taxa de urbanização. Esses indicadores permitem avaliar se a ferrovia atuou como fator de atração de pessoas, formação de mercados urbanos e consolidação de centralidades locais. A persistência de maior população ou urbanização em áreas conectadas seria consistente com a hipótese de dependência de trajetória.
+
+A terceira dimensão é a produção agrícola. Utilizamos dados da Produção Agrícola Municipal (PAM/IBGE) para mensurar o valor da produção agrícola e testar se o choque ferroviário gerou especialização ou expansão produtiva contínua. Essa dimensão é importante porque parte da literatura interpreta ferrovias como canais de escoamento primário. Comparar efeitos agrícolas e não agrícolas ajuda a distinguir o canal de exportação do canal de adoção tecnológica.
+
+A quarta dimensão reúne indicadores sociais e de bem-estar. Incluímos o Índice de Desenvolvimento Humano Municipal (IDHM), medidas de desigualdade, como o Índice de Gini, renda domiciliar per capita e proporção de indivíduos em situação de pobreza. Esses indicadores permitem investigar se eventuais ganhos econômicos associados à infraestrutura se traduziram em melhoria generalizada das condições de vida ou se ficaram concentrados em dimensões produtivas específicas.
+
+
+Para isolar o efeito da ferrovia de vantagens comparativas inerentes à geografia, incluímos um vetor de controles espaciais predeterminados. Esses controles são importantes porque características naturais e espaciais podem afetar simultaneamente o custo de construção ferroviária, a localização histórica da malha e o desenvolvimento de longo prazo. Ignorá-las poderia atribuir à ferrovia efeitos que, na verdade, decorrem de clima, água, solo, relevo ou dinamismo de municípios vizinhos.
+
+O primeiro controle destacado é o lag espacial da distância sintética, definido pela variável \textit{dist\_sintetica\_vizinhos}. Esse indicador corresponde ao valor médio da \textit{dist\_rail\_sintetica\_km} dos municípios vizinhos, considerando contiguidade do tipo Rainha. Sua inclusão é relevante porque, em modelos espaciais, o efeito de uma infraestrutura raramente fica contido dentro das fronteiras administrativas municipais. O controle captura potenciais transbordamentos: ele ajuda a distinguir se o benefício observado em uma AMC decorre de sua própria exposição ferroviária ou se reflete o dinamismo de localidades vizinhas conectadas ou próximas à ferrovia sintética.
+
+O segundo grupo de controles é climático e vem do WorldClim. Utilizam-se três variáveis bioclimáticas principais: \textit{bio\_1}, que mede a temperatura média anual; \textit{bio\_12}, que mede a precipitação anual; e \textit{bio\_15}, que mede a sazonalidade da precipitação. A temperatura média anual controla efeitos térmicos sobre produtividade agrícola, conforto humano e adequação de atividades econômicas. A precipitação anual é especialmente importante no Nordeste por capturar a disponibilidade hídrica total. A sazonalidade da precipitação mede a concentração das chuvas em determinados períodos do ano, aproximando o risco climático enfrentado pela agricultura no semiárido. Essas variáveis impedem que o modelo confunda desenvolvimento com clima favorável: sem elas, a ferrovia poderia parecer mais benéfica apenas por atravessar áreas menos áridas ou com chuvas mais regulares.
+
+O terceiro grupo é hidrográfico e é construído a partir de bases do IBGE. A variável \textit{dist\_rio\_km} mede a distância da AMC ao rio mais próximo, funcionando como indicador de isolamento em relação a fontes de água. A variável \textit{densidade\_hidro\_km\_km2} mede a extensão da rede hídrica por área, capturando a capilaridade da água no território. Historicamente, no Nordeste, rios perenes e redes hidrográficas mais densas foram vetores autônomos de povoamento, produção e circulação. Esses controles ajudam a isolar o efeito do transporte ferroviário do efeito de acesso à água.
+
+O quarto grupo refere-se à pedologia, também obtida a partir das bases de solos do IBGE. A variável \textit{pct\_solo\_latossolos} mede a participação de latossolos, solos geralmente profundos, bem drenados e associados a maior potencial produtivo em determinados contextos. A variável \textit{pct\_solo\_neossolos} mede a participação de neossolos, solos menos desenvolvidos, frequentemente rasos ou pedregosos, associados a menor produtividade agrícola. Esses controles são fundamentais porque a alocação histórica da ferrovia pode ter seguido a rentabilidade econômica esperada. Se linhas férreas foram desenhadas para atravessar áreas agrícolas mais produtivas, a ausência de controles de solo faria o modelo atribuir à ferrovia um desempenho econômico que, em parte, poderia pertencer à qualidade produtiva da terra.
+
+O quinto grupo mede acesso ao litoral e a portos. A distância euclidiana à costa controla o gradiente histórico de desenvolvimento brasileiro, fortemente concentrado em áreas litorâneas. No Nordeste, capitais, portos e zonas canavieiras costeiras tiveram vantagens históricas de mercado e infraestrutura. Controlar esse gradiente é necessário para distinguir o efeito ferroviário de diferenças prévias entre litoral e interior.
+
+\begin{table}[!htbp]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3.5pt}
+\renewcommand{\arraystretch}{0.80}
+\caption{Estrutura das principais variáveis do estudo}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.7cm}>{\raggedright\arraybackslash}p{8.9cm}}
+\toprule
+\textbf{Grupo} & \textbf{Variáveis e construção} \\
+\midrule
+Tratamento ferroviário & Dummy de AMC de 1970 com 1 para AMCs com centroide a menos de 25 km da rede ferroviaria e 0 se caso contrário. \\
+Instrumento LCP & Indicador de AMC próxima ao caminho sintético de menor custo, construído com DEM/SRTM do OpenTopography, declividade, superfície de fricção e conexão entre nós históricos de origem e destino. \\
+Atividade econômica & PIB total, PIB per capita, Valor Adicionado Bruto total e setorial, agregados ao nível de AMC a partir de bases municipais do IBGE. \\
+População e urbanização & População residente, densidade populacional e taxa de urbanização, compatibilizadas para AMCs. \\
+Produção agrícola & Valor da produção agrícola e indicadores da PAM/IBGE agregados para AMCs. \\
+Indicadores sociais & IDHM, renda domiciliar per capita, Índice de Gini e proporção de pobres, obtidos de bases censitárias e do Atlas do Desenvolvimento Humano. \\
+Controles geográficos & Lag espacial \textit{dist\_sintetica\_vizinhos}; clima WorldClim (\textit{bio\_1}, \textit{bio\_12}, \textit{bio\_15}); hidrografia IBGE (\textit{dist\_rio\_km}, \textit{densidade\_hidro\_km\_km2}); solos IBGE (\textit{pct\_solo\_latossolos}, \textit{pct\_solo\_neossolos}); distância à costa; e condições históricas iniciais. \\
+\bottomrule
+\end{tabular}
+\label{tab:estrutura_variaveis}
+\vspace{0.1cm}
+
+\begin{minipage}{0.95\textwidth}
+\scriptsize \textit{Notas:} Variáveis agregadas ou calculadas no nível de Áreas Mínimas Comparáveis para preservar consistência territorial.
+\end{minipage}
+\end{table}
+
+\section{Estratégia empírica}
+
+Nosso objetivo central é estimar o impacto de longo prazo da infraestrutura ferroviária histórica no desenvolvimento socioeconômico contemporâneo das AMCs do Nordeste brasileiro. Como organizamos os dados em corte transversal, observando resultados contemporâneos em função da exposição histórica às ferrovias, nossa estratégia empírica precisa lidar cuidadosamente com a seleção não aleatória do traçado original. A principal ameaça é que a ferrovia tenha sido construída justamente em áreas com maior potencial econômico, melhor dotação natural ou maior influência política.
+
+
+O ponto de partida é um modelo de Mínimos Quadrados Ordinários (OLS) que relaciona o status de tratamento histórico de uma AMC com seus indicadores atuais. A equação básica é:
+
+\begin{equation}
+Y_i = \alpha + \beta Ferrovia_i + \mathbf{X}_i'\gamma + \delta_s + \epsilon_i,
+\end{equation}
+
+\noindent em que $Y_i$ representa a variável de resultado de longo prazo, como logaritmo do PIB per capita, população, urbanização, IDHM ou pobreza, observada para a AMC $i$. A variável $Ferrovia_i$ é uma dummy que assume valor 1 se a rede ferroviária observada em 1970 atravessava a AMC de 1970, e 0 caso contrário. O vetor $\mathbf{X}_i$ inclui controles geográficos, climáticos, hidrográficos, pedológicos e espaciais, como lag espacial da distância sintética, variáveis WorldClim, rios e solos do IBGE, distância à costa e condições históricas iniciais. O termo $\delta_s$ representa efeitos fixos de estado, e $\epsilon_i$ é o erro.
+
+O coeficiente de interesse, $\beta$, mede o prêmio médio contemporâneo associado à presença histórica da ferrovia, condicional aos controles observáveis. No entanto, a estimação por OLS provavelmente não identifica o efeito causal. O viés de seleção surge porque o planejamento e a construção da malha ferroviária no Brasil Império e na Primeira República não ocorreram de forma aleatória. Planejadores e concessionários frequentemente direcionaram os trilhos para regiões com maior dinamismo econômico, áreas produtoras de algodão e açúcar, centros urbanos relevantes ou localidades com maior capacidade de influência política. Se planejadores alocaram a ferrovia em AMCs com características não observáveis favoráveis ao crescimento, então $E(\epsilon_i \mid Ferrovia_i) \neq 0$, gerando viés de simultaneidade, seleção ou causalidade reversa.
+
+
+Para isolar a variação exógena na alocação ferroviária, adotamos uma estratégia de variáveis instrumentais estimada por Mínimos Quadrados em Dois Estágios (2SLS). O instrumento é baseado na malha ferroviária sintética construída por LCP, em linha com a literatura de história econômica e geografia dos transportes \citep{fogel1964,donaldson2018,berger2017}. Essa malha conecta nós históricos de origem e destino, como portos, capitais e polos produtivos do interior, por rotas que minimizam custos de construção definidos exclusivamente por penalidades topográficas.
+
+% Instrumento e primeiro estágio (LaTeX)
+Definimos duas variáveis indicadoras binárias de proximidade com a ferrovia, ambas com corte em \(\mathbf{25\ km}\) a partir do centróide da AMC \(i\).
+A primeira dummy, \(\;D^{\mathrm{real}}_{i}\;\), é igual a 1 se o centróide da AMC \(i\) estiver a menos de 25 km da rede ferroviária real (e 0 caso contrário) — esta dummy é utilizada na especificação do outcome.
+A segunda dummy, \(\;Z^{\mathrm{sint}}_{i}\;\), é igual a 1 se o centróide da AMC \(i\) estiver a menos de 25 km do traçado ferroviário sintético por LCP (e 0 caso contrário) — esta dummy é usada como instrumento para a exposição exógena à ferrovia.
+
+No primeiro estágio do procedimento 2SLS estimamos
+\begin{align}
+\;D^{\mathrm{real}}_{i} &= \delta_{0} + \delta_{1}\,Z^{\mathrm{sint}}_{i} + \mathbf{X}_{i}'\theta + \delta_{s} + \mu_{i},
+\end{align}
+onde \(\mathbf{X}_{i}\) é o vetor de controles observáveis, \(\delta_{s}\) denota efeitos fixos espaciais e \(\mu_{i}\) o termo de erro.
+\noindent A intuição do primeiro estágio é que a geografia física condicionou fortemente a viabilidade da engenharia ferroviária no século XIX e no início do século XX. Rotas com menor declividade e menos barreiras naturais eram mais prováveis de receber trilhos reais, independentemente das características econômicas das AMCs intermediárias. A relevância do instrumento é avaliada pela magnitude e significância de $\delta_1$, pela estatística F do primeiro estágio e, quando apropriado, por estatísticas robustas de identificação fraca, como Kleibergen-Paap.
+
+
+No segundo estágio, substituímos a exposição ferroviária observada por sua componente prevista pelo instrumento:
+
+\begin{equation}
+Y_i = \alpha + \beta \widehat{D^{\mathrm{real}}_{i}} + \mathbf{X}_i'\gamma + \delta_s + \varepsilon_i.
+\end{equation}
+
+\noindent O coeficiente $\beta$ captura o efeito causal local da ferrovia para as AMCs em que a proximidade ao LCP influenciou a exposição à malha real. Em outras palavras, a estimativa IV identifica o efeito da infraestrutura para localidades em que condições topográficas favoráveis ao traçado induziram o tratamento, e não pelo dinamismo econômico local observado ou não observado.
+
+
+A validade da estratégia depende de duas condições. A primeira é a relevância do instrumento, isto é, $Cov(Z_i,Ferrovia_i) \neq 0$. Essa condição é testável no primeiro estágio. A segunda, mais restritiva, é a exclusão: $Cov(Z_i,\epsilon_i)=0$. A hipótese de exclusão afirma que a ferrovia sintética afeta renda, população ou indicadores sociais contemporâneos apenas ao aumentar a probabilidade de construção da ferrovia real no passado.
+
+Justificamos essa hipótese pelo fato de que construímos o LCP com um algoritmo que considera apenas relevo, declividade e barreiras naturais para conectar nós históricos distantes. O traçado, portanto, ignora características econômicas, instituições locais e poder político das AMCs intermediárias. Condicional aos controles de clima, solo, hidrografia, distância ao litoral, lag espacial e efeitos fixos de estado, a proximidade ao LCP deve afetar os outcomes apenas por meio da infraestrutura ferroviária efetivamente construída.
+
+A principal ameaça a essa hipótese está nos municípios nodais, como portos, capitais e grandes centros históricos, cuja prosperidade motivou a própria definição das rotas. Nesses casos, o LCP pode estar correlacionado com desenvolvimento por razões anteriores à ferrovia. Para mitigar esse risco, as especificações de robustez excluem capitais, pontos terminais e nós originais, concentrando a identificação nas AMCs intermediárias que receberam ou não o choque ferroviário por razões de topografia. Esse procedimento segue a lógica de estudos que exploram rotas intermediárias como fonte de variação mais plausivelmente exógena \citep{jedwab2016,berger2017}.
+
+
+Prevemos um conjunto de testes adicionais. Primeiro, estimamos modelos com diferentes medidas de tratamento: dummy de ferrovia em 1970, distância à ferrovia real, atendimento em raio de 25 km e densidade ferroviária. Segundo, restringimos a amostra a AMCs em até 200 km da malha ferroviária, reduzindo comparações entre localidades muito distintas. Terceiro, excluímos capitais, portos e pontos terminais para focar nos municípios intermediários. Quarto, comparamos especificações com e sem lag espacial da distância sintética, de modo a avaliar spillovers. Quinto, incluímos blocos sucessivos de controles climáticos, hidrográficos e pedológicos para verificar se os resultados são sensíveis a vantagens naturais pré-existentes.
+
+\section{Resultados}
+
+Nesta seção, apresentamos primeiro a validação do instrumento no primeiro estágio e, em seguida, analisamos os resultados do segundo estágio do modelo IV, usando a dummy de exposição ferroviária instrumentada pelo traçado sintético por LCP. Para facilitar a leitura, dividimos os resultados do segundo estágio em quatro escopos: atividade econômica, dinâmica populacional, produção agrícola e indicadores sociais. Em todas as tabelas, as colunas seguem a mesma sequência de especificações: efeito fixo de UF, inclusão de lag espacial, controles climáticos e especificação completa com geografia, hidrografia e solo.
+
+
+Na Tabela \ref{tab:primeiro_estagio}, apresentamos a validação empírica do primeiro estágio. A variável \textit{Dummy Sintética} mede a exposição ao traçado ferroviário hipotético por LCP e prediz positivamente a probabilidade de a ferrovia real atravessar a AMC em 1970. O coeficiente permanece positivo e relativamente estável entre as especificações, mesmo após a inclusão sequencial de lag espacial, controles climáticos, hidrografia e solos. Esse padrão sugere que características naturais observáveis ou dependência espacial não explicam sozinhas a relação entre a malha sintética e a malha real.
+
+\begin{table}[!htbp]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3.5pt}
+\renewcommand{\arraystretch}{0.80}
+\caption{Primeiro estágio: validação da dummy de tratamento}
+\label{tab:primeiro_estagio}
+\begin{tabular}{lcccc}
+\toprule
+& (1) & (2) & (3) & (4) \\
+\midrule
+Dummy sintética & \num{0.313}*** & \num{0.232}*** & \num{0.216}*** & \num{0.215}*** \\
+& (\num{0.029}) & (\num{0.037}) & (\num{0.037}) & (\num{0.037}) \\
+Observações & 1147 & 1147 & 1147 & 1146 \\
+F-Statistic (instrumento) & 114.20 & 39.13 & 34.25 & 33.73 \\
+Efeito fixo UF & Sim & Sim & Sim & Sim \\
+Lag espacial & Não & Sim & Sim & Sim \\
+Clima & Não & Não & Sim & Sim \\
+Hidrografia e solo & Não & Não & Não & Sim \\
+\bottomrule
+\end{tabular}
+\begin{minipage}{0.95\textwidth}
+\scriptsize \textit{Notas:} Erros-padrão entre parênteses. A variável dependente é a dummy de tratamento ferroviário real. *** p$<$0,01; ** p$<$0,05; * p$<$0,10.
+\end{minipage}
+\end{table}
+
+Os resultados indicam um primeiro estágio forte. Na especificação mais simples, estar no traçado sintético aumenta a probabilidade de tratamento real em 31,3 pontos percentuais. Mesmo na especificação completa, que inclui efeitos fixos de UF, lag espacial, clima, hidrografia e solo, o coeficiente permanece em 21,5 pontos percentuais. Além disso, a estatística F do instrumento fica acima dos limiares convencionais em todas as colunas, variando de 33,73 a 114,20. Isso reforça a relevância do LCP como preditor da ferrovia real e reduz a preocupação com instrumento fraco.
+
+
+A interpretação dos coeficientes parte da história regional. No Nordeste, a ferrovia não foi apenas uma tecnologia de escoamento de produtos primários. Ela reduziu o custo de entrada de bens de capital. Também conectou áreas interiores a portos, capitais e mercados de insumos. A literatura internacional ajuda a organizar os mecanismos: acesso a mercados, aglomeração, persistência e transbordamentos \citep{donaldsonhornbeck2016,donaldson2018,berger2017,jedwab2016}. A aplicação ao Nordeste exige um passo adicional. Esses mecanismos operaram em uma região com baixa conectividade inicial, forte vulnerabilidade climática e mercados urbanos esparsos.
+
+
+A Tabela \ref{tab:segundo_estagio_pib} mostra efeitos positivos e estatisticamente significativos da exposição ferroviária sobre o nível de atividade econômica. As magnitudes permanecem elevadas nas especificações com controles adicionais, indicando associação robusta entre acesso histórico à ferrovia, PIB total e PIB per capita no longo prazo.
+
+Esse resultado é consistente com a hipótese de tecnologia incorporada. Em uma região de transporte caro e instável, a ferrovia reduzia o custo de instalar máquinas, caldeiras, oficinas e equipamentos produtivos. Isso ampliava a escala possível da economia local. A evidência dialoga com \citet{atack2010} e \citet{hornung2015}, mas o caso nordestino adiciona uma dimensão específica. Aqui, o ponto de partida era uma economia de especialização primária, baixa mecanização e modernização desigual \citep{furtado1959,eisenberg1974}. Por isso, a chegada da ferrovia podia romper parcialmente o isolamento produtivo. Também podia gerar transbordamentos locais, ao criar demanda por manutenção, transporte complementar, comércio e trabalho técnico.
+
+A manutenção dos coeficientes positivos entre 2000 e 2010 reforça a ideia de dependência de trajetória. Mesmo após o declínio relativo das ferrovias frente ao modal rodoviário, localidades historicamente conectadas parecem conservar vantagens de escala, renda e produtividade média. Essa persistência é coerente com a literatura de acesso a mercados, na qual choques iniciais de transporte podem alterar a distribuição espacial da atividade por longos períodos \citep{donaldsonhornbeck2016,donaldson2018}.
+
+\begin{table}[!htbp]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3.5pt}
+\renewcommand{\arraystretch}{0.80}
+\caption{Segundo estágio: atividade econômica}
+\label{tab:segundo_estagio_pib}
+\begin{tabular}{lcccc}
+\toprule
+& (1) & (2) & (3) & (4) \\
+\midrule
+PIB Total (2000) & \num{1.077}*** & \num{1.426}*** & \num{1.339}*** & \num{1.297}*** \\
+& (\num{0.199}) & (\num{0.335}) & (\num{0.362}) & (\num{0.364}) \\
+PIB Total (2010) & \num{1.160}*** & \num{1.460}*** & \num{1.343}*** & \num{1.292}*** \\
+& (\num{0.205}) & (\num{0.341}) & (\num{0.367}) & (\num{0.368}) \\
+PIB p.c. (2000) & \num{0.411}*** & \num{0.615}*** & \num{0.620}*** & \num{0.616}*** \\
+& (\num{0.070}) & (\num{0.117}) & (\num{0.128}) & (\num{0.130}) \\
+PIB p.c. (2010) & \num{0.387}*** & \num{0.592}*** & \num{0.568}*** & \num{0.563}*** \\
+& (\num{0.068}) & (\num{0.112}) & (\num{0.120}) & (\num{0.122}) \\
+\midrule
+Observações & 1144--1147 & 1144--1147 & 1144--1147 & 1143--1146 \\
+F-Statistic (instrumento) & 152.93--155.01 & 58.98--59.80 & 50.74--51.19 & 49.70--50.22 \\
+Efeito fixo UF & Sim & Sim & Sim & Sim \\
+Lag espacial & Não & Sim & Sim & Sim \\
+Clima & Não & Não & Sim & Sim \\
+Hidrografia e solo & Não & Não & Não & Sim \\
+\bottomrule
+\end{tabular}
+\begin{minipage}{0.95\textwidth}
+\scriptsize \textit{Notas:} Erros-padrão entre parênteses. Tratamento instrumentado pela dummy sintética por LCP. Observações e estatísticas F em intervalo mínimo--máximo quando há múltiplos outcomes. *** p$<$0,01; ** p$<$0,05; * p$<$0,10.
+\end{minipage}
+\end{table}
+
+
+A Tabela \ref{tab:segundo_estagio_pop} apresenta os resultados para população e urbanização. Os coeficientes positivos para população total indicam maior concentração demográfica nas áreas historicamente conectadas. A taxa de urbanização também apresenta coeficientes positivos, especialmente nas especificações com lag espacial e controles adicionais, sugerindo que a ferrovia contribuiu para a consolidação de centralidades urbanas.
+
+Esse padrão é historicamente plausível. A estação ferroviária podia concentrar comércio, armazenagem, serviços públicos, crédito e circulação de trabalhadores. No interior nordestino, isso era decisivo. A rede urbana era esparsa e a infraestrutura era limitada. Assim, a chegada dos trilhos podia mudar a posição relativa de uma localidade. A literatura de \citet{berger2017} e \citet{jedwab2016} ajuda a interpretar essa persistência urbana. No Nordeste, porém, o mecanismo concreto passa pela estação como nó regional. Ela atraía fluxos e também irradiava efeitos para áreas vizinhas. Esse ponto dialoga com \citet{graham1968}, para quem a modernização brasileira foi territorialmente seletiva.
+
+A elevação populacional deve ser interpretada como parte do mecanismo de aglomeração. Municípios conectados podiam atrair moradores, comerciantes, técnicos e firmas, aumentando o tamanho do mercado local. Esse efeito ajuda a explicar por que os resultados econômicos da Tabela \ref{tab:segundo_estagio_pib} aparecem acompanhados de maior população: a ferrovia provavelmente operou tanto pelo lado da produtividade quanto pela formação de mercados urbanos mais densos.
+
+\begin{table}[!htbp]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3.5pt}
+\renewcommand{\arraystretch}{0.80}
+\caption{Segundo estágio: dinâmica populacional e urbanização}
+\label{tab:segundo_estagio_pop}
+\begin{tabular}{lcccc}
+\toprule
+& (1) & (2) & (3) & (4) \\
+\midrule
+Pop. Total (1991) & \num{0.567}*** & \num{0.688}*** & \num{0.605}** & \num{0.572}** \\
+& (\num{0.152}) & (\num{0.251}) & (\num{0.273}) & (\num{0.274}) \\
+Pop. Total (2000) & \num{0.637}*** & \num{0.772}*** & \num{0.690}** & \num{0.651}** \\
+& (\num{0.159}) & (\num{0.261}) & (\num{0.283}) & (\num{0.284}) \\
+Pop. Total (2010) & \num{0.773}*** & \num{0.867}*** & \num{0.774}*** & \num{0.729}** \\
+& (\num{0.166}) & (\num{0.271}) & (\num{0.294}) & (\num{0.294}) \\
+Tx. Urban. (2010) & \num{0.076}** & \num{0.189}*** & \num{0.176}*** & \num{0.181}*** \\
+& (\num{0.032}) & (\num{0.053}) & (\num{0.057}) & (\num{0.059}) \\
+\midrule
+Observações & 1143--1147 & 1143--1147 & 1143--1147 & 1142--1146 \\
+F-Statistic (instrumento) & 152.65--155.01 & 58.89--59.80 & 50.70--51.19 & 49.65--50.22 \\
+Efeito fixo UF & Sim & Sim & Sim & Sim \\
+Lag espacial & Não & Sim & Sim & Sim \\
+Clima & Não & Não & Sim & Sim \\
+Hidrografia e solo & Não & Não & Não & Sim \\
+\bottomrule
+\end{tabular}
+\begin{minipage}{0.95\textwidth}
+\scriptsize \textit{Notas:} Erros-padrão entre parênteses. Tratamento instrumentado pela dummy sintética por LCP. Observações e estatísticas F em intervalo mínimo--máximo quando há múltiplos outcomes. *** p$<$0,01; ** p$<$0,05; * p$<$0,10.
+\end{minipage}
+\end{table}
+
+
+A Tabela \ref{tab:segundo_estagio_pam} reporta os resultados para produção agrícola. Os coeficientes positivos são compatíveis com o canal de integração de mercados e escoamento produtivo, sugerindo que a ferrovia também afetou a escala da atividade agrícola municipal.
+
+Esse resultado retoma uma interpretação clássica: ferrovias reduzem custos de transporte, ampliam mercados e melhoram o acesso a insumos. Essa leitura está associada a \citet{fogel1964} e, para o Brasil, a \citet{summerhill2005}. No Nordeste, porém, o resultado agrícola não deve ser isolado. Ele aparece junto com efeitos sobre PIB, renda e população. A ferrovia escoava algodão, açúcar, couro e outros produtos. Mas também conectava áreas produtoras a centros comerciais e administrativos. Assim, o efeito agrícola pode refletir integração de mercados e transbordamentos urbanos. Feiras, armazéns, crédito e serviços de transporte tendiam a se concentrar nos pontos conectados.
+
+A queda parcial das magnitudes quando entram controles climáticos, hidrográficos e de solo indica que parte da produção agrícola está associada a vantagens naturais pré-existentes. Ainda assim, a persistência de coeficientes positivos na especificação completa sugere que a ferrovia acrescentou conectividade a essas condições naturais. Isso é importante no contexto semiárido: em áreas sujeitas a riscos climáticos, acesso a mercados, armazenagem e transporte podia reduzir custos de transação e aumentar a viabilidade econômica de atividades agrícolas.
+
+\begin{table}[!htbp]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3.5pt}
+\renewcommand{\arraystretch}{0.80}
+\caption{Segundo estágio: produção agrícola}
+\label{tab:segundo_estagio_pam}
+\begin{tabular}{lcccc}
+\toprule
+& (1) & (2) & (3) & (4) \\
+\midrule
+Val. Prod. (2000) & \num{2.040}*** & \num{2.205}*** & \num{1.923}*** & \num{1.726}*** \\
+& (\num{0.366}) & (\num{0.554}) & (\num{0.609}) & (\num{0.599}) \\
+Val. Prod. (2010) & \num{2.687}*** & \num{2.456}*** & \num{1.502}** & \num{1.244}* \\
+& (\num{0.462}) & (\num{0.655}) & (\num{0.645}) & (\num{0.635}) \\
+\midrule
+Observações & 884 & 884 & 884 & 883 \\
+F-Statistic (instrumento) & 87.17 & 36.70 & 27.43 & 25.67 \\
+Efeito fixo UF & Sim & Sim & Sim & Sim \\
+Lag espacial & Não & Sim & Sim & Sim \\
+Clima & Não & Não & Sim & Sim \\
+Hidrografia e solo & Não & Não & Não & Sim \\
+\bottomrule
+\end{tabular}
+\begin{minipage}{0.95\textwidth}
+\scriptsize \textit{Notas:} Erros-padrão entre parênteses. Tratamento instrumentado pela dummy sintética por LCP. Observações e estatísticas F em intervalo mínimo--máximo quando há múltiplos outcomes. *** p$<$0,01; ** p$<$0,05; * p$<$0,10.
+\end{minipage}
+\end{table}
+
+
+A Tabela \ref{tab:segundo_estagio_soc} resume os efeitos sobre indicadores sociais. Os resultados apontam efeitos positivos sobre IDHM e renda per capita, além de coeficiente negativo para pobreza em 2010, consistente com melhorias persistentes de bem-estar nas localidades expostas à infraestrutura ferroviária.
+
+Esses resultados sugerem que os efeitos da ferrovia não ficaram restritos à produção. A infraestrutura histórica aparece associada a capacidades locais mais amplas: maior renda, melhores condições sociais e menor pobreza. A teoria econômica aponta o canal. Choques de transporte alteram mercados de trabalho, acesso a serviços, urbanização e oportunidades produtivas \citep{donaldson2018,banerjee2012}. No Nordeste, esse canal é concreto. Municípios conectados podiam atrair repartições, escolas, comércio e serviços. Esses ativos reforçavam a centralidade local. Também geravam transbordamentos para a vizinhança. A leitura é compatível com \citet{jedwab2016}: vantagens iniciais de conectividade podem persistir por concentração de pessoas, firmas e serviços públicos.
+
+No contexto nordestino, o resultado social é substantivamente relevante porque a região foi historicamente marcada por desigualdade, concentração fundiária e baixa capacidade de diversificação produtiva \citep{furtado1959,cano1977}. O fato de os coeficientes permanecerem significativos após controles geográficos e climáticos sugere que a ferrovia não capturava apenas melhores condições naturais. Ela parece ter contribuído para uma trajetória local distinta, na qual acesso a mercados, formação urbana e acumulação de capacidades produtivas se traduziram em melhores indicadores sociais no longo prazo.
+
+\begin{table}[!htbp]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3.5pt}
+\renewcommand{\arraystretch}{0.80}
+\caption{Segundo estágio: indicadores sociais e bem-estar}
+\label{tab:segundo_estagio_soc}
+\begin{tabular}{lcccc}
+\toprule
+& (1) & (2) & (3) & (4) \\
+\midrule
+IDHM (2000) & \num{0.040}*** & \num{0.051}*** & \num{0.058}*** & \num{0.058}*** \\
+& (\num{0.009}) & (\num{0.014}) & (\num{0.016}) & (\num{0.016}) \\
+IDHM (2010) & \num{0.020}*** & \num{0.028}*** & \num{0.033}*** & \num{0.033}*** \\
+& (\num{0.007}) & (\num{0.010}) & (\num{0.011}) & (\num{0.011}) \\
+Renda p.c. (2000) & \num{0.248}*** & \num{0.463}*** & \num{0.505}*** & \num{0.490}*** \\
+& (\num{0.055}) & (\num{0.097}) & (\num{0.110}) & (\num{0.110}) \\
+Renda p.c. (2010) & \num{0.156}*** & \num{0.333}*** & \num{0.357}*** & \num{0.348}*** \\
+& (\num{0.044}) & (\num{0.074}) & (\num{0.083}) & (\num{0.084}) \\
+\% Pobres (2010) & \num{-7.865}*** & \num{-16.512}*** & \num{-18.527}*** & \num{-18.538}*** \\
+& (\num{1.791}) & (\num{3.183}) & (\num{3.682}) & (\num{3.731}) \\
+\midrule
+Observações & 1147 & 1147 & 1147 & 1146 \\
+F-Statistic (instrumento) & 155.01 & 59.80 & 51.19 & 50.22 \\
+Efeito fixo UF & Sim & Sim & Sim & Sim \\
+Lag espacial & Não & Sim & Sim & Sim \\
+Clima & Não & Não & Sim & Sim \\
+Hidrografia e solo & Não & Não & Não & Sim \\
+\bottomrule
+\end{tabular}
+\begin{minipage}{0.95\textwidth}
+\scriptsize \textit{Notas:} Erros-padrão entre parênteses. Tratamento instrumentado pela dummy sintética por LCP. Observações e estatísticas F em intervalo mínimo--máximo quando há múltiplos outcomes. *** p$<$0,01; ** p$<$0,05; * p$<$0,10.
+\end{minipage}
+\end{table}
+
+\section{Discussão: mecanismos e interpretação dos resultados}
+
+Os resultados do segundo estágio apontam efeitos positivos e persistentes sobre atividade econômica, população, produção agrícola e indicadores sociais. Essa configuração sugere que a ferrovia operou por mais de um canal. O primeiro é o acesso a tecnologia incorporada. A ferrovia reduziu o custo de transportar máquinas, caldeiras, equipamentos têxteis, ferramentas e insumos pesados. Isso ampliou o conjunto de atividades viáveis fora dos portos e das capitais. O canal é coerente com os efeitos positivos sobre PIB, PIB per capita e renda. A conexão ferroviária não deslocava apenas mercadorias. Ela também facilitava a entrada de capital físico e conhecimento técnico. A literatura de \citet{atack2010} e \citet{hornung2015} ajuda a interpretar esse mecanismo. O Nordeste adiciona o contexto: a infraestrutura chegava a áreas onde a mecanização era limitada pelo isolamento.
+
+Como teste adicional, exploramos no Apêndice A limiares alternativos de exposição ferroviária para a malha de 1969. Os resultados da Tabela \ref{tab:ap_limiares_1969} mostram que os efeitos são mais fortes e consistentes nos limiares de 10 km e 25 km: PIB, PIB per capita, população, urbanização, produção agrícola, IDHM e renda apresentam coeficientes positivos, enquanto pobreza apresenta coeficiente negativo. Quando ampliamos o raio para 50 km e, sobretudo, 100 km, as magnitudes se atenuam e alguns sinais se invertem, embora o primeiro estágio fique mais forte. Esse padrão sugere que a exposição ferroviária relevante era relativamente localizada. A infraestrutura parecia beneficiar principalmente municípios diretamente atravessados ou próximos aos pontos de acesso, enquanto limiares muito amplos passam a misturar áreas efetivamente conectadas com localidades apenas indiretamente próximas. A evidência reforça, portanto, os mecanismos de estação, mercado local, transporte complementar e difusão de equipamentos, em vez de um efeito regional homogêneo da malha ferroviária.
+
+No caso nordestino, esse mecanismo é particularmente plausível porque a restrição histórica de transporte era severa. Antes da consolidação ferroviária, a circulação terrestre dependia de caminhos precários, tropas de animais e rotas sujeitas a sazonalidade climática. Como argumentam \citet{furtado1959} e \citet{eisenberg1974}, a estrutura econômica regional combinava especialização primário-exportadora, concentração de renda e dificuldades de modernização produtiva. Nesse ambiente, a ferrovia podia alterar margens relevantes de investimento ao permitir que equipamentos e insumos chegassem a localidades antes isoladas. Assim, os coeficientes positivos em PIB e renda não devem ser lidos apenas como efeito de redução de frete, mas como evidência compatível com uma mudança nas possibilidades produtivas locais.
+
+O segundo mecanismo é a formação de centralidades urbanas. Os resultados para população e urbanização indicam concentração de pessoas, mercados e serviços. A estação era o ponto focal. Ela reunia comércio, armazenagem, trabalhadores e intermediação financeira. Com o tempo, podia atrair escolas, repartições públicas, oficinas, bancos e mercados atacadistas. \citet{berger2017} e \citet{jedwab2016} mostram mecanismos semelhantes em outros contextos. No Nordeste, a ponte empírica é clara: em uma rede urbana rarefeita, a estação podia redefinir centralidades locais. Ela também podia produzir transbordamentos, atraindo atividades de municípios próximos.
+
+O terceiro mecanismo é a integração de mercados agrícolas e urbanos. A Tabela \ref{tab:segundo_estagio_pam} mostra efeitos positivos sobre o valor da produção agrícola. Isso sugere um canal de escoamento e acesso a insumos. A leitura se aproxima de \citet{fogel1964} e \citet{summerhill2005}. Mas há uma diferença importante. No Nordeste, a ferrovia não era apenas corredor de exportação. Muitas linhas atravessavam áreas de baixa densidade econômica. Também respondiam a objetivos políticos, administrativos e de combate ao isolamento. Por isso, os efeitos agrícolas provavelmente conviveram com efeitos urbanos e tecnológicos. Os resultados em PIB, população, renda e produção agrícola reforçam essa leitura multicanal.
+
+O quarto mecanismo é a persistência por custos afundados e complementaridades locais. Oficinas, armazéns, equipamentos e rotinas comerciais não desaparecem imediatamente quando o modal perde importância. Esses ativos podem ser adaptados. Também podem manter pessoas, firmas e serviços em localidades previamente conectadas. Essa é a lógica de dependência de trajetória presente em \citet{donaldsonhornbeck2016} e \citet{donaldson2018}. No Nordeste, ela é observada na combinação de maior IDHM, maior renda e menor pobreza. A infraestrutura histórica parece associada não só à escala econômica, mas também a melhores indicadores sociais.
+
+A evidência também exige cautela. Ferrovias não produzem desenvolvimento automaticamente. Seus efeitos dependem de complementaridades institucionais, capital humano, crédito, estrutura fundiária, políticas públicas e capacidade local de absorver tecnologia. Essa ressalva é importante para o Nordeste, onde \citet{graham1968} e \citet{summerhill2003} mostram que a modernização dos transportes ocorreu de forma desigual e frequentemente condicionada por interesses políticos, capitais externos e restrições fiscais. Portanto, os resultados devem ser interpretados como efeitos médios locais de exposição ferroviária, não como prova de que qualquer ferrovia geraria desenvolvimento em qualquer contexto.
+
+Por fim, os resultados podem envolver deslocamento espacial. Parte do ganho das localidades conectadas pode refletir concentração de pessoas, comércio e serviços antes dispersos em áreas vizinhas. Esse é o ponto empírico dos efeitos de transbordamento. Crescimento local não é necessariamente crescimento agregado. A inclusão de lag espacial e controles sucessivos reduz parte da preocupação. Mas não elimina a necessidade de testes adicionais. É preciso comparar áreas conectadas, vizinhas e distantes da malha. Ainda assim, a robustez dos coeficientes sugere que a ferrovia foi componente relevante da geografia econômica nordestina. Ela operou por tecnologia incorporada, centralidade urbana, integração de mercados e persistência institucional.
+
+\section{Conclusão}
+
+Neste artigo, investigamos se a expansão ferroviária no Nordeste brasileiro produziu efeitos persistentes sobre desenvolvimento regional, adoção tecnológica e organização espacial da atividade econômica. Tratamos o Nordeste como um caso histórico singular para a literatura de infraestrutura: uma região periférica, heterogênea, parcialmente semiárida, marcada por isolamento físico, baixa densidade industrial, desigualdade fundiária e políticas públicas voltadas à integração territorial e ao enfrentamento das secas. Nesse contexto, interpretamos a ferrovia não apenas como um corredor de escoamento de produtos primários, mas também como uma infraestrutura capaz de transportar bens de capital, máquinas, técnicos, peças e rotinas produtivas para áreas antes pouco conectadas.
+
+Os resultados apontam quatro achados principais. Primeiro, o primeiro estágio confirma a relevância do instrumento: a dummy sintética baseada no LCP prediz de forma forte a exposição ferroviária real, mesmo após a inclusão de efeitos fixos de UF, lag espacial e controles climáticos, hidrográficos e pedológicos. Segundo, no segundo estágio, a exposição ferroviária apresenta associação positiva e estatisticamente significativa com PIB total e PIB per capita em 2000 e 2010, sugerindo persistência de vantagens econômicas locais. Terceiro, os resultados para população e urbanização indicam que as ferrovias contribuíram para a formação de centralidades demográficas e urbanas, compatíveis com mecanismos de aglomeração e reorganização espacial. Quarto, os efeitos positivos sobre produção agrícola, IDHM e renda per capita, combinados ao efeito negativo sobre pobreza, sugerem que a infraestrutura ferroviária afetou múltiplas dimensões do desenvolvimento local, e não apenas a escala econômica agregada.
+
+A interpretação desses achados reforça a hipótese de que a ferrovia funcionou como canal de tecnologia incorporada. Ao reduzir o custo de transporte de máquinas, equipamentos e insumos complementares, a infraestrutura ampliou o conjunto de atividades viáveis em localidades interiores. Esse canal ajuda a explicar por que os efeitos aparecem em variáveis econômicas, populacionais, agrícolas e sociais. A evidência também sugere que a persistência regional pode resultar da combinação entre custos afundados, aprendizado local, formação de mercados urbanos e complementaridades produtivas. Assim, deslocamos a discussão sobre ferrovias brasileiras para além do eixo cafeeiro e mostramos que regiões periféricas, como o Nordeste, podem oferecer evidências importantes sobre os efeitos de longo prazo de infraestruturas em contextos de baixa conectividade inicial.
+
+Reconhecemos, contudo, algumas limitações. A primeira é a disponibilidade e precisão dos dados históricos. Embora a harmonização em Áreas Mínimas Comparáveis reduza problemas de mudança de fronteiras municipais, ela também agrega localidades e pode atenuar heterogeneidades internas relevantes. A segunda limitação está na mensuração da exposição ferroviária: a presença de trilhos em 1970 identifica conexão histórica, mas não captura plenamente intensidade de uso, qualidade operacional, frequência de serviços, data exata de chegada, localização de estações ou desativações parciais. A terceira limitação diz respeito à identificação causal. O instrumento baseado em LCP reduz a preocupação com seleção espacial, mas a restrição de exclusão pode ser ameaçada se a topografia ou a posição entre nós históricos afetarem resultados contemporâneos por canais não ferroviários. A quarta limitação é que os resultados locais podem incluir efeitos de deslocamento: parte do ganho observado em áreas conectadas pode refletir concentração de atividade antes dispersa em municípios vizinhos, e não apenas crescimento agregado líquido.
+
+Essas limitações abrem uma agenda clara de pesquisa. Primeiro, precisamos aprimorar a datação de ramais, estações e fases de operação para estimar efeitos dinâmicos e distinguir impactos de curto, médio e longo prazo. Segundo, futuras versões devem incorporar medidas mais diretas do canal tecnológico, como dados históricos de firmas, oficinas, máquinas, patentes, ocupações técnicas, educação profissional e estrutura setorial. Terceiro, podemos avançar na mensuração de spillovers, comparando municípios diretamente conectados, vizinhos e localidades mais distantes, de modo a separar efeitos de crescimento líquido de efeitos de redistribuição espacial. Quarto, podemos complementar a estratégia empírica com testes de robustez adicionais, como exclusão de capitais, portos e nós originais, uso de diferentes raios de atendimento ferroviário e comparação com trajetórias rodoviárias posteriores. Quinto, podemos explorar o tratamento escalonado das ferrovias.
+
+
+\section*{Apêndice A: Resultados por limiares de exposição ferroviária}
+\addcontentsline{toc}{section}{Apêndice A: Resultados por limiares de exposição ferroviária}
+
+A Tabela \ref{tab:ap_limiares_1969} apresenta estimativas adicionais do segundo estágio usando dummies alternativas de exposição ferroviária histórica em diferentes limiares de distância à malha ferroviária de 1969. Mantemos a especificação completa, equivalente ao modelo M4, com efeitos fixos de UF, lag espacial e controles climáticos, hidrográficos e pedológicos. O exercício avalia se os efeitos estimados dependem de uma definição muito estreita de tratamento ou se persistem quando ampliamos o raio de influência da infraestrutura.
+
+\begin{table}[!htbp]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{0.82}
+\caption{Segundo estágio por limiares de exposição ferroviária, 1969}
+\label{tab:ap_limiares_1969}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+Outcome & 10 km & 25 km & 50 km & 100 km \\
+\midrule
+PIB Total (2000) & \num{2.140}*** (\num{0.595}) & \num{1.176}*** (\num{0.290}) & \num{-0.090} (\num{0.218}) & \num{-0.783}** (\num{0.320}) \\
+PIB Total (2010) & \num{2.302}*** (\num{0.623}) & \num{1.254}*** (\num{0.299}) & \num{0.019} (\num{0.224}) & \num{-0.766}** (\num{0.335}) \\
+PIB p.c. (2000) & \num{0.802}*** (\num{0.219}) & \num{0.663}*** (\num{0.119}) & \num{0.118} (\num{0.078}) & \num{-0.243}** (\num{0.111}) \\
+PIB p.c. (2010) & \num{0.792}*** (\num{0.226}) & \num{0.629}*** (\num{0.115}) & \num{0.182}** (\num{0.081}) & \num{-0.266}** (\num{0.111}) \\
+Pop. Total (1991) & \num{1.320}*** (\num{0.418}) & \num{0.424}* (\num{0.217}) & \num{-0.191} (\num{0.186}) & \num{-0.475}* (\num{0.267}) \\
+Pop. Total (2000) & \num{1.439}*** (\num{0.437}) & \num{0.499}** (\num{0.224}) & \num{-0.196} (\num{0.191}) & \num{-0.534}* (\num{0.277}) \\
+Pop. Total (2010) & \num{1.510}*** (\num{0.470}) & \num{0.625}*** (\num{0.234}) & \num{-0.163} (\num{0.195}) & \num{-0.500}* (\num{0.285}) \\
+Tx. Urban. (2010) & \num{0.145}* (\num{0.079}) & \num{0.116}** (\num{0.047}) & \num{0.021} (\num{0.038}) & \num{-0.143}*** (\num{0.052}) \\
+Val. Prod. (2000) & \num{2.389}** (\num{1.000}) & \num{1.758}*** (\num{0.542}) & \num{-0.035} (\num{0.428}) & \num{-0.705} (\num{0.536}) \\
+Val. Prod. (2010) & \num{2.870}** (\num{1.176}) & \num{2.089}*** (\num{0.668}) & \num{0.921}* (\num{0.496}) & \num{-0.294} (\num{0.589}) \\
+IDHM (2000) & \num{0.099}*** (\num{0.026}) & \num{0.062}*** (\num{0.013}) & \num{0.028}** (\num{0.012}) & \num{-0.024} (\num{0.015}) \\
+IDHM (2010) & \num{0.061}*** (\num{0.018}) & \num{0.034}*** (\num{0.009}) & \num{0.013}* (\num{0.008}) & \num{-0.024}** (\num{0.010}) \\
+Renda p.c. (2000) & \num{0.608}*** (\num{0.161}) & \num{0.430}*** (\num{0.087}) & \num{0.103} (\num{0.068}) & \num{-0.174}* (\num{0.091}) \\
+Renda p.c. (2010) & \num{0.397}*** (\num{0.122}) & \num{0.288}*** (\num{0.068}) & \num{0.074} (\num{0.053}) & \num{-0.153}** (\num{0.074}) \\
+\% Pobres (2010) & \num{-17.460}*** (\num{4.989}) & \num{-13.791}*** (\num{2.822}) & \num{-3.027} (\num{2.075}) & \num{11.322}*** (\num{3.033}) \\
+\bottomrule
+\end{tabular}}
+\begin{minipage}{0.96\textwidth}
+\scriptsize \textit{Notas:} Células reportam coeficiente e erro-padrão entre parênteses para o modelo completo M4. O tratamento é uma dummy de exposição ferroviária definida por limiares de distância à malha ferroviária de 1969 e instrumentada pela dummy sintética correspondente. Estatísticas F do instrumento por limiar: 10 km: 17.47--38.42; 25 km: 36.05--79.28; 50 km: 71.41--153.66; 100 km: 165.27--231.31. Observações variam entre 927 e 1231, conforme o outcome. *** p$<$0,01; ** p$<$0,05; * p$<$0,10.
+\end{minipage}
+\end{table}
+
+\begin{thebibliography}{99}
+
+
+\bibitem[Atack et al.(2010)]{atack2010}
+Atack, J.; Haines, M. R.; Margo, R. A. Railroads and the rise of the factory: Evidence for the United States, 1850--1870. In: Costa, D. L.; Lamoreaux, N. R. (org.). \textit{Understanding Long-Run Economic Growth}. Chicago: University of Chicago Press, 2010.
+
+
+\bibitem[Arthur(1994)]{arthur1994}
+Arthur, W. B. \textit{Increasing Returns and Path Dependence in the Economy}. Ann Arbor: University of Michigan Press, 1994.
+
+\bibitem[Baum-Snow(2007)]{baumsnow2007}
+Baum-Snow, N. Did highways cause suburbanization? \textit{Quarterly Journal of Economics}, v. 122, n. 2, p. 775--805, 2007.
+
+\bibitem[Banerjee, Duflo e Qian(2012)]{banerjee2012}
+Banerjee, A.; Duflo, E.; Qian, N. On the road: Access to transportation infrastructure and economic growth in China. \textit{NBER Working Paper}, n. 17897, 2012.
+
+\bibitem[Berger e Enflo(2017)]{berger2017}
+Berger, T.; Enflo, K. Locomotives of local growth: The short- and long-term impact of railroads in Sweden. \textit{Journal of Urban Economics}, v. 98, p. 124--138, 2017.
+
+\bibitem[Buckley(2000)]{buckley2000}
+Buckley, E. \textit{Technocrats and the Politics of Drought and Development in Twentieth-Century Brazil}. Chapel Hill: University of North Carolina Press, 2000.
+
+\bibitem[Callaway e Sant'Anna(2021)]{callaway2021}
+Callaway, B.; Sant'Anna, P. H. C. Difference-in-differences with multiple time periods. \textit{Journal of Econometrics}, v. 225, n. 2, p. 200--230, 2021.
+
+
+\bibitem[Cano(1977)]{cano1977}
+Cano, W. \textit{Raízes da concentração industrial em São Paulo}. São Paulo: Difel, 1977.
+
+\bibitem[Crockatt de Sá(1893)]{crockatt1893}
+Crockatt de Sá, J. \textit{Brazilian Railways: Their History, Legislation and Development}. Rio de Janeiro: Imprensa Nacional, 1893.
+
+
+\bibitem[David(1985)]{david1985}
+David, P. A. Clio and the economics of QWERTY. \textit{American Economic Review}, v. 75, n. 2, p. 332--337, 1985.
+
+\bibitem[Donaldson(2018)]{donaldson2018}
+Donaldson, D. Railroads of the Raj: Estimating the impact of transportation infrastructure. \textit{American Economic Review}, v. 108, n. 4--5, p. 899--934, 2018.
+
+\bibitem[Donaldson e Hornbeck(2016)]{donaldsonhornbeck2016}
+Donaldson, D.; Hornbeck, R. Railroads and American economic growth: A market access approach. \textit{Quarterly Journal of Economics}, v. 131, n. 2, p. 799--858, 2016.
+
+
+\bibitem[Duranton e Turner(2012)]{durantonturner2012}
+Duranton, G.; Turner, M. A. Urban growth and transportation. \textit{Review of Economic Studies}, v. 79, n. 4, p. 1407--1440, 2012.
+
+\bibitem[Ehrl(2017)]{ehrl2017}
+Ehrl, P. Minimum comparable areas for the spatial analysis of Brazilian municipalities: 1872--2010. \textit{Estudos Econômicos}, v. 47, n. 1, p. 215--229, 2017.
+
+\bibitem[Eisenberg(1974)]{eisenberg1974}
+Eisenberg, P. L. \textit{The Sugar Industry in Pernambuco: Modernization Without Change, 1840--1910}. Berkeley: University of California Press, 1974.
+
+\bibitem[Furtado(1959)]{furtado1959}
+Furtado, C. \textit{Formação econômica do Brasil}. Rio de Janeiro: Fundo de Cultura, 1959.
+
+\bibitem[Graham(1968)]{graham1968}
+Graham, R. \textit{Britain and the Onset of Modernization in Brazil, 1850--1914}. Cambridge: Cambridge University Press, 1968.
+
+\bibitem[Fogel(1964)]{fogel1964}
+Fogel, R. W. \textit{Railroads and American Economic Growth: Essays in Econometric History}. Baltimore: Johns Hopkins Press, 1964.
+
+
+\bibitem[Fujita, Krugman e Venables(1999)]{fujita1999}
+Fujita, M.; Krugman, P.; Venables, A. J. \textit{The Spatial Economy: Cities, Regions, and International Trade}. Cambridge: MIT Press, 1999.
+
+
+\bibitem[Hornung(2015)]{hornung2015}
+Hornung, E. Railroads and growth in Prussia. \textit{Journal of the European Economic Association}, v. 13, n. 4, p. 699--736, 2015.
+
+
+\bibitem[Hirschman(1958)]{hirschman1958}
+Hirschman, A. O. \textit{The Strategy of Economic Development}. New Haven: Yale University Press, 1958.
+
+\bibitem[Jedwab e Moradi(2016)]{jedwab2016}
+Jedwab, R.; Moradi, A. The permanent effects of transportation revolutions in poor countries: Evidence from Africa. \textit{Review of Economics and Statistics}, v. 98, n. 2, p. 268--284, 2016.
+
+
+\bibitem[Krugman(1991)]{krugman1991}
+Krugman, P. Increasing returns and economic geography. \textit{Journal of Political Economy}, v. 99, n. 3, p. 483--499, 1991.
+
+\bibitem[Maitra e Yu(2021)]{maitra2021}
+Maitra, P.; Yu, S. Infrastructure, market access and long-run development: Evidence from historical transport networks. Manuscrito, 2021.
+
+
+\bibitem[Michaels(2008)]{michaels2008}
+Michaels, G. The effect of trade on the demand for skill: Evidence from the Interstate Highway System. \textit{Review of Economics and Statistics}, v. 90, n. 4, p. 683--701, 2008.
+
+\bibitem[Myrdal(1957)]{myrdal1957}
+Myrdal, G. \textit{Economic Theory and Under-developed Regions}. London: Duckworth, 1957.
+
+\bibitem[Redding e Turner(2015)]{reddingturner2015}
+Redding, S. J.; Turner, M. A. Transportation costs and the spatial organization of economic activity. In: Duranton, G.; Henderson, J. V.; Strange, W. C. (org.). \textit{Handbook of Regional and Urban Economics}. Amsterdam: Elsevier, 2015. v. 5, p. 1339--1398.
+
+\bibitem[Rosenberg(1982)]{rosenberg1982}
+Rosenberg, N. \textit{Inside the Black Box: Technology and Economics}. Cambridge: Cambridge University Press, 1982.
+
+\bibitem[Summerhill(2003)]{summerhill2003}
+Summerhill, W. R. \textit{Order Against Progress: Government, Foreign Investment, and Railroads in Brazil, 1854--1913}. Stanford: Stanford University Press, 2003.
+
+\bibitem[Summerhill(2005)]{summerhill2005}
+Summerhill, W. R. Big social savings in a small laggard economy: Railroad-led growth in Brazil. \textit{Journal of Economic History}, v. 65, n. 1, p. 72--102, 2005.
+
+\end{thebibliography}
+
+\end{document}

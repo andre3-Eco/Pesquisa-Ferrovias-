@@ -1,0 +1,134 @@
+% --- UNIVERSAL PREAMBLE BLOCK ---
+\documentclass[11pt, a4paper]{article}
+\usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
+\usepackage{fontspec}
+
+\usepackage[portuguese, bidi=basic, provide=*]{babel}
+
+\babelprovide[import, onchar=ids fonts]{portuguese}
+\babelprovide[import, onchar=ids fonts]{english}
+
+% Set default/Latin font to Sans Serif in the main (rm) slot
+\babelfont{rm}{Noto Sans}
+
+% Add because main language is not English
+\usepackage{enumitem}
+\setlist[itemize]{label=-}
+
+\usepackage{booktabs}
+\usepackage[colorlinks=true, linkcolor=blue, urlcolor=black]{hyperref}
+
+\title{\textbf{Relatório Técnico: Construção do Banco de Dados Espacial das Ferrovias Históricas do Nordeste}}
+\author{André Elias Lopes}
+\date{Março de 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent Este documento sintetiza os desafios metodológicos e as soluções aplicadas para transformar mapas antigos e bases governamentais fragmentadas em uma variável econométrica rigorosa. O relatório detalha o processo de concepção e montagem de um banco de dados espacial focado na evolução histórica da malha ferroviária da região Nordeste do Brasil. Adotando uma postura realista e crítica face à precariedade dos dados públicos, descreve-se o resgate documental, a auditoria cartográfica e o georreferenciamento realizados para contornar falhas estruturais, resultando em uma base cronológica precisa e pronta para análise espacial no ambiente R.
+\end{abstract}
+
+\vspace{0.5cm}
+
+\section{O Diagnóstico: A Precariedade das Bases Oficiais e Abertas}
+
+O primeiro passo da pesquisa evidenciou um problema estrutural crônico na gestão da informação territorial brasileira: as bases de dados geoespaciais públicas são insuficientes, estáticas e, muitas vezes, factualmente incorretas para uma análise histórica rigorosa. 
+
+A avaliação preliminar das principais fontes disponíveis --- como os \textit{shapefiles} do DNIT (VGeo), bases do Ministério dos Transportes, malhas do IBGE e até plataformas colaborativas robustas como o \textit{OpenRailwayMap} --- revelou três falhas metodológicas graves que inviabilizavam o uso direto desses dados em modelos econométricos:
+
+\begin{itemize}
+    \item \textbf{Falta de Cronologia (A Ilusão Estática):} As bases modernas mostram a malha de forma atemporal. Não há especificação de em que ano cada trecho foi efetivamente inaugurado, paralisado ou erradicado, impossibilitando análises de impacto causal ao longo do tempo.
+    \item \textbf{As ``Ferrovias Fantasmas'':} Projetos governamentais que nunca saíram do papel, ou leitos que foram abandonados antes mesmo da colocação dos trilhos, são frequentemente mapeados como infraestrutura real. Exemplos críticos identificados incluem o ramal de Cajapió (Maranhão), o Ramal de Floriano (Piauí) e trechos em Lajes (Rio Grande do Norte). O uso acrítico dessas bases poluiria a regressão com infraestrutura inexistente.
+    \item \textbf{Amálgama de Modais:} Ramais industriais estritamente privados (como as teias de usinas canavieiras na Paraíba e em Pernambuco) muitas vezes se confundem com a malha pública de passageiros e carga geral nas bases abertas, distorcendo a variável de acessibilidade dos municípios.
+\end{itemize}
+
+\section{Fontes de Dados e Resgate Histórico}
+
+Para contornar o ``ruído'' das bases modernas, o processo exigiu o abandono da dependência exclusiva dos \textit{shapefiles} prontos e um retorno metódico às fontes primárias. A construção da base exigiu a triangulação de três categorias de dados:
+
+\subsection{Bases Vetoriais de Referência (O Ponto de Partida)}
+As bases do \textbf{OpenRailwayMap} e as malhas de transporte do \textbf{IBGE/DNIT} foram utilizadas estritamente como guias topológicos preliminares. Elas forneceram o traçado de trechos que ainda existem ou que deixaram marcas óbvias no relevo (visíveis por satélite), mas toda geometria extraída dessas fontes foi tratada como ``sob suspeita'' até confirmação histórica.
+
+\subsection{Cartografia Histórica (A Verdade no Chão)}
+Para auditar a base vetorial, recorreu-se ao acervo digital da \textbf{Biblioteca do IBGE}. Foram coletados mapas topográficos e políticos estaduais das décadas de 1940, 1950 e 1960. Adicionalmente, foram resgatadas plantas antigas de companhias ferroviárias, como a \textit{Great Western of Brazil Railway} (GWBR) e a Rede de Viação Cearense (RVC), além de mapas anexos a relatórios governamentais da época.
+
+\subsection{Fontes de Datação (A Camada Ano a Ano)}
+O maior desafio metodológico foi identificar o ano exato de chegada dos trilhos em cada segmento e as paradas das antigas companhias. Diante da lacuna de dados oficiais consolidados, a geometria foi cruzada com uma pesquisa bibliográfica e arquivística intensiva, descentralizada e muitas vezes não convencional. As fontes utilizadas foram divididas em cinco frentes críticas:
+
+\subsubsection*{1. Documentação Governamental Primária}
+Apesar de incompletos, os documentos de Estado balizaram a pesquisa macrorregional:
+\begin{itemize}
+    \item \textbf{Relatórios do MVOP e Anuários do IBGE:} Consultados para atestar extensões quilométricas entregues a cada exercício.
+    \item \textbf{Mensagens de Presidentes de Província e Governadores:} Documentação fundamental (Império e Primeira República) relatando o avanço e as frequentes paralisações dos canteiros de obras.
+    \item \textbf{Relatórios da RFFSA:} Essenciais para mapear a erradicação de ramais deficitários a partir da década de 1950.
+\end{itemize}
+
+\subsubsection*{2. Bibliografia de Referência (Livros e Obras Históricas)}
+Para contornar a falta de metadados das bases espaciais, recorreu-se à literatura especializada em história logística:
+\begin{itemize}
+    \item \textbf{``A GRETOESTE: A história da rede ferroviária Great Western of Brazil'' (William Edmundson, 2016):} Considerada uma das obras mais completas sobre a influência britânica no Recife e a construção de linhas específicas em Alagoas (como a \textit{Paulo Afonso Railway}) e na Paraíba.
+    \item \textbf{``Brazilian Railways: Their History, Legislation and Development'' (Chrockatt de Sá, 1893):} Fonte primária valiosa detalhando as concessões e o desenvolvimento das linhas no século XIX, incluindo a Recife a Limoeiro e a Bahia Central.
+    \item \textbf{``Impressões do Brazil no Século Vinte'' (1913):} Obra monumental com dados técnicos precisos sobre a expansão da Great Western em Alagoas, Paraíba, Pernambuco e Rio Grande do Norte.
+\end{itemize}
+
+\subsubsection*{3. Pesquisas Acadêmicas e Teses}
+O rigor da academia ajudou a estruturar os recortes temporais:
+\begin{itemize}
+    \item \textbf{Ricardo Lira Silva (UFPB):} Dissertação com cronologia detalhada da implantação ferroviária (1880-1957) em Pernambuco e no Nordeste.
+    \item \textbf{Maria Emilia Lopes Freire (UFPE) e Anna Eliza Finger (UnB):} Teses focadas na Rede Ferroviária Nordeste (RFN), analisando a arquitetura e a materialidade histórica de lugares e estações centrais (1852 a 1957).
+    \item \textbf{Lucas Neves Prochnow (IPHAN):} Pesquisa crítica sobre a memória ferroviária e o processo de patrimonialização em Pernambuco.
+\end{itemize}
+
+\subsubsection*{4. Portais, Blogs e Bases Digitais Colaborativas}
+De forma pragmática, reconhece-se que a burocracia estatal falhou ao não catalogar adequadamente o fim de sua própria infraestrutura. Projetos independentes e abertos foram cruciais para a auditoria linha por linha:
+\begin{itemize}
+    \item \textbf{Estações Ferroviárias do Brasil (Ralph Mennucci Giesbrecht):} Este portal é, sem exagero, a fonte independente mais robusta sobre o tema no país. Ele cataloga centenas de estações nordestinas, fornecendo anos exatos de inauguração, altitude e a constatação realista do abandono atual.
+    \item \textbf{Blogs Especializados e Wikipedia:} Páginas da Wikipedia serviram como roteiros iniciais para desvendar ramais obscuros, que foram posteriormente validados. Blogs independentes, como o \textit{História Ferroviária Paraibana}, forneceram relatos in loco que os anuários oficiais ignoraram.
+    \item \textbf{Hemeroteca Digital Brasileira:} Utilizada com filtros (como o \textit{Diário de Pernambuco} e o \textit{Jornal do Recife}) para cruzar editais de inauguração reportados na imprensa local da época.
+\end{itemize}
+
+\subsubsection*{5. Acervos Institucionais e Museus}
+\begin{itemize}
+    \item \textbf{Fundação Joaquim Nabuco (Fundaj) e Museu do Trem (Recife/PE):} Ofereceram acervo iconográfico do século XIX e registros das operações da RFN, validando o impacto regional.
+    \item \textbf{Instituto do Patrimônio Histórico e Artístico Nacional (IPHAN):} Através do Inventário de Conhecimento do Patrimônio Cultural Ferroviário, atestou-se as coordenadas de antigas estações-chave como Jaraguá (Maceió) e João Felipe (Fortaleza), permitindo a ancoragem exata dos mapas.
+\end{itemize}
+
+\section{Georreferenciamento e Auditoria no QGIS}
+
+Com o material bibliográfico e cartográfico reunido, o QGIS assumiu o papel central de estruturação. O processo técnico consistiu em:
+
+\begin{enumerate}
+    \item \textbf{Ancoragem Espacial:} Utilizando a ferramenta de Georreferenciador do QGIS, os mapas históricos rasterizados foram sobrepostos às imagens de satélite modernas e aos limites municipais atuais do IBGE.
+    \item \textbf{Ajuste Fino por Pontos de Controle:} Para evitar distorções, foram utilizados pontos de controle (GCPs) inalteráveis ao tempo: antigas estações ferroviárias sobreviventes (muitas hoje transformadas em prefeituras ou centros culturais), pontes metálicas centenárias e o traçado de rios que não sofreram alteração de curso.
+    \item \textbf{Vetorização Manual e Limpeza:} Os traçados foram redesenhados ou severamente editados. As ``ferrovias fantasmas'' (como Cajapió e Floriano) foram sumariamente deletadas da malha principal. Ramais estritamente privados de usinas foram isolados ou removidos, mantendo apenas a infraestrutura de impacto regional.
+\end{enumerate}
+
+\section{A Camada \textit{Ferrovias\_cronologica}}
+
+A criação desta camada vetorizada foi o coração metodológico do banco de dados. A topologia de linhas foi segmentada (quebrada) a cada nova estação relevante ou mudança histórica de \textit{status}. Cada segmento (\textit{feature}) recebeu atributos fundamentais, transformando a geometria em dados quantitativos reais:
+
+\begin{itemize}
+    \item \textbf{Trecho/Ramal:} Nomenclatura oficial da linha (ex: \textit{Ramal de Campina Grande}).
+    \item \textbf{Ano\_Inauguracao:} Ano exato em que o segmento entrou em operação comercial.
+    \item \textbf{Ano\_Desativacao:} Ano em que a operação foi suspensa ou os trilhos erradicados (se aplicável).
+    \item \textbf{Status\_Historico:} Classificação de operação (ex: \textit{Operacional, Erradicado, Projeto Abandonado}).
+\end{itemize}
+
+\section{Tratamento Final para Modelagem Econométrica}
+
+O objetivo final do banco de dados não é a elaboração de mapas ilustrativos, mas sim o cálculo preciso da distância euclidiana ou de custo de transporte das ferrovias para os centroides de cada Área Mínima Comparável (AMC) ao longo dos anos. Para garantir que os dados conversem perfeitamente com pacotes espaciais estatísticos (como o pacote \texttt{sf} no R), o QGIS foi utilizado para o refinamento técnico final:
+
+\begin{itemize}
+    \item \textbf{Reprojeção do Sistema de Referência (SRC):} A camada foi convertida do padrão global de coordenadas geográficas (WGS 84 / EPSG:4326) para o sistema projetado métrico local, o \textbf{SIRGAS 2000 / UTM zone 24S (EPSG:31984)}. Essa conversão é inegociável, pois garante que as matrizes de distância calculadas no RStudio retornem valores reais em quilômetros ou metros, não em graus decimais distorcidos, mitigando erros de medição na variável independente.
+    \item \textbf{Consolidação e Exportação:} O formato obsoleto \textit{shapefile} (.shp) foi descartado devido às suas limitações (truncamento de nomes de colunas a 10 caracteres, múltiplos arquivos soltos). O banco de dados foi integralmente exportado no formato moderno \textbf{GeoPackage (.gpkg)}, garantindo integridade dos metadados, ausência de limites práticos de tamanho e estabilidade no versionamento.
+\end{itemize}
+
+\section{Conclusão}
+
+O resultado deste fluxo de trabalho é uma base de dados limpa, historicamente auditada e espacialmente rigorosa. Ao não assumir a confiabilidade das bases oficiais contemporâneas e realizar o cruzamento intensivo com cartografia, teses e projetos independentes de resgate histórico, foi possível filtrar as falhas de planejamento do Estado brasileiro e registrar a realidade da infraestrutura instalada no chão. 
+
+A variável instrumental resultante captura a evolução cronológica exata da logística nordestina, ano a ano, consolidando-se como um insumo confiável e robusto para modelos econométricos que busquem isolar o efeito da infraestrutura no desenvolvimento regional sustentado ao longo do tempo.
+
+\end{document}

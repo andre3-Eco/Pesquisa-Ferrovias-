@@ -1,0 +1,1890 @@
+\documentclass[12pt]{article}
+\usepackage[brazilian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+\usepackage{enumitem}
+\usepackage{hyperref} % Adicionado para links clicáveis (útil para DOIs ou URLs)
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Resumos dos Artigos},
+    pdfpagemode=FullScreen,
+    }
+
+\title{Resumos dos Artigos: Análise de Longo Prazo dos Investimentos em Infraestrutura Ferroviária}
+\author{André Elias Lopes}
+\date{\today} % Usar \today para data atual ou deixar em branco com {}
+
+\begin{document}
+
+\maketitle
+\tableofcontents % Adicionado para facilitar a navegação
+\newpage
+
+\section{Railways and cities in India}
+
+\subsection*{Autores}
+James Fenske, Namrata Kala, e Jinlin Wei (2023). \textit{Journal of Development Economics}, 161, 103038.
+
+\subsection*{Objetivo Principal}
+O objetivo principal do artigo é investigar como a expansão da rede ferroviária moldou o tamanho das cidades na Índia colonial entre 1881 e 1931. Isso ocorre em um contexto histórico onde o crescimento urbano na Índia foi lento e sem aceleração no período, apesar de já existirem muitos centros urbanos antes da introdução das ferrovias, em contraste com outras regiões em desenvolvimento consideradas na literatura. O estudo também busca entender os mecanismos que conectam as ferrovias ao crescimento urbano, com foco no acesso ao mercado.
+
+\subsection*{Método}
+
+\subsubsection*{Tipo de Estudo}
+Empírico. O estudo utiliza dados quantitativos sobre a população das cidades e a rede ferroviária na Índia colonial.
+
+\subsubsection*{Dados}
+\begin{itemize}
+    \item Um novo conjunto de dados sobre populações de cidades com pelo menos 1000 habitantes na Índia colonial (incluindo Bangladesh, Birmânia, Índia e Paquistão modernos), coletados do censo de 1931.
+    \item Os dados cobrem os anos de 1881, 1891, 1901, 1911, 1921 e 1931.
+    \item Dados geoespaciais das cidades.
+    \item Um shapefile da rede ferroviária indiana com datas de abertura de cada segmento, construído a partir do histórico das ferrovias e um arquivo de linhas modernas. A construção das ferrovias na Índia começou em 1853 e atingiu mais de 40.000 milhas de trilha em 1930. As preocupações que motivaram a construção incluíram unificação política, acesso ao algodão, viabilidade comercial e, posteriormente, motivos militares e de combate à fome.
+    \item Variáveis de controle geográficas, como latitude, longitude, distância para rios principais e costa (em log), ruggedness, malária, altitude, precipitação, temperatura e adequação para diferentes culturas (arroz de sequeiro, arroz úmido, trigo e algodão). Historicamente, regiões como as planícies do Ganges e Indus e Gujarat já eram mais urbanas devido a fatores naturais e geográficos.
+    \item Variáveis para testes de heterogeneidade: presença de um porto medieval, proximidade a eventos da Rebelião Indiana de 1857 e exposição a fomes. A Rebelião de 1857 ocorreu logo após o início da construção ferroviária e influenciou a colocação de ferrovias por motivos militares. As fomes também foram um fator para a construção de linhas de "proteção".
+\end{itemize}
+
+\subsubsection*{Modelo}
+\begin{itemize}
+    \item \textbf{Especificação principal (Efeitos Fixos):} O estudo utiliza um modelo de efeitos fixos estimado por mínimos quadrados ordinários (OLS) para avaliar a relação entre a proximidade à ferrovia e o tamanho da população das cidades.
+    \begin{equation} \label{eq:india_fe}
+        \ln P_{i,t} = \alpha + \beta \ln \text{Railway Distance}_{i,t} + \delta_i + \eta_t + x_{i,0}^{\prime}\eta_t + \epsilon_{it}
+    \end{equation}
+    Onde:
+    \begin{itemize}
+        \item $P_{i,t}$: População da cidade $i$ no ano do censo $t$.
+        \item $\text{Railway Distance}_{i,t}$: Distância da cidade $i$ à ferrovia em quilômetros no ano $t$.
+        \item $\delta_i$: Efeitos fixos da cidade (remove variáveis geográficas invariantes no tempo).
+        \item $\eta_t$: Efeitos fixos do ano (captura tendências comuns no crescimento populacional).
+        \item $x_{i,0}$: Controles geográficos basais interagidos com os efeitos fixos do ano ($x_{i,0}^{\prime}\eta_t$).
+        \item $\epsilon_{it}$: Termo de erro.
+        \item Os erros padrão são agrupados por cidade.
+    \end{itemize}
+    \item \textbf{Estratégia de Variáveis Instrumentais (IV):} Devido a possíveis vieses na estimação por efeitos fixos, o estudo emprega várias estratégias de variáveis instrumentais. O instrumento principal é baseado na distância de um caminho de menor custo que conecta cidades que existiam antes do início da construção ferroviária.
+    \begin{itemize}
+        \item \textbf{Construção do Instrumento:} A distância de cada cidade a um caminho hipotético de menor custo (calculado com base em dados de inclinação do terreno e custos de construção parametrizados) que conecta pares de cidades pré-ferrovia (identificadas a partir de dados históricos anteriores a 1853 com base em seu potencial de mercado). A interação do log de (um mais) a distância a este caminho de menor custo com o ano é usada para instrumentar o log da distância à ferrovia.
+        \item A identificação se baseia em como a proximidade a este plano hipotético prevê tendências de tempo diferenciais na proximidade ferroviária.
+    \end{itemize}
+    \item \textbf{Modelo de Acesso ao Mercado:} Como alternativa à proximidade física, o estudo estima modelos onde a variável chave é o acesso ao mercado, uma medida do acesso que as firmas e consumidores em uma localização têm a firmas e consumidores em todas as outras localizações, ponderado pelos custos de alcance. Este conceito é central em modelos de geografia econômica e crucial para entender o impacto da infraestrutura de transporte.
+    \begin{equation} \label{eq:india_market_access_pop}
+        \ln P_{i,t} = \alpha + \beta \ln \text{Market Access}_{i,t} + \delta_i + \eta_t + x_{i,0}^{\prime}\eta_t + \epsilon_{it}
+    \end{equation}
+    Onde:
+    \begin{equation} \label{eq:india_market_access_def}
+        \text{Market Access}_{i,t} = \sum_{j \neq i} P_{j,t} \tau_{i,j,t}^{-\theta}
+    \end{equation}
+    \begin{itemize}
+        \item $P_{j,t}$: População da cidade $j$ no ano $t$.
+        \item $\tau_{i,j,t}$: Custo de viagem entre a cidade $i$ e a cidade $j$ no ano $t$, considerando diferentes modos de transporte que coexistiam com as ferrovias, como vagões, transporte costeiro e rios. Normalizado para 1 para ferrovias, com custos relativos para outros modos baseados em estimativas existentes.
+        \item $\theta$: Elasticidade do comércio, que governa a velocidade com que o acesso a um mercado diminui à medida que os custos de transporte aumentam. O valor basal é 1, com alternativas de 3.6, 7.8 e 8.28, dentro da faixa típica de estimativas de modelos de gravidade.
+        \item Os mesmos instrumentos usados para a distância à ferrovia são empregados para o acesso ao mercado.
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Resultados-Chave}
+\begin{itemize}
+    \item As ferrovias impulsionaram o crescimento da população urbana na Índia colonial entre 1881 e 1931.
+    \item Estimativas OLS sugerem uma elasticidade negativa do tamanho da cidade em relação à distância da ferrovia entre -0.017 e -0.019, indicando que a proximidade à ferrovia prediz um maior tamanho da cidade, embora o efeito seja relativamente pequeno em comparação com outros contextos.
+    \item Estimativas IV mostram elasticidades maiores, variando de -0.113 a -0.191, sugerindo que os efeitos das ferrovias no crescimento urbano são mais substanciais do que os indicados pelo OLS, possivelmente devido a viés de variáveis omitidas ou diferenças entre as cidades que ganharam acesso mais cedo (compliers) e a amostra total.
+    \item Cidades que aumentaram o acesso ao mercado devido à ferrovia cresceram.
+    \item As elasticidades do tamanho da cidade em relação ao acesso ao mercado variam de 0.385 a 0.628 via OLS e 1.028 a 1.370 via IV.
+    \item Os efeitos da ferrovia no tamanho da cidade foram maiores para cidades que eram inicialmente pequenas e isoladas (maior distância da ferrovia em 1881 e menor tamanho inicial), sugerindo que as ferrovias promoveram o crescimento ao invés de apenas reforçar aglomerações existentes.
+    \item Os impactos foram atenuados para cidades com links de transporte alternativos (portos e rios) ou onde as ferrovias foram construídas por motivos militares ou em regiões adequadas para culturas comerciais (algodão).
+\end{itemize}
+
+\subsection*{Limitações}
+\begin{itemize}
+    \item O estudo é limitado pela falta de dados de população de cidades anteriores à ferrovia que seja da mesma resolução e abrangência do censo colonial.
+    \item A disponibilidade de variáveis chave para testar mecanismos alternativos (como migração interdistrital, renda e fertilidade) é limitada por serem reportadas apenas em nível distrital, não digitalizadas ou não disponíveis em todos os anos do censo. O crescimento urbano na Índia colonial foi impulsionado principalmente pela migração rural-urbana, não por diferenças em fertilidade ou mortalidade.
+    \item Tratar ferrovias como polilinhas e cidades como pontos sem massa pode levar a erros de medição na distância das cidades às ferrovias, exacerbado por mudanças nas localizações ao longo do tempo.
+\end{itemize}
+
+\subsection*{Relevância}
+\begin{itemize}
+    \item O artigo oferece uma base metodológica relevante para análises de painel dinâmico, especialmente no uso de efeitos fixos e variáveis instrumentais para lidar com endogeneidade de infraestrutura.
+    \item A análise do impacto da infraestrutura (ferrovias) no crescimento desigual das cidades (efeitos maiores em cidades menores e isoladas) é diretamente relevante para entender as origens da desigualdade regional.
+    \item Embora o foco não seja política fiscal, a discussão sobre o investimento público em infraestrutura de transporte e seus efeitos no desenvolvimento econômico regional, bem como o debate histórico sobre o benefício econômico das ferrovias coloniais, fornece um contexto importante para avaliar a eficácia de políticas fiscais voltadas para a redução das disparidades regionais.
+    \item A construção de variáveis de acesso ao mercado e a análise de seus impactos são técnicas interessantes para entender como a conectividade afeta a atividade econômica em diferentes regiões.
+\end{itemize}
+
+\newpage
+\section{Locomotives of local growth: The short- and long-term impact of railroads in Sweden}
+
+\subsection*{Autores}
+Thor Berger e Kerstin Enflo (2015). \textit{Journal of Urban Economics}. (Nota: O ano da publicação original parece ser 2017, verificar referência. O texto fornecido indica (2015) duas vezes, mas o Journal of Urban Economics publicou este artigo em 2017, Vol. 98, pp. 124-138).
+
+\subsection*{Objetivo Principal}
+Este artigo estuda o impacto das ferrovias em 150 anos de crescimento urbano na Suécia. Os autores identificam os efeitos de curto e longo prazo de uma primeira onda de construção ferroviária, que ocorreu em um contexto de dramática transição econômica, política e social na Suécia, transformando um país pobre e rural em uma nação rica e urbanizada. A pesquisa investiga se o choque transitório das primeiras ferrovias gerou dependência de trajetória na localização da atividade econômica.
+
+\subsection*{Método}
+
+\subsubsection*{Tipo de Estudo}
+Empírico. O estudo utiliza métodos econométricos para identificar o impacto causal das ferrovias no crescimento populacional das cidades.
+
+\subsubsection*{Contexto Histórico do Transporte Ferroviário na Suécia}
+Antes da era ferroviária, o transporte na Suécia era restrito, principalmente a animais de carga, carroças em estradas não pavimentadas, transporte por trenós em “estradas de inverno”, transporte costeiro e canais. Os custos de transporte eram altos e sazonais. O transporte terrestre acima de 200 km não era viável para mercadorias de alto peso/baixo valor. As ferrovias alteraram radicalmente o transporte, oferecendo operação durante todo o ano, maior velocidade e menor custo, reduzindo as taxas de frete em três quartos e os custos de passageiros pela metade. A construção das ferrovias foi um tema politicamente divisivo, com propostas baseadas no mercado (Adolf von Rosen, 1845) e em um monopólio estatal (Nils Ericson, 1856). A primeira onda de expansão ferroviária (1855-1870) foi financiada pelo estado, com o objetivo principal de conectar as principais cidades portuárias, mas também com preocupações militares e objetivos de desenvolvimento, o que levou as linhas a serem roteirizadas através de áreas interiores desfavorecidas. Isso resultou em muitas cidades historicamente importantes sendo deixadas sem conexão inicial. Após 1870, a construção ferroviária aumentou drasticamente, e a rede se expandiu para conectar quase todas as cidades.
+
+\subsubsection*{Dados}
+\begin{itemize}
+    \item Amostra de todas as cidades suecas que possuíam foral em 1840, antes do início da construção ferroviária. Cidades formadas após 1840 e as três principais cidades terminais (Estocolmo, Gotemburgo e Malmö) foram excluídas. A amostra inicial é de 81 cidades.
+    \item Dados populacionais de cada década entre 1800 e 2010 de censos populacionais históricos.
+    \item Reconstrução da rede ferroviária de 1870 e digitalização das propostas de rede de von Rosen (1845) e Ericson (1856) usando software GIS e mapas históricos.
+    \item Dados adicionais em nível de cidade sobre resultados históricos (cerca de 1900) e contemporâneos (2005/2010), como acesso a ferrovias, rodovias, estradas principais, estoque de habitação antiga, preços de casas, densidade populacional, estrutura etária, diversidade industrial, número de indústrias, pendulares e tamanho de estabelecimentos.
+    \item Variáveis de controle geográficas, como localização na costa ou em lagos principais, longitude e latitude.
+\end{itemize}
+
+\subsubsection*{Modelos e Estratégias de Identificação}
+\begin{itemize}
+    \item \textbf{Diferenças-em-Diferenças (DiD):} Para examinar o impacto de curto prazo (1840-1870), o estudo compara cidades que ganharam acesso à rede ferroviária na primeira onda com um grupo de controle de cidades que não ganharam.
+    \begin{equation} \label{eq:sweden_did_short}
+        \ln(P_{it}) = \gamma_i + \theta_{jt} + \lambda_t + \delta(FW_i \times Post_t) + Z_{it}^{\prime}\beta_i + \epsilon_{ijt}
+    \end{equation}
+    Onde:
+    \begin{itemize}
+        \item $P_{it}$: População da cidade $i$ no ano $t$.
+        \item $\gamma_i$: Efeitos fixos da cidade (capturam fatores invariantes no tempo).
+        \item $\theta_{jt}$: Efeitos fixos de região por período (capturam choques regionais variáveis no tempo).
+        \item $\lambda_t$: Efeitos fixos de período (capturam fatores que causam urbanização no período).
+        \item $FW_i$: Dummy que vale 1 para cidades que ganharam acesso na primeira onda (1855-1870), 0 caso contrário.
+        \item $Post_t$: Dummy que vale 1 para o ano de 1870, 0 caso contrário.
+        \item $\delta$: Coeficiente de interesse, estimado pelo OLS, que representa o impacto da ferrovia.
+        \item $Z_{it}$: Vetor de variáveis de controle (dummies para localização na costa/lagos principais, longitude, latitude e suas interações, todas interagidas com efeitos de período).
+        \item $\epsilon_{ijt}$: Termo de erro.
+        \item Erros padrão agrupados em nível de cidade.
+    \end{itemize}
+    \item \textbf{Impacto de Longo Prazo:} Para examinar o impacto de longo prazo (1800-2010), a equação \eqref{eq:sweden_did_short} é modificada para permitir que o efeito do acesso na primeira onda varie por década.
+    \begin{equation} \label{eq:sweden_did_long}
+        \ln(P_{it}) = \alpha_i + \lambda_t + \delta_t FW_i + Z_{i}^{\prime}\beta_{it} + \epsilon_{it}
+    \end{equation}
+    Onde:
+    \begin{itemize}
+        \item $\delta_t$: Coeficiente que representa a diferença média na população entre cidades com e sem acesso na primeira onda em relação ao ano base de 1855.
+        \item Os demais termos são definidos de forma análoga, com $Z_i$ contendo controles geográficos interagidos com efeitos de década.
+    \end{itemize}
+    \item \textbf{Variáveis Instrumentais (IV):} Para mitigar o viés de variáveis omitidas e a não aleatoriedade na alocação das ferrovias (particularmente o potencial viés de seleção negativa devido aos objetivos de desenvolvimento dos planejadores estatais), são utilizadas estratégias de variáveis instrumentais (2SLS).
+    \begin{itemize}
+        \item \textbf{Instrumento Principal:} Distância de rotas de menor custo aproximadas por linhas retas entre os principais terminais da rede (Estocolmo, Gotemburgo, Malmö, regiões de mineração no norte e Noruega), evitando obstáculos naturais. O instrumento é uma dummy que vale 1 para cidades localizadas em zonas de buffer (10 km e 20 km) ao longo dessas linhas retas. A relevância do instrumento baseia-se na forte correlação entre a localização nessas zonas de buffer e o acesso à ferrovia na primeira onda. A restrição de exclusão assume que a localização nessas zonas não está correlacionada com outros determinantes de crescimento.
+        \item \textbf{Instrumentos Complementares:} As propostas de rede de Adolf von Rosen (1845) e Nils Ericson (1856) são usadas como instrumentos alternativos. A relevância baseia-se na forte relação de primeiro estágio entre as propostas e as linhas construídas. A restrição de exclusão assume que as rotas propostas não afetam a população urbana por canais diferentes das ferrovias construídas.
+    \end{itemize}
+    Equações de Primeiro e Segundo Estágio:
+    \begin{align}
+        R_{it} &= \zeta_i + \phi_t + \psi(L_i^z \times Post_t) + Z_{it}^{\prime}\beta_i + \vartheta_{ijt} \label{eq:sweden_iv_first} \\
+        \ln(P_{it}) &= \alpha_i + \lambda_t + \sigma \hat{R_{it}} + Z_{it}^{\prime}\beta_t + \epsilon_{it} \label{eq:sweden_iv_second}
+    \end{align}
+    Onde:
+    \begin{itemize}
+        \item $R_{it}$: Dummy que vale 1 se a cidade $i$ tem acesso à ferrovia no ano $t$.
+        \item $L_i^z$: Um dos instrumentos $z$ (dummy de buffer de linha reta ou dummy de inclusão na proposta de rede).
+        \item $\hat{R_{it}}$: Acesso à ferrovia previsto pelo primeiro estágio.
+        \item $\sigma$: Coeficiente de interesse no segundo estágio, estimado pelo 2SLS, que representa o impacto causal do acesso à ferrovia.
+        \item Os demais termos são definidos de forma análoga às equações anteriores.
+    \end{itemize}
+    \item \textbf{Testes de Placebo:} Quatro testes de placebo são realizados para avaliar a validade das estratégias de IV. São examinados os "efeitos" da localização em zonas de buffer de linhas retas onde nenhuma ferrovia foi construída, rotas propostas mas não construídas até 1870, e linhas construídas apenas após 1870. Espera-se que os efeitos estimados para essas linhas placebo sejam próximos de zero se as IVs forem válidas.
+\end{itemize}
+
+\subsection*{Resultados-Chave}
+\begin{itemize}
+    \item As cidades que ganharam acesso à rede ferroviária na primeira onda experimentaram aumentos relativos substanciais e estatisticamente significativos na população entre 1855 e 1870. As estimativas OLS sugerem um aumento relativo médio de 27\% na população.
+    \item As estimativas IV são consistentemente maiores que as estimativas OLS (o impacto causal sugerido é cerca de duas vezes maior), o que é consistente com a ideia de que os planejadores estatais tenderam a direcionar as ferrovias para áreas com piores perspectivas de crescimento inicial.
+    \item A maior parte do crescimento observado nas cidades conectadas na primeira onda refletiu uma reorganização da atividade econômica, com realocação de população de cidades próximas não conectadas. O efeito de tratamento diminui à medida que o grupo de controle é composto por cidades não conectadas mais distantes da rede.
+    \item Conexões ferroviárias que surgiram após 1870 tiveram pouco impacto relativo mensurável nas populações urbanas.
+    \item No longo prazo (até 2010), as diferenças relativas na população entre as cidades com acesso precoce e outras cidades persistiram em grande parte. As cidades com conexão ferroviária precoce parecem ter atingido seu nível de equilíbrio de longo prazo no início do século XX.
+    \item A persistência das diferenças populacionais não parece ser explicada por um excesso histórico de investimentos em infraestrutura ferroviária, vantagem industrial ou investimentos em serviços públicos em 1900. Também não é explicada por fatores contemporâneos como acesso a infraestrutura de transporte, estoque de habitação antiga, preços de casas, densidade, estrutura etária ou padrões de especialização industrial, quando comparadas a cidades de tamanho similar hoje.
+    \item A evidência sugere que a vantagem transitória de uma conexão ferroviária precoce deu origem à dependência de trajetória na localização da atividade econômica.
+\end{itemize}
+
+\subsection*{Limitações}
+\begin{itemize}
+    \item A exclusão de cidades que se formaram após 1840 (cuja localização pode ser endógena à rede ferroviária) pode subestimar o impacto de longo prazo das ferrovias.
+    \item A utilização de cidades definidas por limites administrativos em evolução, em vez de áreas urbanas consistentemente definidas, pode introduzir viés se os limites mudaram diferencialmente para as cidades conectadas na primeira onda, embora a análise comparativa de áreas geográficas atuais e densidade populacional não sugira grandes distorções.
+\end{itemize}
+
+\subsection*{Relevância}
+\begin{itemize}
+    \item Boa metodologia, incluindo DiD e IVs para lidar com endogeneidade, e a discussão sobre a "dependência de trajetória" são diretamente aplicáveis a estudos sobre os efeitos de políticas públicas e investimentos em infraestrutura.
+    \item A descoberta de que o crescimento impulsionado pela ferrovia refletiu principalmente reorganização de atividade econômica, em vez de crescimento agregado nas cidades conectadas, tem implicações importantes para a avaliação de políticas de desenvolvimento regional e investimentos em infraestrutura, sugerindo a necessidade de considerar os efeitos de deslocamento.
+    \item A investigação sobre a persistência dos efeitos ao longo de um século, apesar da expansão posterior da rede, é importante para avaliar a durabilidade dos impactos de choques localizados e a possibilidade de múltiplos equilíbrios espaciais.
+    \item A comparação de cidades que cresceram devido ao choque inicial com cidades de tamanho similar hoje, para descartar explicações baseadas em estoques de capital é uma boa idéia.
+\end{itemize}
+
+\newpage
+\section{Railroads and Rural Industrialization: Evidence from a Historical Policy Experiment}
+
+\subsection*{Autores}
+Thor Berger (2019). \textit{Explorations in Economic History}, 74, 101277.
+
+\subsection*{Objetivo Principal}
+O estudo investiga o impacto das ferrovias estatais no crescimento populacional e na transformação estrutural e industrialização das áreas rurais da Suécia no século XIX. O foco é estabelecer uma relação causal, explorando o fato de que as linhas-tronco do sistema ferroviário atravessaram comunidades rurais que não eram alvos diretos dos planejadores. O artigo também busca entender se os investimentos em infraestrutura de transporte podem impulsionar o desenvolvimento industrial em regiões periféricas.
+
+\subsection*{Método}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Abordagem:} Diferenças-em-Diferenças (DiD) com estratégia de Variável Instrumental (VI).
+    \item \textbf{Dados:}
+    \begin{itemize}
+        \item Painel de paróquias rurais (1850-1900).
+        \item Variáveis: emprego industrial, população, características geográficas.
+        \item Rede ferroviária histórica georreferenciada.
+    \end{itemize}
+    \item \textbf{Instrumento:} "Least Cost Paths" (LCPs) - rotas hipotéticas de menor custo entre cidades-alvo.
+    \item \textbf{Controles:} Efeitos fixos por condado, aptidão agrícola, acesso a canais, etc.
+\end{itemize}
+
+\subsection*{Resultados-Chave}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Efeito Localizado:}
+    \begin{itemize}
+        \item Paróquias a $\leq 5$km das linhas-tronco tiveram:
+        \begin{itemize}
+            \item $+6.9$ p.p. na participação do emprego industrial (VI).
+            \item $+20.7\%$ no crescimento populacional (VI).
+        \end{itemize}
+        \item Efeitos decaem rapidamente além de 5km.
+    \end{itemize}
+    
+    \item \textbf{Mecanismos:}
+    \begin{itemize}
+        \item Redução de custos de transporte (75\% para bens).
+        \item Integração de mercados rurais isolados.
+        \item Crescimento de indústrias leves (têxteis, móveis).
+    \end{itemize}
+    
+    \item \textbf{Robustez:}
+    \begin{itemize}
+        \item Resultados consistentes em subamostras rurais.
+        \item Sem evidência de spillovers negativos significativos.
+        \item Testes placebos validam estratégia de identificação.
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Limitações}
+\begin{itemize}[leftmargin=*]
+    \item Dados históricos restritos a paróquias com registros completos.
+    \item Potencial viés de seleção em rotas não construídas.
+    \item Dificuldade em estimar efeitos agregados na economia.
+\end{itemize}
+
+\subsection*{Relevância}
+\begin{itemize}[leftmargin=*]
+    \item Ideia de que investimentos em infraestrutura de transporte podem catalisar a industrialização em regiões rurais, importante para países em desenvolvimento hoje.
+    \item As ferrovias são identificadas como um fator central para a rápida convergência da Suécia com os líderes industriais europeus no século XIX.
+    \item A estratégia de VI baseada em LCPs é boa ideia para estudos futuros sobre impactos de infraestrutura, principalmente em contextos onde a alocação não foi aleatória.
+\end{itemize}
+
+\newpage
+\section{Historical econometrics: instrumental variables and regression discontinuity designs}
+
+\subsection*{Autores}
+Felipe Valencia Caicedo (2020). CEPR Discussion Paper DP15208.
+
+\subsection*{Objetivo Principal}
+O trabalho faz um levantamento (survey) do uso de Variáveis Instrumentais (IVs) e Desenhos de Regressão Descontínua (RDDs) na história econômica. Ele mostra as tendências positivas no emprego desses métodos em artigos de história econômica, detalha fases de desenvolvimento e discute refinamentos metodológicos recentes.
+
+\subsection*{Método}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Dados:}
+    \begin{itemize}
+       \item Para documentar tendências, o autor usa três amostras de artigos publicados entre 2000-2020: artigos em 20 principais periódicos de economia, nos 5 principais periódicos de história econômica e nos 5 principais periódicos de interesse geral em economia.
+       \item O artigo também se baseia em uma vasta literatura existente que aplicou os métodos de IV e RDD.
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Resultados-Chave}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Geral:}
+    O estudo mostra uma tendência positiva e crescente no uso de IVs e RDDs em artigos de história econômica publicados em periódicos de destaque entre 2000 e 2020. Por exemplo, o número de artigos de história econômica usando IV em periódicos gerais de topo aumentou para mais de cinco por ano em 2018, e os estudos com RDD, embora começando mais tarde (por volta de 2008), também mostraram crescimento.
+    
+    \item \textbf{Fases:}
+    \begin{itemize}
+        \item \textbf{Estudos Pioneiros (2001-2011):} Artigos seminais que introduziram e popularizaram o uso de IVs e RDDs em contextos históricos, como os trabalhos de Acemoglu, Johnson e Robinson (2001, 2002) sobre instituições e mortalidade de colonizadores; Dell (2010) sobre os efeitos de longo prazo da mita usando RDD geográfico; e Becker e Woessmann (2009) sobre o protestantismo, usando distância a Wittenberg como instrumento.
+        \item \textbf{Segunda Onda (2012-2020):} Estudos que refinaram e expandiram o uso dessas técnicas, com maior sofisticação econométrica e abordando novas questões. Exemplos incluem Michalopoulos e Papaioannou (2013, 2014, 2016) sobre o impacto de fronteiras étnicas e nacionais na África usando RDD e Alsan (2015) sobre o impacto da mosca tsé-tsé no desenvolvimento africano usando um índice de adequabilidade como instrumento.
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Limitações}
+\begin{itemize}[leftmargin=*]
+    \item O artigo foca especificamente em IVs e RDDs, reconhecendo que outras técnicas econométricas (como diferenças-em-diferenças, experimentos naturais, etc.) também são importantes em história econômica.
+\end{itemize}
+
+\subsection*{Relevância}
+\begin{itemize}[leftmargin=*]
+    \item Panorama sobre o uso de Variáveis Instrumentais e Desenhos de Regressão Descontínua.
+    \item Apresenta uma série de estudos influentes que podem servir de exemplo e inspiração metodológica.
+\end{itemize}
+
+\newpage
+\section{Port rail connectivity and agricultural production: evidence from a large sample of farmers in Ethiopia}
+ 
+\subsection*{Autores}
+IIMI, A., ADAMTEI, H., MARKLAND, J., \& TSEHAYE, E. (2019). \textit{Journal of Applied Economics}, 22(1), 149-171. (Nota: Verifiquei a referência, o volume é 22, issue 1, páginas 149-171).
+
+\subsection*{Objetivo Principal}
+O artigo estima os impactos da conectividade do transporte ferroviário ao porto na produção agrícola na Etiópia, utilizando um evento histórico de abandono de uma importante linha ferroviária que conectava o país ao Porto de Djibouti.
+
+\subsection*{Método}
+
+\subsubsection*{Dados}
+\begin{itemize}
+    \item \textbf{Fonte:} Oito rodadas das Pesquisas Anuais de Amostra Agrícola da Etiópia (\textit{Ethiopian Agriculture Sample Surveys}).
+    \item \textbf{Período:} 2003-2010.
+    \item \textbf{Amostra:} Mais de 190.000 domicílios (aproximadamente 30.000 por ano), cobrindo todas as regiões da Etiópia, com dados no nível distrital (\textit{woreda}) para análise espacial.
+\end{itemize}
+
+\subsubsection*{Modelo}
+O estudo utiliza uma \textbf{função de produção agrícola} para estimar os impactos da conectividade portuária e outros fatores na produção. Os autores fazem isso por meio da combinação de \textbf{efeitos fixos} em nível de distrito e tempo com \textbf{variáveis instrumentais (VI)} para lidar com a endogeneidade da variável de transporte.
+
+\subsubsection*{Detalhamento da Equação Principal}
+A equação estimada (originalmente Equação 4 do artigo), incorporando a especificação de Battese (1997) para lidar com variáveis de insumo com muitos zeros, é:
+\begin{equation}\label{eq:ethiopia_prod_func}
+\begin{split}
+\ln V_{ijt} = & \beta_{0} + \beta_{L}\ln L_{ijt} + \beta_{H}\ln H_{ijt} + \beta_{F}\ln F_{ijt}^{*} + \delta_{F}D_{F,jt} \\
+& + \beta_{S}\ln S_{ijt}^{*} + \delta_{S}D_{S,jt} + \beta_{R}\ln R_{ijt}^{*} + \delta_{R}D_{R,ijt} \\
+& + \beta_{TR}\ln TR_{jt} + Z_{ijt}'\beta_{Z} + c_{j} + c_{t} + \epsilon_{ijt}
+\end{split}
+\end{equation}
+Onde:
+\begin{itemize}
+    \item $V_{ijt}$: Valor total das colheitas produzidas pelo domicílio $i$ na localização (distrito) $j$ no tempo $t$. Esta é a variável dependente, representando a produção agrícola.
+    \item $L_{ijt}$: Insumo trabalho, aproximado pelo tamanho do domicílio. Espera-se que $\beta_L > 0$.
+    \item $H_{ijt}$: Área de terra cultivada de sequeiro. Espera-se que $\beta_H > 0$.
+    \item $F_{ijt}^{*}$: Quantidade de fertilizante utilizado. $F_{ijt}^{*} = \max(F_{ijt}, D_{F,jt})$, onde $F_{ijt}$ é a quantidade de fertilizante e $D_{F,jt}$ é uma variável dummy. Este tratamento é importante pois muitos agricultores não utilizam fertilizantes. Espera-se que $\beta_F > 0$.
+    \item $D_{F,jt}$: Variável dummy que é igual a 1 se o domicílio $j$ no tempo $t$ não utiliza fertilizante ($F_{ijt}=0$), e 0 caso contrário. O coeficiente $\delta_F$ captura o efeito de não usar fertilizante.
+    \item $S_{ijt}^{*}$: Quantidade de sementes melhoradas utilizadas, com tratamento similar a $F_{ijt}^{*}$. Espera-se que $\beta_S > 0$.
+    \item $D_{S,jt}$: Variável dummy para uso zero de sementes melhoradas, similar a $D_{F,jt}$.
+    \item $R_{ijt}^{*}$: Área de terra irrigada, com tratamento similar a $F_{ijt}^{*}$. Espera-se que $\beta_R > 0$.
+    \item $D_{R,jt}$: Variável dummy para uso zero de irrigação, similar a $D_{F,jt}$.
+    \item $TR_{jt}$: Conectividade de transporte ao porto (Porto de Djibouti) para o distrito $j$ no tempo $t$. Esta é a variável chave de interesse e é definida como o menor custo de transporte de cada distrito ao porto, calculado usando software espacial (ArcGIS) e considerando custos unitários de transporte ferroviário e rodoviário (medida multimodal). Um aumento no custo ($TR_{jt}$) significa pior conectividade, então espera-se que $\beta_{TR} < 0$. A variação temporal desta variável advém da deterioração e cessação das operações da ferrovia Etio-Djibouti durante o período de análise.
+    \item $Z_{ijt}$: Vetor de características do domicílio (ex: sexo do chefe do domicílio, escolaridade, percentual de terra própria). Os coeficientes em $\beta_Z$ medem o impacto dessas características.
+    \item $c_j$: Efeitos fixos específicos do distrito, que controlam características locais invariantes no tempo (ex: potencial agroclimático, topografia, proximidade a mercados locais). Isso é crucial para controlar por fatores não observados que podem estar correlacionados tanto com a produção quanto com a infraestrutura de transporte.
+    \item $c_t$: Efeitos fixos específicos do tempo (ano), que controlam por choques agregados comuns a todos os distritos em um determinado ano (ex: preços de commodities, condições climáticas gerais).
+    \item $\epsilon_{ijt}$: Termo de erro idiossincrático.
+\end{itemize}
+
+\subsection*{Resultados-Chave}
+\begin{itemize}
+    \item A deterioração da acessibilidade do transporte ao porto teve um impacto significativamente negativo na produção agrícola.
+    \item Especificamente, o uso de fertilizantes diminuiu com o aumento dos custos de transporte.
+    \item Na regressão com VI (considerada mais consistente), o coeficiente da variável de custo de transporte ($TR$) é negativo e estatisticamente significante, confirmando a hipótese principal. O teste de exogeneidade rejeita a hipótese de que a variável de transporte é exógena.
+\end{itemize}
+
+\subsection*{Limitações}
+\begin{itemize}
+    \item Os dados não são um painel verdadeiro de domicílios (os domicílios entrevistados podem não ser os mesmos ao longo dos anos), mas sim seções transversais repetidas agrupadas ao longo do tempo. Os efeitos fixos são em nível de distrito, não de domicílio.
+    \item A variável de trabalho (tamanho do domicílio) é uma aproximação, pois não há dados detalhados sobre a alocação de trabalho dos membros da família para atividades agrícolas específicas.
+    \item A identificação do impacto causal da infraestrutura de transporte é inerentemente desafiadora, embora os autores empreguem técnicas robustas (efeitos fixos e VI) para mitigar problemas de endogeneidade.
+    \item Alguns dados administrativos sobre limites de distritos podem não ser consistentes ao longo do tempo devido a mudanças, levando à omissão de alguns \textit{woredas} da análise.
+\end{itemize}
+
+\subsection*{Relevância}
+\begin{itemize}
+    \item Aplicação robusta de como estimar o impacto econômico de infraestrutura de transporte na produção agrícola.
+    \item A metodologia empregada, especialmente o uso combinado de \textbf{efeitos fixos de distrito e variáveis instrumentais} para lidar com endogeneidade em um contexto de dados de seção transversal repetida, é uma boa ideia para análises de impacto de políticas ou infraestrutura.
+    \item Na ótica da \textbf{desigualdade regional}, o estudo mostra como o acesso diferencial à infraestrutura (como ferrovias portuárias) pode ser um fator determinante das disparidades na produção e, potencialmente, na renda agrícola entre regiões. A variação espacial nos custos de transporte e seu impacto na produção podem ser diretamente ligados a diferenciais de desenvolvimento regional.
+    \item A forma como a variável de \textbf{conectividade de transporte multimodal ($TR_{jt}$)} foi construída, utilizando SIG e dados de custo, é metodologicamente interessante e pode ser adaptada para sua pesquisa.
+\end{itemize}
+
+\newpage
+ \section{The Permanent Effects of Transportation Revolutions in Poor Countries: Evidence from Africa}
+
+\subsection*{Autores}
+Remi Jedwab e Alexander Moradi (2016). \textit{The Review of Economics and Statistics}, 98(2), 268-284.
+
+\subsection*{Objetivo Principal}
+Investigar o impacto de longo prazo dos investimentos em transporte (ferrovias coloniais) em países pobres, explorando a construção e o eventual declínio das ferrovias coloniais em Gana e na maior parte da África Subsaariana. O estudo analisa se os efeitos iniciais desses investimentos na distribuição da atividade econômica persistiram apesar do colapso das ferrovias e da expansão das redes rodoviárias após a independência.
+
+\subsection*{Método}
+
+\subsubsection*{Tipo de Estudo}
+Empírico, quantitativo.
+
+\subsubsection*{Dados}
+\begin{itemize}
+    \item Novo conjunto de dados sobre ferrovias e cidades em Gana (2.091 células de grade de $0.1 \times 0.1$ graus, ou $11 \times 11$ km) abrangendo o período de 1891-2000.
+    \item Dados similares para 39 países africanos (194.000 células de grade com a mesma precisão) para o período de 1890-2010.
+    \item Dados sobre adequação do solo para cacau, produção de cacau (Gana), população urbana e rural, e bens públicos locais.
+    \item Layouts de ferrovias em GIS, incluindo a história de cada linha e estação, e linhas que foram planejadas mas não construídas (usadas como placebo).
+\end{itemize}
+
+\subsubsection*{Modelo}
+\begin{itemize}
+    \item \textbf{Para Gana (células $c$, períodos 1901-1931 e 1901-2000):}
+    \begin{itemize}
+        \item Impacto na produção de cacau ($\tilde{C}_{c,31}$) e população (rural e urbana, $\tilde{P}_{c,31}$) em 1931:
+        \begin{align}
+            \tilde{C}_{c,31} &= \alpha + Rail_{c,18}\beta + \lambda\tilde{R}_{c,01} + \rho\tilde{U}_{c,01} + X_{c,01}\gamma + u_{c} \label{eq:ghana_cocoa} \\
+            \tilde{P}_{c,31} &= \alpha^{\prime} + Rail_{c,18}\beta^{\prime} + \lambda^{\prime}\tilde{R}_{c,01} + \rho^{\prime}\tilde{U}_{c,01} + X_{c,01}\gamma^{\prime} + u_{c}^{\prime} \label{eq:ghana_pop31}
+        \end{align}
+        \item Persistência do impacto na população ($\tilde{P}_{c,100}$) em 2000:
+        \begin{equation} \label{eq:ghana_pop100}
+            \tilde{P}_{c,100} = \alpha^{\prime\prime} + Rail_{c,18}\beta^{\prime\prime} + \lambda^{\prime\prime}\tilde{R}_{c,01} + \rho^{\prime\prime}\tilde{U}_{c,01} + X_{c,01}\gamma^{\prime\prime} + u_{c}^{\prime\prime}
+        \end{equation}
+        \item $Rail_{c,18}$ são dummies indicando a conectividade ferroviária da célula $c$ em 1918 (0-10km, 10-20km, etc., da linha).
+        \item $\tilde{R}_{c,01}$ e $\tilde{U}_{c,01}$ são z-scores da população rural e urbana em 1901.
+        \item $X_{c,01}$ é um vetor de controles geográficos e de mineração.
+        \item Variáveis dependentes são z-scores para permitir comparabilidade.
+    \end{itemize}
+    \item \textbf{Para 39 países africanos (células $c$, país $s$, períodos 1900-1960 e 1900-2010):}
+    \begin{itemize}
+        \item Impacto na população urbana ($\tilde{U}_{c,s,60}$ e $\tilde{U}_{c,s,110}$) em 1960 e 2010:
+        \begin{align}
+            \tilde{U}_{c,s,60} &= \alpha_{ssa} + Rail_{c,s,60}\beta_{ssa} + \rho_{ssa}\tilde{U}_{c,s,00} + \pi_{s} + X_{c,s,00}\gamma_{ssa} + v_{c,s} \label{eq:africa_pop60} \\
+            \tilde{U}_{c,s,110} &= \alpha_{ssa}^{\prime} + Rail_{c,s,60}\beta_{ssa}^{\prime} + \rho_{ssa}^{\prime}\tilde{U}_{c,s,00} + \pi_{s}^{\prime} + X_{c,s,00}\gamma_{ssa}^{\prime} + v_{c,s}^{\prime} \label{eq:africa_pop110}
+        \end{align}
+        \end{itemize}
+        \item $Rail_{c,s,60}$ são dummies de conectividade ferroviária em 1960.
+        \item $\tilde{U}_{c,s,00}$ é o z-score da população urbana em 1900.
+        \item $\pi_s$ são efeitos fixos de país.
+    \end{itemize}
+    \item \textbf{Estratégias de Identificação:}
+    \begin{itemize}
+        \item Inclusão de diversos controles geográficos e de geografia econômica.
+        \item Análise de descontinuidades espaciais (comparando células vizinhas dentro dos mesmos grupos étnicos ou distritos).
+        \item Inclusão de polinômios de longitude e latitude.
+        \item Análise separada para linhas construídas com propósitos de mineração ou militares (potencialmente mais exógenas à produção agrícola).
+        \item Uso de linhas placebo (rotas planejadas mas não construídas).
+        \item Instrumentação (IV): para Gana, distância de linhas retas conectando cidades pré-ferrovia; para a África, distância de uma rede Euclidiana de Árvore Geradora Mínima (EMST) baseada na rede urbana inicial de 1900.
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Resultados-Chave}
+\begin{itemize}
+    \item As ferrovias coloniais tiveram grandes e persistentes efeitos na distribuição da atividade econômica.
+    \item Em Gana, a conectividade ferroviária aumentou significativamente a produção de cacau, o crescimento da população rural (efeitos até 30 km da linha) e o crescimento da população urbana (efeitos até 10 km da linha) durante o período colonial.
+    \item Esses efeitos em Gana persistiram até o ano 2000, mesmo após o declínio das ferrovias e a expansão das estradas. O equilíbrio espacial tornou-se estável logo após a construção das ferrovias.
+    \item Para os 39 países africanos, as ferrovias tiveram um efeito positivo e robusto na população urbana em 1960, e esse efeito também persistiu até 2010.
+    \item Os resultados sugerem que investimentos iniciais em transporte podem ter efeitos duradouros em países pobres. À medida que os países se desenvolvem, retornos crescentes podem solidificar a distribuição espacial da atividade econômica, e investimentos subsequentes em transporte podem ter efeitos menores.
+\end{itemize}
+
+\subsection*{Limitações}
+\begin{itemize}
+    \item A endogeneidade da localização das ferrovias é uma preocupação, embora abordada com múltiplas estratégias de identificação.
+    \item A qualidade e disponibilidade de dados históricos podem variar.
+    \item Isolar completamente os canais de persistência ao longo de um século é complexo.
+\end{itemize}
+
+\subsection*{Relevância}
+\begin{itemize}
+    \item Fornece evidências importantes sobre os efeitos de longo prazo de grandes investimentos em infraestrutura em países em desenvolvimento.
+    \item Destaca o papel da dependência de trajetória (path dependence) na configuração da geografia econômica.
+    \item Sugere que os retornos de investimentos em infraestrutura podem ser heterogêneos, sendo potencialmente maiores em contextos de infraestrutura básica e altos custos de transporte iniciais.
+    \item Relevante para políticas contemporâneas de desenvolvimento regional e planejamento de infraestrutura em países de baixa renda.
+\end{itemize}
+
+\newpage
+
+\section{The Causal Effect of Transport Infrastructure: Evidence from a New Historical Database}
+
+\subsection*{Autores}
+Erik Lindgren, Per Pettersson-Lidbom e Björn Tyrefors (2021). Documento de Trabalho (Março de 2021).
+
+\subsection*{Objetivo Principal}
+Analisar o efeito causal de investimentos em infraestrutura de transporte (ferrovias) em três medidas de atividade econômica local: renda real não agrícola, valor da terra agrícola e tamanho da população, utilizando um novo banco de dados histórico da Suécia.
+
+\subsection*{Método}
+
+\subsubsection*{Tipo de Estudo}
+Empírico, quantitativo.
+
+\subsubsection*{Dados}
+\begin{itemize}
+    \item Novo banco de dados histórico com dados anuais em painel para aproximadamente 2.400 regiões administrativas (governos locais) na Suécia, cobrindo o período de 1860-1917.
+    \item Dados anuais sobre tamanho da população, valor da terra agrícola e renda real no setor não agrícola.
+    \item Informações sobre a abertura de até 1.340 novas ferrovias (estatais e privadas).
+\end{itemize}
+
+\subsubsection*{Modelo}
+\begin{itemize}
+    \item \textbf{Design de Estudo de Eventos Escalonado (Staggered Event Study Design):} Robusto à heterogeneidade dos efeitos do tratamento, utilizando o estimador de Diferenças-em-Diferenças (DID) desenvolvido por de Chaisemartin e d'Haultfoeuille (2020, 2021).
+    \item Equação de regressão populacional base:
+    \begin{equation} \label{eq:sweden_event_study}
+        Y_{it} = \alpha_i + \lambda_t + \beta_{it}Rail_{it} + v_{it}
+    \end{equation}
+    Onde:
+    \begin{itemize}
+        \item $Y_{it}$: Medida de atividade econômica local (log da renda real não agrícola, log do valor da terra agrícola, ou log do tamanho da população) para a região $i$ no ano $t$.
+        \item $Rail_{it}$: Variável indicadora que assume o valor 1 se a região $i$ tem acesso a uma ferrovia no ano $t$, e 0 caso contrário.
+        \item $\alpha_i$: Efeito fixo de região.
+        \item $\lambda_t$: Efeito fixo de ano.
+        \item $\beta_{it}$: Efeito do tratamento heterogêneo por região e tempo.
+    \end{itemize}
+    \item Testes de tendências paralelas para até 25 anos antes da abertura das ferrovias.
+    \item \textbf{Distinção entre Crescimento e Reorganização:} Análise de efeitos de transbordamento (spillover) em regiões vizinhas não tratadas (placebo).
+    \begin{equation} \label{eq:sweden_spillover}
+        Y_{it} = \alpha_{i} + \lambda_{t} + \pi_{it}Rail\_neighbors_{jt} + v_{jt}
+    \end{equation}
+    Onde $Rail\_neighbors_{jt}$ é uma função indicadora se uma área vizinha $j$ tem acesso a uma ferrovia no tempo $t$.
+\end{itemize}
+
+\subsection*{Resultados-Chave}
+\begin{itemize}
+    \item Efeitos de forma reduzida do acesso a ferrovias são extremamente grandes: a renda real no setor não agrícola aumenta cumulativamente em aproximadamente 120\% ao longo de um período de 30 anos após a abertura de uma ferrovia. Este efeito é cerca de 20 vezes maior do que o encontrado em muitos estudos anteriores.
+    \item O valor da terra agrícola e o tamanho da população aumentam ambos em aproximadamente 15\% ao longo de um período de 30 anos após a abertura de uma ferrovia.
+    \item A hipótese de tendências paralelas se sustenta por pelo menos 25 anos antes da abertura das ferrovias para todos os resultados analisados.
+    \item Há pouca evidência de violações da SUTVA (Stable Unit Treatment Value Assumption) ao estimar os efeitos placebo em regiões vizinhas. Os efeitos de transbordamento estimados são próximos de zero.
+    \item Isso sugere que os efeitos de forma reduzida encontrados refletem crescimento genuíno da atividade econômica, em vez de uma mera reorganização da atividade existente.
+\end{itemize}
+
+\subsection*{Limitações}
+\begin{itemize}
+    \item A definição de "região vizinha" para testar spillovers pode influenciar os resultados dessa análise específica.
+\end{itemize}
+
+\subsection*{Relevância}
+\begin{itemize}
+    \item Utiliza um design de estudo de eventos que aborda explicitamente o problema de efeitos de tratamento heterogêneos na literatura sobre infraestrutura de transporte.
+    \item Os dados históricos anuais e altamente desagregados espacialmente para a Suécia são consideravelmente melhores e mais abrangentes do que os utilizados em estudos anteriores.
+    \item Distingui credivelmente o crescimento e a reorganização da atividade econômica com base nos efeitos observados da infraestrutura.
+    \item Os resultados, que indicam efeitos muito maiores do que os encontrados anteriormente, têm implicações significativas para a avaliação de projetos de infraestrutura e para a compreensão do papel das ferrovias no desenvolvimento econômico.
+\end{itemize}
+
+\newpage
+
+\section{The Long Shadow of Infrastructure Development: Long Run Effects of Railway Construction in Colonial India}
+
+\subsection*{Autores}
+Pushkar Maitra e William Yu (2021). \textit{Monash University, Department of Economics, Discussion Paper no. 2021-01} (Janeiro de 2021).
+
+\subsection*{Objetivo Principal}
+Examinar os impactos de longo prazo do investimento em infraestrutura, especificamente a construção de ferrovias pela Grã-Bretanha na Índia colonial (1853-1930), sobre a prosperidade econômica e resultados socioeconômicos nos distritos do subcontinente indiano mais de um século depois.
+
+\subsection*{Método}
+
+\subsubsection*{Tipo de Estudo}
+Empírico, quantitativo.
+
+\subsubsection*{Dados}
+\begin{itemize}
+    \item Ano de introdução das ferrovias em cada distrito da Índia atual, Bangladesh e Paquistão (fonte: Donaldson, 2018).
+    \item Variável de resultado principal: Luzes noturnas ($log(1+sumlight)$ e $log(1+meanlight)$) como proxy para prosperidade no nível do distrito (dados de 1992-2013).
+    \item Controles coloniais: Renda real e área total cultivada por 17 grandes culturas (Donaldson, 2018), dummy para regra direta britânica.
+    \item Controles pós-independência (Índia): Proporção da população SC (Scheduled Castes) e ST (Scheduled Tribes), percentual da população alfabetizada (Censo de 2011).
+    \item Controles geográficos: Comprimento do rio no distrito, percentual do distrito com elevação média acima de 500 metros (Duflo e Pande, 2007).
+    \item Medidas alternativas de prosperidade: Depósitos bancários agregados no distrito (RBI, 2013), taxas de pobreza rural e urbana no distrito (NSS 60ª rodada, 2004, para a Índia).
+    \item Resultados socioeconômicos (Índia): Proporção de homens e mulheres adultos sem escolaridade e subnutridos (IMC $<$ 18.5) (IHDS2, 2011-2012).
+    \item Dados de densidade populacional por distrito (1901-2001, fonte: Tumbe, 2012, 2015) para análise do mecanismo de aglomeração.
+\end{itemize}
+
+\subsubsection*{Modelo}
+\begin{itemize}
+    \item \textbf{Especificação principal (OLS):}
+    \begin{equation} \label{eq:maitra_main}
+        log(1+sumlight_{dst})=\beta_{0}+\sum_{i=1}^{7}\beta_{i}R_{i}+\gamma X_{dst}+\lambda_{s}+\eta_{t}+\epsilon_{dst}
+    \end{equation}
+    Onde:
+    \begin{itemize}
+        \item $sumlight_{dst}$: Luzes noturnas no distrito $d$, estado $s$, ano $t$.
+        \item $R_i$: Dummies para o período de introdução da ferrovia no distrito (ex: $R_1$ para 1850-1860, $R_7$ para 1911-1930). O grupo de referência são distritos não conectados até 1930.
+        \item $X_{dst}$: Vetor de controles no nível do distrito.
+        \item $\lambda_s$: Efeitos fixos de estado.
+        \item $\eta_t$: Efeitos fixos de ano (quando dados em painel são usados).
+    \end{itemize}
+    \item \textbf{Análise de Spillovers Geográficos:}
+    \begin{equation} \label{eq:maitra_spillover}
+        log(1+sumlight_{ds})=\alpha_{0}+\alpha_{1}\Phi(M_{dsT})+\gamma X_{ds}+\lambda_{s}+\epsilon_{ds}
+    \end{equation}
+    Onde $M_{dsT}$ é a distância do centróide do distrito $d$ ao centróide do distrito conectado mais próximo no ano $T$.
+    \item \textbf{Análise de Intensidade da Construção Ferroviária:}
+    \begin{equation} \label{eq:maitra_intensity}
+        log(1+sumlight_{ds})=\xi_{0}+\xi_{1}L_{dst}+\gamma X_{dsT}+\lambda_{s}+\eta_{t}+\epsilon_{ds}
+    \end{equation}
+    Onde $L_{dst}$ é o número de quilômetros de trilhos ferroviários no distrito no tempo $T$.
+    \item \textbf{Estratégia de Variáveis Instrumentais (IV):} Para o efeito da conexão pré-1880 ($Pre-1880$ dummy).
+    \begin{equation} \label{eq:maitra_iv}
+        log(1+sumlight_{dst})=\beta_{0}+\beta_{1}Pre-1880+\gamma X_{dst}+\lambda_{s}+\epsilon_{dst}
+    \end{equation}
+    Instrumento: Distância mínima do centróide de um distrito ao centróide de um distrito no caminho mais curto hipotético que une as principais cidades.
+\end{itemize}
+
+\subsection*{Resultados-Chave}
+\begin{itemize}
+    \item Distritos do subcontinente indiano conectados mais cedo às ferrovias (especialmente antes de 1880) continuam a ter níveis significativamente mais altos de prosperidade econômica (medida por luzes noturnas e depósitos bancários agregados) e taxas de pobreza rural mais baixas mais de um século depois.
+    \item Homens e mulheres que residem em distritos conectados mais cedo são menos propensos a não ter educação ou a serem subnutridos.
+    \item Há evidências de spillovers geográficos: um aumento na distância do distrito conectado mais próximo está associado a um declínio significativo na atividade econômica um século depois.
+    \item As estimativas IV para o efeito da conexão ferroviária precoce (pré-1880) na prosperidade de longo prazo são positivas, estatisticamente significativas e maiores em magnitude do que as estimativas OLS, indicando que as estimativas OLS podem fornecer um limite inferior do efeito.
+    \item Os efeitos persistentes parecem ser impulsionados por efeitos de aglomeração positivos devido à maior exposição dos distritos conectados ao comércio internacional e inter-regional. Distritos conectados antes de 1880 apresentam densidade populacional significativamente maior.
+\end{itemize}
+
+\subsection*{Limitações}
+\begin{itemize}
+    \item Dificuldade em obter dados de renda consistentes no nível do distrito, levando ao uso de proxies como luzes noturnas.
+    \item A colocação das ferrovias pode ser endógena, embora os autores tentem mitigar isso com IV e discussão histórica dos motivos britânicos.
+    \item A migração seletiva de indivíduos mais educados e saudáveis para distritos mais ricos não pode ser totalmente descartada como uma explicação para os resultados de saúde e educação, embora a mobilidade geográfica na Índia seja considerada baixa.
+\end{itemize}
+
+\subsection*{Relevância}
+\begin{itemize}
+    \item Os resultados são consistentes com a ideia de que choques transitórios de conectividade precoce a ferrovias resultam em dependência de trajetória na localização da atividade econômica.
+\end{itemize}
+
+\newpage
+
+\section{Railroads, Coffee, and the Growth of Big Business in São Paulo, Brazil}
+
+\subsection*{Autores}
+Robert H. Mattoon, Jr. (1977). \textit{Hispanic American Historical Review}, 57(2), 273-295.
+
+\subsection*{Objetivo Principal}
+Examinar como a elite empresarial de São Paulo adotou a inovação ferroviária, estabeleceu as primeiras companhias ferroviárias e respondeu às demandas consequentes sobre gestão empresarial, trabalho e indústria, no contexto da expansão da economia cafeeira no século XIX.
+
+\subsection*{Método}
+
+\subsubsection*{Tipo de Estudo}
+Histórico, qualitativo, com foco no desenvolvimento empresarial e institucional.
+
+\subsubsection*{Dados}
+\begin{itemize}
+    \item Documentos históricos sobre legislação ferroviária em São Paulo e no Brasil imperial.
+    \item Relatórios anuais e arquivos da Companhia Paulista de Estradas de Ferro e outras companhias.
+    \item Anais da Assembleia Legislativa Provincial de São Paulo.
+    \item Jornais da época (ex: Correio Paulistano).
+    \item Biografias e estudos secundários sobre a história econômica e social de São Paulo e do Brasil.
+\end{itemize}
+
+\subsubsection*{Modelo de Análise}
+Análise histórica e narrativa da formação e desenvolvimento das empresas ferroviárias, com ênfase nas seguintes dimensões:
+\begin{itemize}
+    \item O papel do capital estrangeiro (britânico) e local (paulista) na criação das primeiras ferrovias.
+    \item A influência dos interesses cafeeiros e do governo provincial/imperial.
+    \item A evolução da estrutura empresarial, gestão, e necessidades de mão de obra (qualificada e não qualificada).
+    \item Os encadeamentos (linkages) industriais e o impacto na economia regional.
+    \item A interação entre as estruturas sociais e econômicas preexistentes (baseadas na plantation) e a nova tecnologia/organização ferroviária.
+\end{itemize}
+
+\subsection*{Resultados-Chave}
+\begin{itemize}
+    \item A primeira ferrovia em São Paulo, a Santos-Jundiaí (Companhia Ingleza), foi construída com capital e engenharia britânicos (iniciada por Irineu Evangelista de Sousa, o Barão de Mauá), pois os paulistas, em meados do século XIX, careciam de capital, tecnologia e visão empresarial para tal empreendimento, apesar da crescente necessidade de transporte para o café.
+    \item A fundação da Companhia Paulista de Estradas de Ferro em 1868 representou uma iniciativa regional, com capital e direção predominantemente locais (paulistas). Esta iniciativa foi, em parte, uma reação à influência externa e uma resposta à necessidade de servir diretamente os interesses dos cafeicultores do interior.
+    \item As ferrovias foram cruciais para a expansão da fronteira do café, integraram a província, e levaram à emergência das primeiras grandes empresas corporativas em São Paulo.
+    \item As estruturas de negócios, trabalho e produção não foram completamente transformadas, mas sim adaptadas. As empresas ferroviárias muitas vezes refletiam a organização e a ética paternalista das fazendas de café.
+    \item Houve uma mistura de interesses públicos e privados, com o governo provincial e imperial apoiando as ferrovias através de garantias de juros e outras políticas favoráveis, visando primordialmente o fomento da economia cafeeira.
+    \item A mão de obra qualificada (engenheiros, mecânicos) foi inicialmente estrangeira, mas com o tempo, brasileiros, incluindo filhos de fazendeiros educados no exterior ou nas novas escolas politécnicas, começaram a ocupar essas posições. A mão de obra não qualificada dependeu de imigrantes e trabalhadores de outras regiões.
+    \item Os encadeamentos industriais para trás (backward linkages) foram limitados. A maior parte do material rodante e dos trilhos era importada, e não houve um desenvolvimento significativo de uma indústria local para suprir as ferrovias.
+    \item Embora São Paulo tenha desenvolvido uma rede ferroviária densa (atípica na América Latina), a inovação não desencadeou o mesmo tipo de crescimento industrial por meio de encadeamentos para trás como observado na Europa ou América do Norte, devido às condições socioeconômicas e à estrutura produtiva preexistentes.
+\end{itemize}
+
+\subsection*{Limitações}
+\begin{itemize}
+    \item O estudo é focado primariamente no caso de São Paulo.
+    \item A análise é predominantemente qualitativa e histórica, não empregando métodos econométricos formais para testar hipóteses causais.
+    \item A generalização dos achados para outras regiões ou países deve ser feita com cautela.
+\end{itemize}
+
+\subsection*{Relevância}
+\begin{itemize}
+    \item O artigo ilustra a complexa interação entre uma grande inovação tecnológica (ferrovias), o desenvolvimento de uma economia agrícola de exportação (café) e a evolução das estruturas empresariais e sociais em um país em desenvolvimento.
+    \item Demonstra como as condições socioeconômicas, políticas e institucionais preexistentes (como a economia de plantation) moldam o impacto e a adoção de novas tecnologias.
+    \item Oferece insights sobre a formação de elites empresariais regionais e a dinâmica entre capital local, capital estrangeiro e o papel do Estado.
+\end{itemize}
+
+\newpage
+
+\section{Roman Roads to Prosperity: Persistence and Non-Persistence of Public Goods Provision}
+
+\subsection*{Autores}
+Carl-Johan Dalgaard, Nicolai Kaarsen, Ola Olsson e Pablo Selaya (2020). Documento de Trabalho (Agosto de 2020).
+
+\subsection*{Objetivo Principal}
+Explorar a persistência da provisão de bens públicos, investigando a ligação entre os investimentos em infraestrutura rodoviária feitos durante o Império Romano (especificamente até 117 CE) e a presença de infraestrutura moderna, bem como a ligação entre a infraestrutura antiga e a atividade econômica no passado (500 CE) e no presente (2010).
+
+\subsection*{Método}
+
+\subsubsection*{Tipo de Estudo}
+Empírico, quantitativo, utilizando dados geoespaciais e econométricos.
+
+\subsubsection*{Dados}
+\begin{itemize}
+    \item Unidade de análise: Células de grade de $1 \times 1$ grau de latitude por longitude dentro da área do Império Romano em 117 CE, que foram "tratadas" por pelo menos uma estrada romana.
+    \item Estradas Romanas: Rede de estradas principais digitalizada do "Barrington Atlas of the Greek and Roman World" (Talbert, 2000). A variável é a porcentagem da área de um buffer de 5 km ao redor das estradas romanas dentro de cada célula de grade.
+    \item Estradas Modernas: Rede de estradas primárias e secundárias de 2000 (Seamless Digital Chart of the World). Medida similar à das estradas romanas.
+    \item Assentamentos Romanos: Número de grandes assentamentos em 500 CE dentro de cada célula (fonte: DARE, Åhlfeldt, 2017).
+    \item Atividade Econômica Contemporânea: Intensidade de luzes noturnas (DMSP-OLS, 2010) e densidade populacional (Gridded Population of the World v4, 2010).
+    \item Controles: Latitude, longitude, robustez do terreno, elevação, qualidade do solo (adequação calórica pré e pós-1500, adequação agrícola), distância à costa, rios principais, portos naturais, distância a Roma, à fronteira do império e à capital atual, número de minas antigas, área da célula de grade.
+    \item Dados sobre cidades mercantis na Alemanha medieval (Cantoni e Yuchtman, 2014) para análise de mecanismo.
+\end{itemize}
+
+\subsubsection*{Modelo}
+\begin{itemize}
+    \item \textbf{Especificação de Regressão Cross-Sectional Principal:}
+    \begin{equation} \label{eq:roman_roads_main}
+        \log (y_{grc}) = \delta_c + \delta_r + \beta \log(1+RRD_{grc}) + X_{grc}\gamma + \epsilon_{grc}
+    \end{equation}
+    Onde:
+    \begin{itemize}
+        \item $y_{grc}$: Variável dependente (log da densidade de estradas modernas, log do número de assentamentos em 500 CE, log das luzes noturnas em 2010, ou log da densidade populacional em 2010) para a célula de grade $g$, na região linguística $r$, no país $c$.
+        \item $RRD_{grc}$: Densidade de estradas romanas (log de 1 + porcentagem da área do buffer).
+        \item $\delta_c$: Efeitos fixos de país.
+        \item $\delta_r$: Efeitos fixos de língua (proxy para cultura).
+        \item $X_{grc}$: Vetor de variáveis de controle geográficas e outras.
+        \item $\epsilon_{grc}$: Termo de erro.
+    \end{itemize}
+    \item \textbf{Estratégia de Identificação:}
+    \begin{itemize}
+        \item Controle extensivo por características geográficas, efeitos fixos de país e de língua.
+        \item Exploração de um "experimento natural": o abandono do uso de veículos com rodas no Norte da África e Oriente Médio (MENA) a partir do primeiro milênio d.C., em contraste com a Europa. A hipótese é que a persistência das estradas e seu impacto no desenvolvimento moderno seriam significativamente mais fracos ou inexistentes nas regiões MENA devido à interrupção do uso e manutenção das estradas.
+        \item Análise de mecanismo: Investigação da emergência de cidades mercantis (market towns) na Alemanha medieval como um canal para a persistência dos efeitos das estradas romanas.
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Resultados-Chave}
+\begin{itemize}
+    \item Existe um padrão notável de persistência: maior densidade de estradas romanas está associada a (a) maior densidade de estradas modernas, (b) maior formação de assentamentos em 500 CE, e (c) maior atividade econômica (luzes noturnas e densidade populacional) em 2010.
+    \item O "experimento natural" do abandono da roda revela que:
+    \begin{itemize}
+        \item Na região MENA, a ligação entre a densidade de estradas romanas e a densidade de estradas modernas é enfraquecida a ponto de se tornar insignificante.
+        \item Similarmente, na região MENA, a ligação entre a densidade de estradas romanas e o desenvolvimento econômico contemporâneo também se torna insignificante.
+        \item Em contraste, na Europa, onde as estradas continuaram em uso e manutenção, a persistência dos efeitos das estradas romanas é observada.
+    \end{itemize}
+    \item A emergência de cidades mercantis desde o período medieval inicial até a era moderna na Alemanha é identificada como um mecanismo robusto e economicamente significativo que sustenta os efeitos persistentes da rede de estradas romanas na Europa.
+\end{itemize}
+
+\subsection*{Limitações}
+\begin{itemize}
+    \item A endogeneidade na localização original das estradas romanas (construídas principalmente para fins militares) é uma preocupação, embora os autores argumentem que muitos fatores geográficos foram superados em vez de evitados e controlem por uma vasta gama de características.
+    \item Falta de precisão dos dados históricos e geográficos ao longo de dois milênios.
+    \item A atribuição causal ao longo de um período tão longo é complexa.
+\end{itemize}
+
+\subsection*{Relevância}
+\begin{itemize}
+    \item Infraestrutura física como um canal importante de persistência do desenvolvimento comparativo ao longo de milênios.
+    \item Durabilidade no longo prazo dos investimentos em bens públicos e como choques históricos (como o abandono da roda) podem interromper ou alterar essas trajetórias de desenvolvimento.
+    \item Evidências sobre como a infraestrutura antiga pode influenciar a localização da atividade econômica e da infraestrutura subsequente, em parte através do desenvolvimento de nós comerciais como cidades mercantis.
+\end{itemize}
+
+\newpage
+
+\section{Big Social Savings in a Small Laggard Economy: Railroad-Led Growth in Brazil}
+
+\subsection*{Autores}
+William R. Summerhill (2005). \textit{The Journal of Economic History}, 65(1), 72-102.
+
+\subsection*{Objetivo Principal}
+Avaliar o impacto direto e indireto do desenvolvimento ferroviário na economia brasileira do século XIX e início do século XX. O estudo quantifica as "economias sociais" (social savings) geradas pelas ferrovias e examina se elas promoveram crescimento ou apenas reforçaram a especialização em exportações e a dependência externa.
+
+\subsection*{Método}
+
+\subsubsection*{Tipo de Estudo}
+Empírico, quantitativo, utilizando econometria histórica e o conceito de "social savings".
+
+\subsubsection*{Dados}
+\begin{itemize}
+    \item Dados sobre a rede ferroviária brasileira até 1913: extensão, custos de transporte (ferroviário e alternativas pré-ferrovia como muares), volumes de carga e passageiros, receitas, custos de construção.
+    \item Dados macroeconômicos do Brasil: PIB, exportações, importações de insumos ferroviários.
+    \item Índices de preços (CPI para Rio de Janeiro, WPI para Rio de Janeiro) para ajustar custos históricos.
+    \item Informações sobre subsídios governamentais às ferrovias.
+\end{itemize}
+
+\subsubsection*{Modelo}
+\begin{itemize}
+    \item \textbf{Cálculo das Economias Sociais (Social Savings) do Frete:}
+    \begin{itemize}
+        \item Compara o custo de transportar o volume de carga de 1913 por ferrovias com o custo estimado de transportá-lo pelo melhor modo alternativo pré-ferrovia (transporte por muares).
+        \item Duas estimativas principais ("A" e "B") baseadas em diferentes deflatores para os custos pré-ferrovia.
+        \item Ajuste para a elasticidade-preço da demanda por frete para obter estimativas de limite inferior das economias sociais. A fórmula para o limite inferior das economias sociais (LBSS), quando a elasticidade $\phi \neq -1$, é:
+        \begin{equation} \label{eq:summerhill_lbss1}
+            LBSS = D \left( \frac{P_N^{\phi+1} - P_R^{\phi+1}}{\phi+1} \right) - G
+        \end{equation}
+        E para $\phi = -1$:
+        \begin{equation} \label{eq:summerhill_lbss2}
+            LBSS = D \ln\left(\frac{P_N}{P_R}\right) - G
+        \end{equation}
+        Onde $D$ é uma constante relacionada à demanda, $P_N$ é o preço do transporte não ferroviário, $P_R$ é o preço do transporte ferroviário, e $G$ são os subsídios governamentais. (Nota: o artigo original apresenta as integrais, aqui simplificadas para a forma resultante).
+    \end{itemize}
+    \item \textbf{Cálculo das Economias Sociais de Passageiros:}
+    \begin{itemize}
+        \item Estimativa das economias em tarifas e no valor do tempo economizado para passageiros de primeira e segunda classe.
+    \end{itemize}
+    \item \textbf{Taxa de Retorno Social do Investimento Ferroviário:}
+    \begin{itemize}
+        \item Compara os benefícios sociais totais (economias sociais mais receitas líquidas das ferrovias) com os custos de construção das ferrovias.
+    \end{itemize}
+    \item \textbf{Análise de Encadeamentos (Linkages):}
+    \begin{itemize}
+        \item Encadeamentos para frente (Forward linkages): impacto na agricultura de exportação e no mercado doméstico.
+        \item Encadeamentos para trás (Backward linkages): demanda por insumos (locais versus importados) e o "vazamento" (leakage) de renda para o exterior.
+    \end{itemize}
+    \item \textbf{Análise de Externalidades Institucionais.}
+\end{itemize}
+
+\subsection*{Resultados-Chave}
+\begin{itemize}
+    \item As ferrovias no Brasil geraram economias sociais de frete muito grandes, contribuindo substancialmente para a transição do país da estagnação para o crescimento econômico. As estimativas de economias sociais de frete em 1913 variam de 5\% a 38\% do PIB, dependendo das premissas.
+    \item As economias sociais de passageiros foram consideravelmente menores em comparação com as de frete (cerca de 1.3\% a 3.6\% do PIB para primeira classe, e menos de 1\% para segunda classe).
+    \item A taxa de retorno social média do investimento ferroviário no Brasil foi alta (estimada entre 17.9\% e 23.1\% em 1913), sugerindo que, no agregado, o Brasil não superinvestiu em ferrovias e, possivelmente, até subinvestiu.
+    \item Contrariando a visão dependentista tradicional, as ferrovias brasileiras favoreceram diferencialmente as atividades voltadas para o mercado doméstico em detrimento das exportações, em parte devido à estrutura de tarifas reguladas que eram mais altas para produtos de exportação como o café.
+    \item Os encadeamentos para trás (backward linkages) para a indústria local foram fracos, com a maioria dos equipamentos e insumos ferroviários sendo importada. No entanto, o "vazamento" de renda devido a essas importações foi modesto, representando cerca de 3\% do PIB em 1913.
+    \item As externalidades institucionais foram mistas: as ferrovias podem ter exacerbado disparidades regionais e incentivado políticas protecionistas locais, mas também promoveram o desenvolvimento de mercados financeiros. A intervenção estatal, embora às vezes positiva, também levou à má alocação de subsídios.
+\end{itemize}
+
+\subsection*{Limitações}
+\begin{itemize}
+    \item A estimativa das elasticidades da demanda por transporte é inerentemente difícil e pode afetar a magnitude das economias sociais.
+    \item Os dados históricos podem conter imprecisões ou lacunas.
+    \item A quantificação completa de todos os efeitos dinâmicos e externalidades de longo prazo é desafiadora dentro do modelo de economias sociais, que é primariamente estático.
+    \item O estudo foca no impacto agregado, e a variação entre diferentes linhas e regiões pode ser substancial.
+\end{itemize}
+
+\subsection*{Relevância}
+\begin{itemize}
+    \item Oferece uma reavaliação quantitativa do papel das ferrovias no desenvolvimento econômico do Brasil, desafiando narrativas dependentistas tradicionais.
+    \item Demonstra que o impacto da infraestrutura de transporte pode ser muito significativo em economias "atrasadas" com altos custos de transporte iniciais e alternativas limitadas.
+    \item Mostra como a estrutura de incentivos (como tarifas e subsídios) e as políticas governamentais podem moldar os resultados do desenvolvimento de infraestrutura, não apenas em termos de eficiência, mas também na distribuição dos benefícios.
+\end{itemize}
+\newpage
+
+\section{The spatial impacts of a massive rail disinvestment program: The Beeching Axe}
+
+\subsection*{Autores}
+Gibbons, S., Heblich, S., \& Pinchbeck, E. W. (2024) Journal of Urban Economics, 143, 103691
+
+\subsection*{Objetivo Principal}
+O estudo investiga os impactos econômicos e a reversibilidade dos efeitos de investimentos em infraestrutura de transporte, analisando um programa de desinvestimento em larga escala que removeu grande parte da rede ferroviária da Grã-Bretanha em meados do século XX, conhecido como "Beeching Axe".
+
+\subsection*{Método}
+
+\subsubsection*{Tipo de Estudo}
+Empírico
+
+\subsubsection*{Dados}
+\begin{itemize}
+    \item Painel de dados de aproximadamente 13.250 paróquias (a menor unidade geográfica disponível) na Grã-Bretanha.
+    \item Dados demográficos e socioeconômicos dos censos decenais de 1901 a 2001.
+    \item GIS histórico da rede ferroviária britânica, detalhando linhas e estações abertas e fechadas por década.
+\end{itemize}
+
+\subsubsection*{Modelo}
+A estratégia empírica central é uma regressão de diferenças no tempo, que estima como as mudanças na acessibilidade ferroviária entre 1951 e 1981 afetaram os resultados populacionais e socioeconômicos. Para isolar o efeito causal, o estudo emprega várias estratégias de identificação:
+\begin{itemize}
+    \item \textbf{Controle de Tendências Prévias:} Inclusão de dados populacionais históricos (1901-1951) para controlar tendências preexistentes.
+    \item \textbf{Diferenças aos Pares (Pairwise-Difference):} Uma abordagem semiparamétrica que compara unidades geográficas com tendências populacionais pré-política virtualmente idênticas.
+    \item \textbf{Variáveis Instrumentais (IV):} Uso de três instrumentos para capturar a variação exógena nos cortes ferroviários, baseados em (1) linhas redundantes previstas, (2) ano de construção das linhas e (3) a orientação leste-oeste dos trilhos.
+\end{itemize}
+
+\subsubsubsection*{Detalhamento (Equações)}
+\begin{enumerate}
+    \item \textbf{Modelo Principal (Diferenças no Tempo):} A relação central é expressa como:
+    \[
+    \Delta \ln(y_i) = \beta \cdot \Delta \ln(\text{cent}_i) + \text{Controles} + \epsilon_i
+    \]
+    Onde $\Delta \ln(y_i)$ é a variação logarítmica do resultado (ex: população) na paróquia $i$, e $\Delta \ln(\text{cent}_i)$ é a variação logarítmica da \textbf{centralidade da rede}. $\beta$ é a elasticidade de interesse.
+    \vspace{0.5cm}
+
+    \item \textbf{Índice de Centralidade/Acesso ao Mercado (Equação 3):} A variável explicativa chave, \texttt{cent}, é definida como:
+    \[
+    \text{cent}_i = \sum_{j \in J} \left( \sum_{k \in K} m_k (\text{railtime}_{jk})^{-\theta} \right) \cdot (\text{roadtime}_{ij})^{-\theta}
+    \]
+    Onde \texttt{railtime} é o tempo de viagem de trem, \texttt{roadtime} é o tempo de viagem terrestre até a estação, e $m_k$ é o peso do destino. Este índice captura como os cortes, mesmo distantes, afetam a conectividade geral de uma localidade.
+\end{enumerate}
+
+\subsection*{Resultados-Chave}
+\begin{itemize}
+    \item A elasticidade da população em relação à centralidade da rede é de aproximadamente \textbf{0.3}. Uma perda de 10\% na acessibilidade ferroviária causou uma queda relativa de 3\% na população.
+    \item Os 20\% dos locais mais expostos aos cortes tiveram um crescimento populacional 24 pontos percentuais menor do que os 20\% menos expostos.
+    \item Os efeitos foram persistentes, observados até o censo de 2001.
+    \item As áreas afetadas sofreram uma perda de trabalhadores qualificados e em idade ativa, e um aumento relativo no número de aposentados.
+    \item O fechamento de estações \textbf{locais} teve um impacto maior do que as mudanças na conectividade \textbf{global} da rede.
+    \item A construção da rede de autoestradas (\textit{motorways}) mitigou os efeitos negativos dos cortes, mas não compensou os locais mais prejudicados.
+\end{itemize}
+
+\subsection*{Limitações}
+\begin{itemize}
+    \item \textbf{Viés de Seleção:} A principal preocupação é que os cortes tenham sido direcionados a áreas já em declínio, embora os autores abordem isso extensivamente.
+    \item \textbf{Fatores de Confusão:} Os cortes coincidiram com outros choques, como a construção de autoestradas e o desenvolvimento de "New Towns".
+    \item \textbf{Dados de Viagem:} Os tempos de viagem são imputados com base em velocidades médias assumidas, não em horários reais.
+    \item \textbf{Tipo de Transporte:} A análise não consegue distinguir os efeitos sobre o transporte de passageiros versus o de cargas.
+\end{itemize}
+
+\subsection*{Relevância}
+\begin{itemize}
+    \item Exemplo da aplicação de métodos econométricos avançados (IV, modelos de painel, estimadores semiparamétricos).
+    \item Aplicação do conceito de \textbf{acesso ao mercado} e \textbf{centralidade de rede}.
+    \item Contribui para a literatura sobre \textbf{dependência de trajetória}, mostrando que os efeitos de investimentos em infraestrutura são parcialmente reversíveis.
+    \item A construção de variáveis instrumentais baseadas na história e geometria da rede é uma abordagem criativa e instrutiva.
+\end{itemize}
+\newpage
+
+\section{Social Savings as a Measure of The Contribution of a New Technology to Economic Growth}
+
+\subsection*{Autores}
+Crafts, N. (2004), LSE Working Paper in Large-Scale Technological Change
+
+\subsection*{Objetivo Principal}
+O artigo pretende comparar duas metodologias principais para avaliar o impacto de uma nova tecnologia no crescimento econômico: a abordagem da \textbf{“poupança social”} (\textit{social savings}), historicamente associada ao estudo das ferrovias por Robert Fogel, e a abordagem padrão da \textbf{“contabilidade do crescimento”} (\textit{growth accounting}), frequentemente usada para analisar tecnologias modernas como as TIC.
+
+
+\subsection*{Método}
+
+\subsubsection*{Tipo de Estudo}
+Revisão Metodológica
+
+\subsubsection*{Abordagem}
+O artigo realiza uma análise conceptual e teórica. Compara as duas metodologias, destacando as suas bases teóricas, pressupostos, vantagens e desvantagens.
+
+\subsubsection*{Análise Teórica}
+A “poupança social” é definida como a poupança de custos de recursos proporcionada pela nova tecnologia em comparação com a melhor alternativa seguinte. A sua fórmula base é:
+\[
+SS = (P_{T0} - P_{T1}) \cdot T_1
+\]
+Onde $P_{T0}$ é o preço da tecnologia antiga, $P_{T1}$ é o preço da nova, e $T_1$ é a quantidade de serviços fornecida pela nova tecnologia.
+
+\subsubsection*{Comparação}
+A contabilidade do crescimento decompõe o crescimento do produto em contribuições de capital, trabalho e um resíduo, a Produtividade Total dos Fatores (PTF). O artigo compara estas duas visões, uma focada nos benefícios para o \textbf{utilizador} (poupança social) e outra na contribuição para a \textbf{produção} (contabilidade do crescimento).
+
+
+
+\subsection*{Resultados-Chave}
+\begin{itemize}
+    \item  Numa economia fechada, a poupança social de uma tecnologia é aproximadamente equivalente à sua contribuição para o crescimento da PTF no setor onde é aplicada.
+    \item  A principal vantagem da abordagem da poupança social manifesta-se em economias abertas. Quando um país é um grande exportador de uma nova tecnologia, uma parte significativa dos benefícios é transferida para os consumidores nos países importadores. A poupança social reflete melhor os benefícios que ficam efetivamente no país produtor.
+    \item  Estudos mostram que países que são grandes \textit{utilizadores} (como EUA) podem ter poupanças sociais maiores do que países que são grandes \textit{produtores} e exportadores (como a Irlanda).
+    \item  As duas metodologias podem ser complementares, oferecendo perspectivas diferentes sobre o impacto tecnológico (bem-estar vs. capacidade produtiva).
+\end{itemize}
+
+\subsection*{Limitações}
+\begin{itemize}
+    \item  Ambas as metodologias têm dificuldade em capturar o valor total de bens que introduzem características fundamentalmente novas.
+    \item  Nenhuma das abordagens consegue medir adequadamente os efeitos de transbordamento (spillovers) noutros setores da economia.
+\end{itemize}
+
+\subsection*{Relevância}
+\begin{itemize}
+    \item Exemplo de como medir o impacto da tecnologia, distinguindo entre produção (PIB) e bem-estar (rendimento real).
+    \item Reforça que a metodologia escolhida para avaliar uma tecnologia pode levar a conclusões muito diferentes sobre quais países mais beneficiam dela.
+\end{itemize}
+\newpage
+
+\section{Investimento em Infraestrutura de Transportes e Crescimento Econômico: uma Análise Espacial dos Estados brasileiros}
+
+\subsection*{Autores}
+Ribeiro, M. R. P., \& Santos, L. M. S. (2023). Revista Brasileira de Estudos Regionais e Urbanos
+
+\subsection*{Objetivo Principal}
+O estudo investiga empiricamente o impacto dos investimentos públicos estaduais em infraestrutura de transportes sobre o crescimento económico dos estados brasileiros, com foco em duas hipóteses principais: 1) se esses investimentos contribuem para o crescimento económico e 2) se os seus efeitos são mais pronunciados nas regiões menos desenvolvidas do país (Norte e Nordeste).
+
+\subsection*{Método}
+
+\subsubsection*{Tipo de Estudo}
+Empírico
+
+\subsubsection*{Dados}
+\begin{itemize}
+    \item Painel de dados para 26 unidades federativas do Brasil (excluindo o Distrito Federal) para o período de 1998 a 2012.
+    \item Dados de investimento em transportes e outros gastos públicos obtidos da base de dados FINBRA (Tesouro Nacional).
+    \item Dados do PIB e da população obtidos do IPEA.
+\end{itemize}
+
+\subsubsection*{Modelo}
+A análise utiliza métodos de econometria espacial com dados em painel, tanto estáticos (efeitos fixos e aleatórios) como dinâmicos (GMM). A abordagem espacial permite capturar os efeitos de transbordamento (\textit{spillovers}) entre os estados. A equação base do modelo pode ser representada como:
+\[
+\Delta \ln(\text{PIBpc}_{it}) = f(\Delta \ln(\text{GTotal}_{it}), \ln(\text{InvTransp}_{it-1}), \dots) + \text{Efeitos Espaciais} + \mu_{it}
+\]
+Onde $\Delta \ln(\text{PIBpc}_{it})$ é a taxa de crescimento do PIB per capita, e $\ln(\text{InvTransp}_{it-1})$ é a variável de interesse principal (investimento em transportes). A utilização de modelos de painel espacial é crucial para controlar a heterogeneidade dos estados e medir os impactos nos vizinhos.
+
+
+\subsection*{Resultados-Chave}
+\begin{itemize}
+    \item \textbf{(Impacto Geral):} A análise para o Brasil como um todo \textbf{não} encontrou uma relação estatisticamente significativa entre o investimento em transportes e o crescimento económico.
+    \item \textbf{(Impacto Regional):} \textbf{Confirmada.} O investimento em infraestrutura de transportes tem um impacto \textbf{positivo e estatisticamente significativo} sobre o crescimento do PIB per capita nos estados das regiões menos desenvolvidas (Norte e Nordeste). Para as regiões mais desenvolvidas, o efeito é negativo ou não significativo, sugerindo rendimentos marginais decrescentes.
+    \item \textbf{Análise Descritiva:} A participação do investimento em transportes no orçamento total dos estados diminuiu consideravelmente no período analisado (1998-2012).
+\end{itemize}
+
+\subsection*{Limitações}
+\begin{itemize}
+    \item \textbf{Agregação de Dados:} Os dados de investimento não permitem diferenciar o impacto de cada modal de transporte (rodoviário, ferroviário, etc.).
+    \item \textbf{Período de Análise:} A análise está limitada ao período de 1998-2012 devido à descontinuidade das bases de dados.
+    \item \textbf{Proxy de Investimento:} O estudo utiliza o fluxo de investimento monetário, e não o estoque de capital, que é uma medida mais comum na literatura.
+\end{itemize}
+
+\subsection*{Relevância}
+\begin{itemize}
+    \item É um dos poucos trabalhos para o Brasil que aplica econometria de painel espacial para analisar o investimento monetário em transportes, considerando os efeitos de transbordamento regional.
+    \item  Sugere que, para maximizar o crescimento e reduzir desigualdades, os investimentos em transportes deveriam ser priorizados nas regiões Norte e Nordeste.
+    \item Retrata a redução da prioridade dada ao investimento em transportes nos orçamentos estaduais.
+\end{itemize}
+\newpage
+\section{Ferrovias no Brasil: Projetos futuros e em andamento}
+
+\subsection*{Autores}
+Dantas, A. A. N., \& Fraga, Y. S. B. (2021). Research, Society and Development
+
+\subsection*{Objetivo Principal}
+Analisar o cenário atual e futuro das ferrovias brasileiras, com ênfase nos projetos em andamento e futuros, para caracterizar o contexto das principais construções ferroviárias do país e os objetivos dos projetos que ainda estão a ser avaliados.
+
+
+\subsection*{Método}
+
+\subsubsection*{Tipo de Estudo}
+Revisão Bibliográfica / Exploratório
+
+\subsection*{Abordagem}
+A pesquisa é caracterizada como um levantamento bibliográfico, exploratório e qualitativo, baseada na análise de fontes secundárias como artigos científicos, livros, relatórios de órgãos governamentais (Valec, ANTT) e notícias.
+
+
+\subsection*{Resultados-Chave}
+\begin{itemize}
+    \item  O Brasil sofre com uma forte dependência do modal rodoviário (cerca de 62\% do transporte de carga), enquanto o ferroviário é subutilizado (apenas 24\%), o que gera problemas de logística, custos elevados e ineficiência. A greve dos camionistas de 2018 é citada como um exemplo claro desta vulnerabilidade.
+    \item  A malha ferroviária brasileira é pequena (cerca de 28,2 mil km) e parcialmente ociosa (um terço sem uso), indicando um enorme potencial de expansão que não é aproveitado por falta de investimentos.
+    \item \textbf{Projetos em Andamento:}
+    \begin{itemize}
+        \item  Em operação de Açailândia (MA) a Anápolis (GO), com um trecho em construção para estender a linha até Estrela d'Oeste (SP).
+        \item  Em construção para ligar o futuro porto de Ilhéus (BA) a Figueirópolis (TO), conectando-se à FNS.
+    \end{itemize}
+    \item \textbf{Projetos Futuros:}
+    \begin{itemize}
+        \item \textbf{Ferrovia Transcontinental:} Projeto para ligar o Porto de Açu (RJ) ao Peru, criando um corredor bioceânico.
+        \item \textbf{Extensão da FNS ao Sul:} Continuar o traçado de Estrela d'Oeste (SP) até o porto de Rio Grande (RS).
+        \item \textbf{Outros Projetos:} Ferrovia do Pantanal e a conclusão da FIOL (tramo 3).
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Limitações}
+\begin{itemize}
+    \item \textbf{Falta de Investimento:} O principal obstáculo para a expansão da malha ferroviária é a insuficiência de investimentos contínuos.
+    \item \textbf{Contratos de Concessão:} Os modelos de concessão dos anos 90 são apontados como problemáticos, gerando falta de concorrência e dificuldades de interconexão entre as malhas.
+\end{itemize}
+
+\subsection*{Relevância}
+\begin{itemize}
+    \item O artigo fornece um diagnóstico atualizado sobre a situação do modal ferroviário no Brasil, identificando os principais gargalos e as oportunidades de expansão.
+    \item Sistematiza os principais projetos de infraestrutura ferroviária (em andamento e planeados), o que é fundamental para análises de impacto económico e regional.
+    \item Reforça a necessidade de uma política de transportes mais equilibrada e de longo prazo para aumentar a competitividade da economia brasileira.
+\end{itemize}
+\newpage
+
+\section{Desenvolvimento Sócio-Econômico, Infraestrutura de Transportes e Inovação: Um Estudo Econométrico Espacial dos Efeitos de Spillover nos Estados Brasileiros}
+
+\subsection*{Autores}
+Herick Fernando Moralles
+
+\subsection*{Objetivo Principal}
+Analisar a relação entre crescimento econômico, infraestrutura de transportes, gastos em inovação tecnológica e desenvolvimento sócio-econômico nos estados brasileiros, com foco nos seus efeitos de \textit{spillover} (transbordamento) para estados vizinhos.
+
+\subsection*{Método}
+
+\subsubsection*{Tipo de Estudo}
+☑️ Empírico (dados quantitativos)
+
+\subsubsection*{Dados}
+Foi utilizado um painel de dados para os 27 estados brasileiros no período de 2004 a 2009. As fontes incluem o Anuário Exame, IPEA DATA e o Ministério da Ciência e Tecnologia (MCT). As variáveis analisadas foram:
+\begin{itemize}
+    \item \textbf{Crescimento Econômico:} PIB estadual.
+    \item \textbf{Desenvolvimento:} Índice FIRJAN de Desenvolvimento Municipal (IFDM).
+    \item \textbf{Infraestrutura:} Malha rodoviária, ferroviária, movimento de cargas em portos e aeroportos.
+    \item \textbf{Inovação:} Dispêndio em atividades de Ciência e Tecnologia (C\&T).
+    \item \textbf{Controle:} Estoque de capital (proxy: consumo industrial de energia), trabalho (população ocupada) e educação.
+\end{itemize}
+
+\subsubsection*{Modelo}
+Foi empregado um Modelo Espacial de Durbin (SDM) para dados em painel, que permite capturar tanto a dependência espacial na variável dependente quanto nas variáveis explicativas. A estrutura geral do modelo de duas equações é:
+\begin{enumerate}
+    \item \textbf{Equação de Crescimento Econômico (PIB):}
+    $$ \ln(C_{it}) = \rho_1 W \ln(C_{it}) + \alpha_1 \ln(K_{it}) + \dots + \theta_1 W \ln(T_{it}) + \dots + Fe_i + \epsilon_{1it} $$
+    \item \textbf{Equação de Desenvolvimento (IFDM):}
+    $$ \ln(Dse_{it}) = \rho_2 W \ln(Dse_{it}) + \beta_1 \ln(K_{it}) + \dots + \phi_1 W \ln(T_{it}) + \dots + Fe_i + \epsilon_{2it} $$
+\end{enumerate}
+Onde $W$ é a matriz de ponderação espacial (inverso da distância e contiguidade), $C$ é o PIB, $Dse$ é o IFDM, $K$ é capital, $T$ é infraestrutura, $Fe_i$ representa os efeitos fixos estaduais e $\rho$ e $\theta/\phi$ capturam os efeitos de \textit{spillover}.
+
+\subsection*{Resultados-Chave}
+\begin{itemize}
+    \item A infraestrutura rodoviária foi o maior promotor de \textit{spillovers} positivos, tanto para o crescimento (elasticidade de 0,751) quanto para o desenvolvimento (1,103).
+    \item O investimento em inovação (C\&T) de um estado gerou \textit{spillovers} negativos e significantes para o desenvolvimento dos seus vizinhos (elasticidade de -0,250), sugerindo uma concentração de benefícios sociais na unidade investidora.
+    \item O desenvolvimento de um estado mostrou ter um efeito de \textit{spillover} negativo sobre seus vizinhos (elasticidade de -0,242), indicando possível concorrência por recursos ou migração de fatores.
+    \item O crescimento do PIB, por outro lado, gerou um \textit{spillover} positivo, embora marginalmente significante (0,082).
+\end{itemize}
+
+\subsection*{Limitações}
+\begin{itemize}
+    \item A série temporal curta (2004-2009) limita a análise de efeitos de longo prazo, especialmente para investimentos em inovação.
+    \item O uso de \textit{proxies} para variáveis como estoque de capital (consumo de energia) pode não capturar perfeitamente o conceito desejado.
+    \item A agregação de dados em nível estadual pode mascarar heterogeneidades intra-regionais importantes.
+\end{itemize}
+
+\subsection*{Relevância}
+\begin{itemize}
+    \item O estudo oferece uma metodologia robusta (econometria espacial) para avaliar políticas públicas, quantificando os efeitos de transbordamento que são frequentemente ignorados.
+    \item Os resultados sugerem que políticas de infraestrutura, especialmente rodoviária, devem ser planejadas de forma coordenada entre os estados para maximizar os benefícios regionais.
+    \item Alerta para o fato de que investimentos em inovação, se não acompanhados por políticas de difusão, podem acentuar desigualdades regionais.
+\end{itemize}
+
+\newpage
+
+\section{Aggregate and Regional Economic Effects of New Railway Infrastructure}
+
+\subsection*{Autores}
+Wolfgang Polasek, Wolfgang Schwarzbauer, Richard Sellner
+
+\subsection*{Objetivo Principal}
+Avaliar os efeitos econômicos agregados (nacionais) e regionais de dois grandes projetos de infraestrutura ferroviária na Áustria, analisando também se tais projetos promovem a convergência ou a divergência econômica entre as regiões.
+
+\subsection*{Método}
+
+\subsubsection*{Tipo de Estudo}
+☑️ Empírico (dados quantitativos)
+
+\subsubsection*{Dados}
+Painel de dados para 99 regiões austríacas (distritos políticos) entre 1995 e 2005. As variáveis incluem:
+\begin{itemize}
+    \item \textbf{Indicadores Econômicos:} Crescimento do PIB, emprego e número de firmas.
+    \item \textbf{Acessibilidade Ferroviária:} Indicadores construídos com base em tempos de viagem, frequência de conexões e volume de transporte.
+    \item \textbf{Controle:} Demografia, densidade populacional e de firmas.
+\end{itemize}
+
+\subsubsection*{Modelo}
+Utiliza-se um modelo econométrico espacial dinâmico, denominado EAR (Economic Accessibility and Regional), para prever os efeitos de longo prazo (30 anos) dos projetos. A especificação geral é um sistema de equações para cada indicador econômico:
+$$ \Delta y_{t} = c + AI_{t}\alpha + \Delta X_{t}\beta + \epsilon_{t} $$
+Onde $\Delta y_t$ é a variação do indicador econômico (PIB, emprego, etc.), $AI_t$ é a matriz de indicadores de acessibilidade, e $\Delta X_t$ representa outras variáveis explicativas. O modelo foi refinado usando \textit{Bayesian Model Averaging} (BMA) para selecionar as variáveis mais relevantes.
+
+\subsection*{Resultados-Chave}
+\begin{itemize}
+    \item Ambos os projetos (túnel Semmering e estação central de Viena) mostraram ter efeitos positivos no nível de emprego e no número de firmas em nível nacional, embora o impacto na taxa de crescimento seja temporário.
+    \item A distribuição regional dos benefícios difere substancialmente entre os projetos. O túnel Semmering beneficia principalmente o leste e o sul da Áustria, enquanto a estação de Viena favorece o norte e o leste.
+    \item O túnel Semmering (SBT) demonstrou maior potencial para promover a convergência regional. A correlação entre os efeitos de emprego induzidos e as taxas de desemprego passadas foi positiva (+0.2), e a correlação entre os efeitos no PIB e o PIB per capita passado foi negativa (-0.35), indicando que as regiões mais fracas se beneficiaram mais.
+    \item O projeto da estação central de Viena (VIE central) não mostrou evidências de fomento à convergência regional (correlações de -0.09 e -0.04, respectivamente).
+\end{itemize}
+
+\subsection*{Limitações}
+\begin{itemize}
+    \item O modelo depende de previsões de melhorias na acessibilidade, que são baseadas em dados fornecidos pela companhia ferroviária e podem estar sujeitas a incertezas.
+    \item A análise foca-se apenas na infraestrutura ferroviária, não considerando interações com outros modos de transporte, como rodovias.
+\end{itemize}
+
+\subsection*{Relevância}
+\begin{itemize}
+    \item Demonstra a importância de avaliar projetos de infraestrutura não apenas em nível agregado, mas também em sua dimensão regional, para entender os impactos distributivos.
+    \item Fornece uma ferramenta econométrica para formuladores de políticas decidirem entre projetos alternativos com base em seus efeitos sobre a convergência econômica.
+    \item Reforça que a localização e o tipo de infraestrutura são cruciais para determinar quais regiões se beneficiarão mais, sendo uma informação vital para políticas de desenvolvimento regional.
+\end{itemize}
+
+\newpage
+
+\section{Social Savings}
+
+\subsection*{Autores}
+Tim Leunig
+
+\subsection*{Objetivo Principal}
+Revisar o conceito de "poupança social" (\textit{social savings}), uma metodologia desenvolvida no campo da cliometria para medir o impacto econômico de uma inovação tecnológica. O artigo define o conceito, compara-o com outras métricas (excedente do consumidor, produtividade total dos fatores) e analisa suas aplicações, principalmente no estudo das ferrovias.
+
+\subsection*{Método}
+
+\subsubsection*{Tipo de Estudo}
+☑️ Teórico / ☑️ Metanálise (Revisão de literatura e conceitual)
+
+\subsubsection*{Dados}
+O artigo não gera novos dados primários, mas revisa e sintetiza os resultados de dezenas de estudos de "poupança social" aplicados a ferrovias em diversos países (EUA, Reino Unido, Brasil, México, Espanha, etc.) e a outras inovações como a máquina a vapor e o cinema.
+
+\subsubsection*{Modelo}
+A "poupança social" é definida como a diferença de custo entre realizar uma atividade com a nova tecnologia e realizá-la com a tecnologia anterior (contrafactual), multiplicada pela quantidade produzida com a nova tecnologia. A fórmula básica é:
+$$ \text{Poupança Social} = (P_{t-1} - P_t) \cdot Q_t $$
+Onde:
+\begin{itemize}
+    \item $P_{t-1}$ é o preço (custo) da tecnologia antiga.
+    \item $P_t$ é o preço (custo) da nova tecnologia.
+    \item $Q_t$ é a quantidade total produzida/transportada após a inovação.
+\end{itemize}
+Este cálculo assume, implicitamente, que a demanda é perfeitamente inelástica ($Q$ não mudaria se o preço voltasse a ser $P_{t-1}$), o que tende a superestimar o ganho de bem-estar em comparação com a medida do excedente do consumidor.
+
+\subsection*{Resultados-Chave}
+\begin{itemize}
+    \item A metodologia de "poupança social" tende a superestimar o ganho de bem-estar (medido pelo excedente do consumidor), especialmente quando a queda de preço causada pela inovação é grande e a demanda pelo bem/serviço é elástica.
+    \item Estudos pioneiros de Robert Fogel sobre as ferrovias nos EUA concluíram que sua contribuição para o PIB em 1890 foi de cerca de 4.7\%, um valor significativo, mas não "indispensável" como se acreditava, pois existiam alternativas como os canais.
+    \item O impacto das ferrovias variou enormemente entre os países. Em nações com poucas alternativas de transporte (como Brasil e México), a poupança social chegou a 20-40\% do PIB, enquanto em países com redes de canais desenvolvidas (como EUA e Reino Unido), o impacto foi bem menor.
+    \item A metodologia força o historiador a ser explícito sobre o cenário contrafactual (o que teria acontecido sem a inovação), tornando a análise mais rigorosa.
+\end{itemize}
+
+\subsection*{Limitações}
+\begin{itemize}
+    \item A suposição de demanda inelástica é o principal ponto fraco, podendo levar a grandes superestimações do benefício real.
+    \item O método não captura benefícios indiretos, como economias de escala em outras indústrias que foram possibilitadas pela nova tecnologia (ex: o surgimento de grandes empresas de varejo graças às ferrovias).
+    \item A comparação entre diferentes estudos é difícil devido a variações nas datas, na qualidade dos dados e nas premissas adotadas por cada autor.
+\end{itemize}
+
+\subsection*{Relevância}
+\begin{itemize}
+    \item A "poupança social" foi um conceito revolucionário que permitiu, pela primeira vez, quantificar o impacto de grandes inovações históricas, mudando a forma como a história econômica é analisada.
+    \item Oferece uma estrutura clara para avaliar o valor de uma tecnologia, focando na redução de custos que ela proporciona à sociedade.
+    \item A metodologia pode ser aplicada a inovações contemporâneas para fornecer uma estimativa de "limite superior" de seu impacto econômico.
+\end{itemize}
+
+\section{Desenvolvimento Sócio-Econômico, Infraestrutura de Transportes e Inovação: Um Estudo Econométrico Espacial dos Efeitos de Spillover nos Estados Brasileiros}
+
+\subsection*{Autores}
+Herick Fernando Moralles (2012)
+
+\subsection*{Objetivo Principal}
+Analisar a relação entre crescimento econômico, infraestrutura de transportes, gastos em inovação tecnológica e desenvolvimento socioeconômico nos estados brasileiros, quantificando os efeitos diretos e os efeitos de transbordamento (spillover) para estados vizinhos.
+
+\subsection*{Método}
+
+\subsubsection*{Tipo de Estudo}
+☑️ Empírico (dados quantitativos)
+
+\subsubsection*{Dados}
+Painel de dados para os 27 estados brasileiros no período de 2004 a 2009. As fontes incluem o Anuário Exame, IPEA DATA e o Ministério da Ciência e Tecnologia (MCT). As variáveis utilizadas são o PIB (crescimento), o Índice FIRJAN de Desenvolvimento Municipal (IFDM) (desenvolvimento), estoque de capital (proxy: consumo industrial de energia), trabalho (população economicamente ativa), infraestrutura de transportes (rodovias, ferrovias, portos, aeroportos) e gastos em C\&T (inovação).
+
+\subsubsection*{Modelo}
+O estudo utiliza um Modelo Espacial de Durbin (SDM) para dados em painel, estimado por Máxima Verossimilhança. O SDM é uma especificação geral que inclui a defasagem espacial da variável dependente (efeito de vizinhança) e das variáveis explicativas (efeitos de spillover). O modelo é composto por duas equações simultâneas:
+\begin{enumerate}
+    \item \textbf{Crescimento Econômico (PIB)}:
+    $ln(C_{it}) = \rho_1 W ln(C_{it}) + \alpha_1 ln(K_{it}) + \alpha_2 ln(L_{it}) + \alpha_3 ln(T_{it}) + \alpha_4 ln(In_{it}) + \theta_1 W ln(K_{it}) + \theta_2 W ln(L_{it}) + \theta_3 W ln(T_{it}) + \theta_4 W ln(In_{it}) + Fe_i + \epsilon_{it}$
+    \item \textbf{Desenvolvimento Socioeconômico (IFDM)}:
+    $ln(Dse_{it}) = \rho_2 W ln(Dse_{it}) + \beta_1 ln(C_{it}) + \beta_2 ln(T_{it}) + \beta_3 ln(In_{it}) + \phi_1 W ln(C_{it}) + \phi_2 W ln(T_{it}) + \phi_3 W ln(In_{it}) + Fe_i + \mu_{it}$
+\end{enumerate}
+Onde $W$ é a matriz de pesos espaciais, $\rho$ captura a dependência espacial na variável dependente, e os parâmetros $\theta$ e $\phi$ capturam os efeitos de spillover das variáveis explicativas dos vizinhos. $Fe_i$ representa os efeitos fixos para cada estado.
+
+\subsection*{Resultados-Chave}
+\begin{itemize}
+    \item A infraestrutura rodoviária é o maior promotor de spillovers positivos tanto para o crescimento do PIB quanto para o desenvolvimento (IFDM). Um aumento de 1\% na malha rodoviária de um estado eleva seu PIB em 0,188\% e o PIB dos vizinhos em 0,751\%.
+    \item O investimento em inovação (C\&T) tem um impacto positivo e significativo sobre o PIB do próprio estado (elasticidade de 0,227), mas um spillover negativo e significativo sobre o desenvolvimento dos estados vizinhos.
+    \item O crescimento do PIB de um estado tem um efeito de transbordamento negativo sobre o desenvolvimento social dos seus vizinhos.
+    \item O capital físico (proxy) apresenta spillovers negativos, sugerindo um efeito de concorrência entre os estados.
+\end{itemize}
+
+\subsection*{Limitações}
+\begin{itemize}
+    \item O período de análise é relativamente curto (6 anos), o que pode limitar a captura de efeitos de longo prazo.
+    \item O uso de proxies para variáveis importantes, como o consumo de energia para o estoque de capital, pode não refletir perfeitamente o conceito teórico.
+    \item A tentativa de incluir defasagens temporais para a variável de inovação mostrou-se inviável pela perda de observações, o que pode omitir a dinâmica temporal dos retornos de investimentos em C\&T.
+\end{itemize}
+
+\subsection*{Relevância}
+\begin{itemize}
+    \item Uma das poucas análises quantitativas dos efeitos de spillover de infraestrutura e inovação para o Brasil.
+    \item Sugere que investimentos em infraestrutura rodoviária geram externalidades positivas significativas, justificando a coordenação de políticas regionais.
+    \item Importância de considerar a dependência espacial em análises regionais para evitar estimativas viesadas.
+\end{itemize}
+\newpage
+
+\section{Railroads and American Economic Growth: A "Market Access" Approach}
+
+\subsection*{Autores}
+Dave Donaldson e Richard Hornbeck (2016)
+
+\subsection*{Objetivo Principal}
+Estimar o impacto agregado das ferrovias no setor agrícola dos Estados Unidos em 1890, desenvolvendo uma metodologia de "acesso a mercados" que supera as limitações da abordagem tradicional de "poupança social" de Fogel.
+
+\subsection*{Método}
+
+\subsubsection*{Tipo de Estudo}
+☑️ Empírico (dados quantitativos)
+
+\subsubsection*{Dados}
+Dados históricos ao nível de condado para os EUA, de 1870 a 1890. A principal fonte de dados é um banco de dados georreferenciado (GIS) construído pelos autores, contendo a rede de ferrovias, hidrovias e canais. As variáveis de resultado, como valor da terra agrícola e população, são provenientes dos Censos dos EUA.
+
+\subsubsection*{Modelo}
+O modelo é derivado da teoria do comércio em equilíbrio geral (modelo de Eaton e Kortum), que prevê que o impacto total (direto e indireto) de uma mudança na rede de transportes sobre um condado é capturado por sua mudança no "acesso a mercados" (Market Access - MA). O MA de um condado $o$ é definido como uma soma ponderada das populações ($N_d$) de todos os outros condados $d$, onde os pesos diminuem com o custo de transporte ($\tau_{od}$) entre eles.
+\begin{equation*}
+    MA_o \approx \sum_{d \neq o} \tau_{od}^{-\theta} N_d
+\end{equation*}
+Onde $\theta$ é a elasticidade do comércio em relação ao custo. O modelo teórico prevê uma relação log-linear entre o valor da terra agrícola ($V_o$) e o acesso a mercados ($MA_o$):
+\begin{equation*}
+    \ln(V_{ot}) = \beta \ln(MA_{ot}) + \delta_o + \delta_{st} + \epsilon_{ot}
+\end{equation*}
+A equação é estimada em primeiras diferenças, analisando a variação no valor da terra em função da variação no acesso a mercados entre 1870 e 1890.
+
+\subsection*{Resultados-Chave}
+\begin{itemize}
+    \item A elasticidade do valor da terra agrícola em relação ao acesso a mercados é estimada em 0.51. Ou seja, um aumento de 1\% no acesso a mercados de um condado aumenta o valor de sua terra agrícola em 0,51\%.
+    \item A remoção contrafactual de todas as ferrovias em 1890 reduziria o valor total da terra agrícola dos EUA em 60,2\%.
+    \item Este impacto corresponde a uma perda econômica anual de 3,22\% do PNB, um valor moderadamente superior às estimativas de "poupança social" de Fogel (1964).
+    \item Alternativas como a expansão de canais ou a melhoria de estradas rurais teriam mitigado apenas uma pequena fração (13\% e 21\%, respectivamente) das perdas causadas pela ausência das ferrovias.
+\end{itemize}
+
+\subsection*{Limitações}
+\begin{itemize}
+    \item A análise se concentra apenas no setor agrícola, omitindo potenciais impactos na manufatura, mineração ou no crescimento tecnológico geral.
+    \item O modelo baseia-se em pressupostos específicos da teoria do comércio, como preferências CES e distribuição de produtividade de Fréchet.
+    \item A endogeneidade da construção de ferrovias é uma preocupação, embora o artigo a aborde com vários testes de robustez (controlando pela densidade local de ferrovias e usando o acesso inicial a hidrovias como instrumento).
+\end{itemize}
+
+\subsection*{Relevância}
+\begin{itemize}
+    \item Introduz uma metodologia inovadora e teoricamente fundamentada (acesso a mercados) para estimar os efeitos agregados de infraestruturas de transporte, capturando explicitamente os spillovers em toda a rede.
+    \item Fornece uma estimativa robusta do papel crítico e insubstituível das ferrovias no desenvolvimento econômico dos EUA.
+    \item Oferece um arcabouço para a avaliação de grandes projetos de infraestrutura em contextos onde os efeitos de transbordamento são generalizados e difíceis de isolar.
+\end{itemize}
+\newpage
+
+\section{Railroads of the Raj: Estimating the Impact of Transportation Infrastructure}
+
+\subsection*{Autores}
+Dave Donaldson (2018)
+
+\subsection*{Objetivo Principal}
+Investigar o impacto econômico da vasta rede ferroviária construída na Índia colonial, avaliando como a infraestrutura de transporte afetou os custos de comércio, os fluxos comerciais e o bem-estar econômico.
+
+\subsection*{Método}
+
+\subsubsection*{Tipo de Estudo}
+Empírico (dados quantitativos, guiado por modelo estrutural)
+
+\subsubsection*{Dados}
+Um novo conjunto de dados em painel ao nível de distrito para a Índia colonial (1870-1930), construído a partir de fontes de arquivo. Inclui preços de commodities, produção agrícola, fluxos de comércio inter-regional e internacional, e um mapa digital da rede ferroviária com o ano de abertura de cada trecho.
+
+\subsubsection*{Modelo}
+O estudo é estruturado em torno de um modelo de comércio Ricardiano com múltiplas regiões e commodities (uma extensão de Eaton e Kortum, 2002). O modelo gera quatro resultados principais que são testados empiricamente:
+\begin{enumerate}
+    \item \textbf{Diferenças de preço medem custos de transporte:} Em casos especiais (sal, um produto homogêneo de fonte única), a diferença de preço entre a origem e o destino é igual ao custo de transporte ($ln(p_d) - ln(p_o) = ln(T_{od})$).
+    \item \textbf{Fluxos de comércio seguem uma equação de gravidade:} O comércio bilateral é uma função dos custos de transporte e de características do exportador e do importador.
+    \item \textbf{Ferrovias aumentam a renda real:} A conexão de um distrito à rede ferroviária aumenta sua renda real per capita.
+    \item \textbf{Estatística Suficiente:} A participação do comércio doméstico de um distrito (a fração de seus gastos com bens produzidos por ele mesmo, $\pi_{oo}$) é uma estatística suficiente para os ganhos de bem-estar do comércio.
+\end{enumerate}
+
+\subsection*{Resultados-Chave}
+\begin{itemize}
+    \item As ferrovias reduziram substancialmente os custos de transporte, evidenciado pela convergência dos preços do sal entre os distritos.
+    \item A redução nos custos de transporte levou a um aumento maciço no volume de comércio inter-regional e internacional.
+    \item A chegada da ferrovia a um distrito médio aumentou a renda agrícola real em 16\%.
+    \item A estatística suficiente ($\pi_{oo}$) explica mais da metade do efeito de renda observado, confirmando que os ganhos de comércio via especialização ricardiana foram um mecanismo central pelo qual as ferrovias geraram bem-estar.
+\end{itemize}
+
+\subsection*{Limitações}
+\begin{itemize}
+    \item A análise se concentra no setor agrícola, embora este fosse dominante na economia da época.
+    \item O modelo depende de pressupostos funcionais específicos (ex: distribuição de produtividade de Fréchet).
+    \item A endogeneidade da localização das ferrovias é uma preocupação, mas o autor a aborda com testes de placebo usando linhas que foram planejadas, mas não construídas.
+\end{itemize}
+
+\subsection*{Relevância}
+\begin{itemize}
+    \item Oferece uma avaliação abrangente e baseada em um modelo estrutural de um dos maiores projetos de infraestrutura da história.
+    \item Inova ao usar diferenças de preço para estimar os custos de transporte e ao testar empiricamente uma estatística suficiente para os ganhos de bem-estar, conectando a teoria do comércio diretamente aos dados.
+    \item Forte evidência de que a infraestrutura de transporte pode gerar ganhos de bem-estar substanciais, principalmente ao reduzir os custos de comércio e permitir a exploração de vantagens comparativas.
+\end{itemize}
+\newpage
+
+\section{Transportation Costs and the Spatial Organization of Economic Activity}
+
+\subsection*{Autores}
+Stephen J. Redding e Matthew A. Turner (2014)
+
+\subsection*{Objetivo Principal}
+Revisar a literatura teórica e empírica sobre a relação entre custos de transporte e a organização espacial da atividade econômica, tanto entre cidades (interurbano) quanto dentro delas (intraurbano).
+
+\subsection*{Método}
+
+\subsubsection*{Tipo de Estudo}
+☑️ Teórico (revisão de literatura e síntese)
+
+\subsubsection*{Dados}
+O artigo não apresenta uma nova análise de dados, mas sim revisa e sintetiza os resultados de uma vasta gama de estudos empíricos sobre o tema.
+
+\subsubsection*{Modelo}
+Os autores desenvolvem um modelo de Nova Geografia Econômica (baseado em Helpman, 1998) com múltiplas regiões para unificar a análise dos transportes. O modelo incorpora tanto os custos de transporte de bens entre cidades quanto os custos de deslocamento (commuting) dentro das cidades. Este arcabouço teórico é usado para derivar equações estruturais para salários, população, aluguéis da terra e comércio, que são então comparadas com as equações de forma reduzida tipicamente estimadas na literatura empírica, destacando os desafios de inferência.
+
+\subsection*{Resultados-Chave (Síntese da Literatura)}
+\begin{itemize}
+    \item \textbf{Identificação Causal:} A literatura empírica superou o desafio da endogeneidade da infraestrutura usando três estratégias principais: variáveis instrumentais baseadas em rotas planejadas (ex: plano do sistema de rodovias dos EUA de 1947), rotas históricas (ex: estradas romanas) e a abordagem de "lugares inconsequentes" (analisando o efeito em pequenas localidades que recebem infraestrutura por estarem no caminho entre grandes centros).
+    \item \textbf{Crescimento vs. Reorganização:} Um desafio central é distinguir se a infraestrutura cria nova atividade econômica (crescimento) ou apenas a desloca (reorganização). A maioria dos estudos de forma reduzida não consegue separar esses efeitos, mas a evidência fragmentada sugere que a reorganização é, muitas vezes, tão importante quanto o crescimento.
+    \item \textbf{Invariância e Heterogeneidade:} Os efeitos da infraestrutura parecem ser notavelmente semelhantes em diferentes economias e escalas espaciais. No entanto, diferentes modos de transporte têm efeitos distintos: ferrovias impactam mais a localização da produção, enquanto rodovias e metrôs impactam mais a distribuição da população.
+\end{itemize}
+
+\subsection*{Limitações (da Literatura Revisada)}
+\begin{itemize}
+    \item A maioria dos estudos de forma reduzida não consegue separar os efeitos de crescimento dos de reorganização espacial.
+    \item Os efeitos de equilíbrio geral, como spillovers para regiões não diretamente tratadas, são frequentemente ignorados ou não capturados adequadamente.
+    \item Há uma necessidade de mais estimações estruturais para permitir análises de bem-estar e contrafactuais de políticas de transporte.
+\end{itemize}
+
+\subsection*{Relevância}
+\begin{itemize}
+    \item Fornece um arcabouço teórico unificado para analisar os efeitos da infraestrutura de transporte em diferentes escalas espaciais (inter e intraurbana).
+    \item Oferece uma revisão sistemática e crítica da literatura empírica, organizando os estudos por suas estratégias de identificação e principais conclusões.
+    \item Aponta as fronteiras da pesquisa, enfatizando a necessidade de modelos que possam distinguir crescimento de reorganização e que permitam uma análise de bem-estar mais robusta para informar políticas públicas.
+\end{itemize}
+\newpage
+
+\section{Infraestrutura de Transportes e Impactos Socioeconômicos: Um Estudo para a Ferrovia Norte Sul no Período de 2007 a 2019}
+
+\subsection*{Autores}
+Marianne Costa Oliveira, Sabino da Silva Porto Junior e Gibran da Silva Teixeira (2021)
+
+\subsection*{Objetivo Principal}
+Avaliar o efeito da construção da Ferrovia Norte-Sul (FNS) sobre o nível de emprego formal e a renda nos municípios brasileiros diretamente afetados pelo investimento, no período de 2007 a 2019.
+
+\subsection*{Método}
+
+\subsubsection*{Tipo de Estudo}
+☑️ Empírico (dados quantitativos)
+
+\subsubsection*{Dados}
+Painel de dados municipais para os estados do Maranhão, Tocantins e Goiás, de 2001 a 2019. As variáveis de resultado são o emprego formal total e a renda média formal (fonte: RAIS). As variáveis de controle (preditores) incluem população, PIB per capita, arrecadação de impostos, IDH, e indicadores de educação e saúde (fontes: IBGE, IPEA).
+
+\subsubsection*{Modelo}
+O estudo utiliza o método de Controle Sintético. Para cada um dos 11 municípios "tratados" (aqueles atravessados pela FNS e com um polo de carga construído entre 2007 e 2014), um contrafactual ("município sintético") é criado. Esse contrafactual é uma combinação ponderada de municípios não tratados ("donor pool"), onde os pesos são escolhidos para que o município sintético replique as características do município tratado no período pré-intervenção. O efeito causal da ferrovia é a diferença entre o resultado observado no município real e no seu contrafactual sintético após a inauguração da ferrovia.
+
+\subsection*{Resultados-Chave}
+\begin{itemize}
+    \item \textbf{Emprego:} Os municípios que receberam a ferrovia mais cedo (obras concluídas entre 2007 e 2010) apresentaram efeitos positivos no emprego formal. Por exemplo, Porto Franco (MA) teve um aumento médio de 376 empregos. Em contrapartida, os municípios onde a FNS foi concluída em 2014 mostraram, inicialmente, uma queda no emprego, possivelmente devido ao fim dos postos de trabalho da fase de construção.
+    \item \textbf{Renda:} Os efeitos sobre a renda média foram menos expressivos. O município de Porto Franco (MA) teve um aumento de 12\%, mas Aguiarnópolis (TO) teve uma queda de 26\%, sugerindo que os novos empregos criados podem ter sido de menor remuneração. Para a maioria dos outros municípios, o impacto na renda não foi estatisticamente significativo.
+    \item \textbf{Tempo de Exposição:} Os resultados sugerem que o tempo de exposição à infraestrutura é crucial. Efeitos positivos e mais consolidados são observados nos municípios onde a ferrovia está em operação há mais tempo.
+\end{itemize}
+
+\subsection*{Limitações}
+\begin{itemize}
+    \item A análise é feita caso a caso, o que dificulta a generalização de um efeito médio da FNS.
+    \item Para os municípios tratados em 2014, o período pós-intervenção é curto, o que pode não ser suficiente para capturar os benefícios de longo prazo da operação da ferrovia.
+    \item O método assume que não há spillovers para as unidades de controle, o que foi mitigado ao se excluir municípios a menos de 50km da ferrovia do "donor pool".
+\end{itemize}
+
+\subsection*{Relevância}
+\begin{itemize}
+    \item Aplica uma metodologia de inferência causal robusta (controle sintético) para avaliar um grande projeto de infraestrutura no Brasil, algo ainda pouco explorado na literatura nacional.
+    \item Fornece evidências de que os impactos da infraestrutura são heterogêneos e dependem do tempo, destacando a existência de possíveis custos de ajuste de curto prazo no mercado de trabalho local.
+    \item Contribui para o debate sobre políticas de desenvolvimento regional, mostrando que os benefícios socioeconômicos de grandes obras de infraestrutura não são automáticos nem imediatos.
+\end{itemize}
+\newpage
+
+\section{Order Against Progress: Government, Foreign Investment, and Railroads in Brazil, 1854-1913}
+
+\subsection*{Autores}
+William R. Summerhill (2003)
+
+\subsection*{Objetivo Principal}
+Realizar uma avaliação quantitativa abrangente do impacto econômico das ferrovias no Brasil entre 1854 e 1913, analisando os ganhos diretos, o papel das políticas governamentais, o investimento estrangeiro e as mudanças estruturais na economia.
+
+\subsection*{Método}
+
+\subsubsection*{Tipo de Estudo}
+☑️ Empírico (nova historiografia quantitativa)
+
+\subsubsection*{Dados}
+O estudo é baseado em uma extensa pesquisa de arquivo em fontes primárias no Brasil, Reino Unido e EUA. Foram construídas novas séries temporais de dados operacionais e financeiros para as ferrovias brasileiras, incluindo volume de carga e passageiros, receitas, custos e capital.
+
+\subsubsection*{Modelo}
+A metodologia central é a da "poupança social" (social savings), popularizada por Robert Fogel. A abordagem consiste em uma análise contrafactual para estimar o quanto o PIB brasileiro teria sido menor em um determinado ano (ex: 1913) se a economia não tivesse as ferrovias e precisasse usar a melhor alternativa de transporte disponível (principalmente mulas e carroças). A poupança social é a diferença no custo total do transporte entre o cenário real (com ferrovias) e o contrafactual (sem ferrovias).
+\begin{equation*}
+    \text{Poupança Social} = Q_{transporte} \times (Custo_{\text{sem ferrovia}} - Custo_{\text{com ferrovia}})
+\end{equation*}
+O autor calcula essa medida para fretes e passageiros, realizando testes de sensibilidade para diferentes elasticidades da demanda por transporte.
+
+\subsection*{Resultados-Chave}
+\begin{itemize}
+    \item O transporte terrestre pré-ferrovia no Brasil era extremamente caro e ineficiente. A poupança social gerada pelas ferrovias foi, portanto, imensa.
+    \item A estimativa conservadora (lower-bound) para a poupança social apenas no transporte de cargas em 1913 foi de \textbf{18\% do PIB} brasileiro, um valor muito superior ao encontrado para os EUA e a maioria dos países europeus.
+    \item A política governamental, especialmente as \textbf{garantias de juros} (dividendos mínimos), foi essencial para atrair o capital estrangeiro (britânico) e doméstico necessário para a construção.
+    \item A regulação das tarifas pelo governo assegurou que a maioria dos benefícios (o excedente) fosse capturada por produtores e consumidores brasileiros, e não pelos investidores estrangeiros.
+    \item Contrariando a teoria da dependência, as ferrovias não serviram apenas para aprofundar um modelo agroexportador. A participação de produtos para o mercado interno no frete ferroviário cresceu de forma constante, e a participação das exportações no PIB brasileiro na verdade caiu no período.
+\end{itemize}
+
+\subsection*{Limitações}
+\begin{itemize}
+    \item A metodologia de poupança social, por ser estática, não captura os efeitos dinâmicos das ferrovias, como o estímulo a novos investimentos ou a atração de imigrantes, o que provavelmente subestima o impacto total.
+    \item A qualidade dos dados históricos, especialmente para o período inicial, apresenta lacunas que exigiram algumas estimativas e interpolações.
+\end{itemize}
+
+\subsection*{Relevância}
+\begin{itemize}
+    \item É a avaliação quantitativa mais completa sobre o impacto econômico das ferrovias no Brasil do século XIX e início do século XX.
+    \item Desafia narrativas históricas dominantes, em particular a teoria da dependência, mostrando que o investimento estrangeiro não foi necessariamente exploratório e que as ferrovias foram cruciais para o desenvolvimento do mercado interno brasileiro.
+    \item Demonstra a importância monumental da infraestrutura de transporte para superar barreiras geográficas e impulsionar o crescimento econômico em uma economia "atrasada".
+\end{itemize}
+\newpage
+
+\section{Impacto da Infraestrutura de Transportes sobre o Desenvolvimento e a Produtividade no Brasil}
+
+\subsection*{Autores}
+Carlos Alvares da Silva Campos Neto, Júnia Cristina Peres R. da Conceição e Alfredo Eric Romminger (2015)
+
+\subsection*{Objetivo Principal}
+Analisar o impacto do investimento público em infraestrutura de transportes sobre o Produto Interno Bruto (PIB) do Brasil, utilizando dados macroeconômicos recentes.
+
+\subsection*{Método}
+
+\subsubsection*{Tipo de Estudo}
+Empírico (dados quantitativos de séries temporais)
+
+\subsubsection*{Dados}
+Séries de tempo trimestrais para a economia brasileira, de 1995 a 2012. As variáveis principais são: PIB, investimento público em infraestrutura de transportes (dados da Câmara dos Deputados e Siga Brasil), investimento privado total (da FBCF, Contas Nacionais) e massa salarial (proxy para emprego/renda do trabalho).
+
+\subsubsection*{Modelo}
+O estudo emprega um modelo de Vetores Autoregressivos (VAR). Esta abordagem permite analisar as inter-relações dinâmicas entre um conjunto de variáveis, sem impor uma estrutura teórica rígida. O modelo estimado é:
+\begin{equation*}
+    X_t = A_0 + A_1 X_{t-1} + \dots + A_n X_{t-n} + \epsilon_t
+\end{equation*}
+onde $X_t$ é o vetor de variáveis endógenas: $X_t = [y_t, g_t, e_t, s_t]'$, representando o log do PIB, do investimento público em transportes, do investimento privado e da massa salarial, respectivamente. O impacto de um choque no investimento público é analisado através das Funções de Impulso-Resposta (IRF).
+
+\subsection*{Resultados-Chave}
+\begin{itemize}
+    \item O investimento público em transportes tem um impacto positivo e crescente sobre o PIB ao longo do tempo.
+    \item A elasticidade do PIB em relação ao investimento público em transportes é de \textbf{0,012} no primeiro ano, sobe para \textbf{0,023} no quarto ano e atinge \textbf{0,032} no longo prazo.
+    \item Um aumento de 1\% no investimento em transportes em 2012 (R\$ 135,2 milhões) geraria um aumento de R\$ 550,6 milhões no PIB no curto prazo e de R\$ 1,47 bilhão no longo prazo (retornos de 4 e 11 vezes o investimento, respectivamente).
+    \item A correlação entre o investimento público e o privado em transportes é muito alta e positiva (0,88), indicando que eles são \textbf{complementares}, não substitutos. O investimento público parece "puxar" (crowd in) o investimento privado.
+\end{itemize}
+
+\subsection*{Limitações}
+\begin{itemize}
+    \item A análise é agregada para o nível nacional, não capturando heterogeneidades regionais ou setoriais.
+    \item A necessidade de trimestralizar dados anuais por interpolação pode introduzir imprecisões.
+    \item O modelo VAR é a-teórico e captura correlações dinâmicas, não necessariamente relações causais estruturais profundas.
+\end{itemize}
+
+\subsection*{Relevância}
+\begin{itemize}
+    \item Evidência macroeconômica recente e quantitativa para o debate sobre infraestrutura no Brasil, confirmando seu papel significativo no crescimento do PIB.
+    \item O resultado de complementaridade entre investimento público e privado é crucial para o desenho de políticas, sugerindo que o investimento estatal é um catalisador para o investimento privado no setor.
+    \item Reforça, com dados brasileiros, a tese de que o investimento em infraestrutura é um determinante chave da produtividade e do crescimento econômico.
+\end{itemize}
+\newpage
+
+\section{Spatial Economics}
+
+\subsection*{Autores}
+Stephen J. Redding (2024)
+
+\subsection*{Objetivo Principal}
+Revisar a pesquisa recente em economia espacial, definindo seu escopo e destacando os principais modelos teóricos, avanços metodológicos e descobertas empíricas.
+
+\subsection*{Método}
+
+\subsubsection*{Tipo de Estudo}
+Teórico (revisão de literatura e síntese)
+
+\subsubsection*{Dados}
+O artigo sintetiza os resultados de uma vasta gama de estudos nas áreas de economia espacial, comércio internacional e economia urbana, sem apresentar uma nova análise de dados.
+
+\subsubsection*{Modelo}
+A revisão é organizada em torno dos modelos fundamentais do campo, fazendo uma distinção chave entre:
+\begin{enumerate}
+    \item \textbf{Sistemas de Cidades/Regiões:} Modelos que analisam as interações econômicas (comércio, migração) entre diferentes unidades espaciais. Inclui desde os modelos seminais de Rosen-Roback e da Nova Geografia Econômica até os modernos Modelos Espaciais Quantitativos (QSMs).
+    \item \textbf{Estrutura Interna das Cidades:} Modelos que examinam a organização da atividade econômica dentro de uma única cidade, focando no deslocamento (commuting) e no uso do solo. Inclui o modelo monocêntrico de Alonso-Muth-Mills e os QSMs urbanos.
+\end{enumerate}
+O artigo enfatiza a ascensão dos QSMs como uma ferramenta poderosa que combina rigor teórico com aplicabilidade empírica.
+
+\subsection*{Resultados-Chave (Síntese da Literatura)}
+\begin{itemize}
+    \item \textbf{Modelos Espaciais Quantitativos (QSMs):} Representam um avanço, pois são ricos o suficiente para incorporar a heterogeneidade e a complexidade dos dados espaciais do mundo real, mas permanecem tratáveis para análise teórica e simulações contrafactuais.
+    \item \textbf{Acesso a Mercados:} Um conceito central que emerge dos QSMs, representando a conectividade econômica de uma localização com todas as outras. É um determinante chave de salários, preços da terra e população.
+    \item \textbf{Primeira vs. Segunda Natureza:} A distribuição espacial da atividade econômica é moldada tanto por fundamentos exógenos ("primeira natureza", como portos naturais) quanto por forças de aglomeração endógenas ("segunda natureza").
+    \item \textbf{Múltiplos Equilíbrios e Path Dependence:} Uma característica importante de muitos modelos espaciais é a possibilidade de múltiplos equilíbrios, o que implica que choques temporários (como a construção de uma ferrovia ou a destruição por uma guerra) podem ter efeitos permanentes na geografia econômica.
+\end{itemize}
+
+\subsection*{Limitações (do Campo de Pesquisa)}
+\begin{itemize}
+    \item Modelar a dinâmica (decisões intertemporais) em modelos espaciais com muitas localizações continua sendo um grande desafio.
+    \item Distinguir empiricamente entre as diferentes fontes de economias de aglomeração (ex: spillovers de conhecimento vs. mercado de trabalho espesso) é extremamente difícil.
+    \item A integração de diferentes escalas espaciais (dentro e entre cidades) em um único modelo tratável é uma fronteira de pesquisa ativa.
+\end{itemize}
+
+\subsection*{Relevância}
+\begin{itemize}
+    \item Oferece uma visão geral concisa e atualizada do estado da arte em economia espacial, um campo que integra comércio, economia urbana e desenvolvimento.
+    \item Explica os fundamentos teóricos e as aplicações empíricas dos modelos quantitativos que agora dominam a área.
+    \item Identifica as principais questões e fronteiras de pesquisa, como a incorporação de dinâmica, a análise de agentes heterogêneos (sorting) e a avaliação de políticas públicas "place-based".
+\end{itemize}
+\newpage
+
+\section{Quantitative Economic Geography Meets History: Questions, Answers and Challenges}
+
+\subsection*{Autores}
+Dávid Krisztián Nagy (2022)
+
+\subsection*{Objetivo Principal}
+Revisar a crescente literatura que aplica modelos quantitativos de equilíbrio geral da economia espacial para estudar eventos históricos, focando nos desafios metodológicos e nas soluções encontradas.
+
+\subsection*{Método}
+
+\subsubsection*{Tipo de Estudo}
+Teórico (revisão de literatura metodológica)
+
+\subsubsection*{Dados}
+O artigo revisa estudos que utilizam diversos conjuntos de dados históricos, como dados de população, produção setorial, valor da terra e redes de transporte.
+
+\subsubsection*{Modelo}
+O foco está na aplicação de Modelos Espaciais Quantitativos (QSMs) a questões históricas. O autor apresenta um modelo QSM de base para ilustrar a metodologia e seus desafios, usando como exemplo o impacto da construção de pontes no século XIX sobre o rio Danúbio. A revisão é estruturada em torno de três desafios principais que essa literatura enfrenta.
+
+\subsection*{Resultados-Chave (Organizados pelos Desafios)}
+\begin{itemize}
+    \item \textbf{Tratabilidade do Modelo:} A literatura desenvolveu uma classe de modelos tratáveis baseados em estruturas de elasticidade constante. Esses modelos permitem a caracterização teórica (existência e unicidade do equilíbrio) e a computação do equilíbrio. No entanto, incorporar elementos como dinâmica, múltiplos setores ou desenvolvimento endógeno de infraestrutura ainda apresenta desafios significativos à tratabilidade.
+    \item \textbf{Disponibilidade de Dados:} A pesquisa histórica é limitada pela escassez de dados. Os pesquisadores têm sido criativos, utilizando fontes de arquivo e ferramentas de GIS para construir os dados necessários. Uma vantagem dos QSMs é que eles podem ser usados para "preencher" dados ausentes (inferir variáveis não observadas), embora isso exija validação cuidadosa através de testes de sobreidentificação.
+    \item \textbf{Identificação Causal:} Para estimar os parâmetros do modelo de forma causal, a literatura tem recorrido a três estratégias principais: (i) \textbf{Experimentos Naturais} (ex: a divisão da Alemanha após a Segunda Guerra); (ii) \textbf{Variáveis Instrumentais} (ex: rotas históricas ou planejadas para instrumentar a infraestrutura atual); e (iii) \textbf{Calibração com Dados Pré-Evento}, para garantir que a endogeneidade do evento não contamine a estimação dos parâmetros.
+\end{itemize}
+
+\subsection*{Limitações (do Campo de Pesquisa)}
+\begin{itemize}
+    \item As premissas simplificadoras necessárias para a tratabilidade dos modelos podem ser uma preocupação.
+    \item A qualidade e a disponibilidade dos dados históricos continuam sendo a restrição fundamental.
+    \item A validade dos pressupostos de identificação (ex: a exogeneidade de um instrumento) é sempre um ponto de debate e crítica.
+\end{itemize}
+
+\subsection*{Relevância}
+\begin{itemize}
+    \item Guia metodológico sobre como a economia espacial quantitativa está sendo usada para responder a grandes questões históricas.
+    \item Estrutura claramente os desafios (tratabilidade, dados, identificação) e as soluções inovadoras que os pesquisadores têm adotado.
+    \item Demonstra o poder dessa abordagem para fornecer respostas quantitativas a questões complexas, como o impacto de ferrovias ou mudanças de fronteiras, e para distinguir os efeitos de crescimento dos de mera reorganização espacial, uma limitação chave dos estudos puramente de forma reduzida.
+\end{itemize}
+
+\section{The Spatial Spillover Effects of Transportation Infrastructure on Regional Economic Growth - An Empirical Study at the Provincial Level in China}
+
+\subsection*{Autores}
+Fan Yin, Yongsheng Qian, Junwei Zeng e Xu Wei (2024)
+
+\subsection*{Objetivo Principal}
+Examinar os efeitos de transbordamento (spillover) espacial da infraestrutura de transporte sobre o crescimento econômico regional, utilizando dados de 31 divisões administrativas de nível provincial na China de 2003 a 2022.
+
+\subsection*{Método}
+
+\subsubsection*{Tipo de Estudo}
+Empírico (dados quantitativos)
+
+\subsubsection*{Dados}
+Dados de painel de 31 províncias chinesas de 2003 a 2022, provenientes do Anuário Estatístico da China, Anuário de Transporte da China e anuários provinciais. As variáveis incluem densidade da rede de transportes (estradas, ferrovias, hidrovias), PIB per capita, força de trabalho, abertura comercial, intensidade de P\&D, despesa fiscal, estrutura industrial, intensidade de TIC e taxa de urbanização.
+
+\subsubsection*{Modelo}
+O estudo utiliza o Modelo Espacial de Durbin (SDM) com três matrizes de pesos espaciais distintas: adjacência 0-1, aninhada econômico-geográfica e distância econômica baseada no PIB. O modelo SDM é especificado como:
+\begin{equation*}
+y_{it} = \rho \sum_{j=1}^{n} w_{ij} y_{jt} + X_{it}\beta + \sum_{j=1}^{n} w_{ij} X_{jt}\delta + \mu_i + \lambda_t + \epsilon_{it}
+\end{equation*}
+Onde $y_{it}$ é o PIB per capita, $X_{it}$ é o vetor de variáveis de controle, $W$ é a matriz de pesos espaciais, e $\rho$ e $\delta$ capturam os efeitos de spillover da variável dependente e das variáveis independentes, respetivamente. $\mu_i$ e $\lambda_t$ são os efeitos fixos espaciais e temporais. A análise decompõe os resultados em efeitos diretos, indiretos e totais.
+
+\subsection*{Resultados-Chave}
+\begin{itemize}
+    \item A infraestrutura de transporte promove significativamente o crescimento econômico tanto na região local quanto nas vizinhas, em todas as matrizes de pesos espaciais.
+    \item O efeito total é mais pronunciado em regiões geograficamente próximas, com um coeficiente de 7.845 (p<0.01).
+    \item Regiões com níveis de desenvolvimento econômico semelhantes também mostram fortes efeitos de colaboração (coeficiente de 2.074, p<0.01), embora o efeito marginal da infraestrutura de transporte diminua.
+    \item Ajustes na estrutura industrial e investimentos em inovação demonstram um efeito inibidor a curto prazo no crescimento econômico, destacando a necessidade de desenvolvimento sincronizado.
+\end{itemize}
+
+\subsection*{Limitações}
+\begin{itemize}
+    \item A análise é a nível provincial, o que pode mascarar heterogeneidades intraprovinciais significativas.
+    \item A endogeneidade da localização da infraestrutura, embora abordada através de modelos espaciais, não é tratada com variáveis instrumentais, o que poderia ser uma limitação.
+\end{itemize}
+
+\subsection*{Relevância}
+\begin{itemize}
+    \item Fornece uma análise abrangente e de longo prazo (20 anos) dos efeitos de spillover da infraestrutura na China.
+    \item A utilização de múltiplas matrizes de pesos espaciais revela a natureza multifacetada das interações espaciais.
+    \item Oferece suporte empírico essencial para políticas de coordenação regional e investimento em infraestrutura, com implicações para outros países em desenvolvimento.
+\end{itemize}
+\newpage
+
+\section{Transportation Costs and the Social Savings of Railroads in Latin America. The Case of Peru}
+
+\subsection*{Autores}
+Luis Felipe Zegarra (2013)
+
+\subsection*{Objetivo Principal}
+Estimar a "poupança social" (social savings) das ferrovias no Peru no final do século XIX e início do século XX, comparando os custos do transporte ferroviário com a melhor alternativa (transporte por mulas e lhamas).
+
+\subsection*{Método}
+
+\subsubsection*{Tipo de Estudo}
+Empírico (nova historiografia quantitativa)
+
+\subsubsection*{Dados}
+Fontes primárias e secundárias, incluindo os "Anales de las Obras Públicas" (1890-1918), a revista "Economista Peruano" e vários estudos históricos para obter dados sobre volume de carga e passageiros, tarifas ferroviárias e custos de transporte alternativo.
+
+\subsubsection*{Modelo}
+A metodologia central é a da "poupança social", que calcula o aumento no excedente do consumidor devido à redução nos custos de transporte proporcionada pelas ferrovias. A poupança social (SS) é calculada como a diferença entre o custo do transporte na economia contrafactual (sem ferrovias) e na economia real (com ferrovias). A fórmula básica, assumindo demanda inelástica, é:
+\begin{equation*}
+SS = (P_N - P_R) \times Q_R
+\end{equation*}
+Onde $P_N$ é a tarifa do transporte alternativo (mulas/lhamas), $P_R$ é a tarifa ferroviária, e $Q_R$ é a quantidade de serviço de transporte (tonelada-km ou passageiro-km) fornecida pela ferrovia. O estudo também considera cenários com diferentes elasticidades-preço da demanda.
+
+\subsection*{Resultados-Chave}
+\begin{itemize}
+    \item A poupança social variou de 0.3\% a 1.3\% do PIB em 1890, aumentando para um intervalo entre 3.6\% e 9.4\% do PIB em 1918.
+    \item Estes valores são comparáveis aos dos Estados Unidos e Grã-Bretanha, mas muito inferiores aos do México, Brasil e Argentina.
+    \item A principal razão para a poupança social relativamente baixa no Peru foi a pequena extensão da sua rede ferroviária (baixa densidade ferroviária) em comparação com outros países latino-americanos.
+    \item As tarifas ferroviárias no Peru eram relativamente altas, em parte devido aos elevados custos operacionais nos Andes, o que também limitou a poupança social.
+\end{itemize}
+
+\subsection*{Limitações}
+\begin{itemize}
+    \item A metodologia de poupança social é estática e não captura os efeitos dinâmicos e de encadeamento das ferrovias na economia.
+    \item A qualidade dos dados históricos pode ter lacunas, exigindo algumas estimativas e interpolações.
+    \item A análise foca nos efeitos diretos, negligenciando benefícios indiretos como o desenvolvimento de novas indústrias ou a atração de imigrantes.
+\end{itemize}
+
+\subsection*{Relevância}
+\begin{itemize}
+    \item Desafia a visão de que a ausência de hidrovias leva automaticamente a uma grande poupança social com as ferrovias, mostrando que a extensão da rede é um fator crucial.
+    \item Fornece a primeira estimativa quantitativa sistemática do impacto direto das ferrovias na economia peruana.
+    \item Oferece um contraponto importante aos estudos de caso de outros países da América Latina, destacando a heterogeneidade dos impactos da infraestrutura na região.
+\end{itemize}
+\newpage
+
+\section{Railroads, Reallocation, and the Rise of American Manufacturing}
+
+\subsection*{Autores}
+Richard Hornbeck e Martin Rotemberg (2019)
+
+\subsection*{Objetivo Principal}
+Examinar o impacto da integração de mercado, impulsionada pela expansão das ferrovias na segunda metade do século XIX, no desenvolvimento da manufatura americana, com foco nos ganhos de produtividade decorrentes da realocação de recursos.
+
+\subsection*{Método}
+
+\subsubsection*{Tipo de Estudo}
+Empírico (dados quantitativos, guiado por modelo estrutural)
+
+\subsubsection*{Dados}
+Dados digitalizados do Censo de Manufaturas dos EUA a nível de condado por indústria para 1860, 1870 e 1880, complementados com dados agregados até 1900. Dados sobre a rede de ferrovias e hidrovias para calcular o "acesso a mercados".
+
+\subsubsection*{Modelo}
+O estudo decompõe o crescimento da produtividade da manufatura em "eficiência técnica" (TFP) e "eficiência realocativa". A eficiência realocativa captura os ganhos de mover insumos para condados onde o produto marginal do valor dos insumos excede seu custo marginal (devido a fricções de mercado, markups, etc.). O impacto do acesso a mercados (MA), impulsionado pelas ferrovias, é estimado com a seguinte regressão de efeitos fixos:
+\begin{equation*}
+Y_{ct} = \beta \ln(MA_{ct}) + \gamma_c + \gamma_{st} + \gamma_t f(x_c, y_c) + \epsilon_{ct}
+\end{equation*}
+Onde $Y_{ct}$ é o resultado (produtividade, eficiência realocativa, etc.), $\gamma_c$ são efeitos fixos de condado, $\gamma_{st}$ são efeitos fixos de estado-ano, e $f(x_c, y_c)$ é um polinômio cúbico em latitude/longitude para controlar por tendências espaciais. A identificação explora a variação no acesso a mercados que não se deve à construção local de ferrovias. Um modelo de equilíbrio geral espacial é usado para a análise contrafactual agregada.
+
+\subsection*{Resultados-Chave}
+\begin{itemize}
+    \item O aumento do acesso a mercados impulsionou substancialmente a produtividade da manufatura. Um aumento de 1 desvio padrão no acesso a mercados aumentou a produtividade do condado em 12.9\% entre 1860 e 1880.
+    \item Este ganho de produtividade foi impulsionado inteiramente por ganhos em "eficiência realocativa", à medida que as ferrovias incentivaram a expansão da atividade manufatureira em condados marginalmente produtivos.
+    \item A remoção contrafactual de todas as ferrovias em 1890 teria reduzido a produtividade agregada dos EUA em 25\%, um valor muito superior às estimativas anteriores que não consideravam a má alocação de recursos.
+    \item Este impacto equivale a uma perda anual de 25\% do PIB, destacando o papel central das ferrovias no crescimento econômico americano.
+\end{itemize}
+
+\subsection*{Limitações}
+\begin{itemize}
+    \item A decomposição da produtividade depende de pressupostos sobre a função de produção (Cobb-Douglas com retornos constantes à escala).
+    \item A análise assume que as fricções de mercado (markups, etc.) são exógenas e não são diretamente afetadas pelo acesso a mercados, o que é consistente com os resultados empíricos do artigo, mas é uma simplificação.
+    \item Os dados detalhados por indústria estão disponíveis apenas até 1880.
+\end{itemize}
+
+\subsection*{Relevância}
+\begin{itemize}
+    \item Demonstra que os ganhos de infraestruturas de uso geral, como as ferrovias, podem ser muito maiores do que se pensava quando a economia apresenta ineficiências e má alocação de recursos.
+    \item Oferece uma nova perspectiva sobre o crescimento econômico americano, enfatizando a importância da realocação espacial de recursos facilitada pela integração de mercados.
+    \item Conecta a literatura de geografia econômica com a de má alocação de recursos, mostrando como a infraestrutura de transporte pode ter efeitos de primeira ordem sobre a produtividade agregada.
+\end{itemize}
+\newpage
+
+\section{Did Railroads Induce or Follow Economic Growth? Urbanization and Population Growth in the American Midwest, 1850-60}
+
+\subsection*{Autores}
+Jeremy Atack, Fred Bateman, Michael Haines e Robert A. Margo (2009)
+
+\subsection*{Objetivo Principal}
+Investigar a relação causal entre a expansão das ferrovias e o desenvolvimento econômico no Meio-Oeste americano durante a década de 1850, focando especificamente na densidade populacional e na urbanização como indicadores de crescimento.
+
+\subsection*{Método}
+
+\subsubsection*{Tipo de Estudo}
+Empírico (dados quantitativos)
+
+\subsubsection*{Dados}
+Um banco de dados GIS recém-construído sobre a infraestrutura de transporte do século XIX nos EUA, combinado com dados de nível de condado do Censo dos EUA de 1790-1970 (Haines-ICPSR). A análise foca num painel balanceado de 278 condados do Meio-Oeste.
+
+\subsubsection*{Modelo}
+A principal estratégia empírica é um modelo de Diferenças em Diferenças (DiD). O "grupo de tratamento" consiste em condados que não tinham acesso ferroviário em 1850, mas o ganharam até 1860. O "grupo de controle" consiste em condados que não tinham acesso ferroviário em nenhum dos dois anos. O modelo DiD compara a mudança na urbanização ou densidade populacional entre 1850 e 1860 para o grupo de tratamento contra o grupo de controle. Regressões DiD são usadas para controlar por covariáveis pré-existentes (tendências de 1840, produtividade agrícola, acesso a hidrovias). Uma abordagem de Variável Instrumental (VI), usando levantamentos ferroviários históricos autorizados pelo Congresso (1824-1838) como instrumento para o acesso ferroviário, é usada como verificação de robustez.
+
+\subsection*{Resultados-Chave}
+\begin{itemize}
+    \item A chegada da ferrovia teve pouco ou nenhum impacto sobre o crescimento da densidade populacional nos condados do Meio-Oeste durante a década de 1850, confirmando a conclusão anterior de Albert Fishlow.
+    \item No entanto, a ferrovia foi uma "causa" significativa da urbanização no Meio-Oeste. O acesso ferroviário aumentou a fração da população vivendo em áreas urbanas em 3 a 4 pontos percentuais.
+    \item As estimativas sugerem que a expansão ferroviária pode ser responsável por mais da metade do aumento da urbanização na região durante a década de 1850.
+    \item A análise mostra que os promotores de ferrovias visavam condados que já cresceram mais rapidamente e tinham maior produtividade agrícola, destacando a importância de controlar a endogeneidade.
+\end{itemize}
+
+\subsection*{Limitações}
+\begin{itemize}
+    \item O estudo foca-se apenas em dois indicadores de desenvolvimento (densidade populacional e urbanização) e num período de tempo curto (1850-1860).
+    \item A variável de tratamento é binária (presença ou ausência de ferrovia), não capturando a intensidade do serviço ferroviário.
+    \item O instrumento baseado em levantamentos do Congresso, embora plausível, pode não ser perfeitamente exógeno se os levantamentos iniciais já visavam áreas com maior potencial de crescimento.
+\end{itemize}
+
+\subsection*{Relevância}
+\begin{itemize}
+    \item Oferece uma resposta matizada ao debate de longa data sobre se as ferrovias "lideraram" ou "seguiram" o crescimento econômico.
+    \item Destaca que o impacto da infraestrutura pode ser heterogêneo em diferentes dimensões do desenvolvimento (população vs. urbanização).
+    \item Demonstra a importância de usar métodos econométricos cuidadosos (DD e VI) para lidar com a endogeneidade na colocação de infraestrutura ao estudar seus impactos históricos.
+\end{itemize}
+\newpage
+
+\section{Rural Transportation Infrastructure in Low- and Middle-Income Countries: A Review of Impacts, Implications, and Interventions}
+
+\subsection*{Autores}
+Noah Kaiser e Christina K. Barstow (2022)
+
+\subsection*{Objetivo Principal}
+Realizar uma revisão abrangente da literatura sobre infraestrutura de transporte rural em países de baixa e média renda (PBMR), sintetizando os impactos em vários setores do desenvolvimento sustentável e analisando as intervenções e estratégias empregadas.
+
+\subsection*{Método}
+
+\subsubsection*{Tipo de Estudo}
+Teórico (revisão de literatura e scoping review)
+
+\subsubsection*{Dados}
+A revisão baseia-se numa vasta gama de literatura acadêmica e de relatórios de organizações (ex: ReCAP, Helvetas), com foco em publicações de 2014 em diante para atualizar revisões anteriores. Foram utilizadas as bases de dados Web of Science e Google Scholar.
+
+\subsubsection*{Modelo}
+Não aplicável (revisão de literatura). A análise é organizada tematicamente, explorando as relações entre a infraestrutura de transporte rural e seis áreas-chave: (1) economia e agricultura, (2) política e governança, (3) saúde, (4) gênero, (5) educação, e (6) alterações climáticas e ambiente. Também analisa intervenções específicas como estradas rurais, pontes e manutenção.
+
+\subsection*{Resultados-Chave}
+\begin{itemize}
+    \item \textbf{Economia e Agricultura:} A infraestrutura melhora o acesso a mercados, insumos e empregos não-agrícolas, mas os benefícios não são automáticos para os mais pobres.
+    \item \textbf{Política e Governança:} O financiamento e a manutenção são desafios crônicos, e a falta de dados dificulta a formulação de políticas eficazes e pró-pobres.
+    \item \textbf{Saúde:} A falta de acesso físico continua a ser uma barreira dominante aos cuidados de saúde, afetando desproporcionalmente mulheres e crianças.
+    \item \textbf{Gênero:} As mulheres enfrentam barreiras de mobilidade distintas e muitas vezes não beneficiam igualmente da infraestrutura, a menos que as intervenções sejam sensíveis ao gênero.
+    \item \textbf{Educação:} Existe uma correlação positiva entre infraestrutura e resultados educacionais, mas a evidência é limitada e complicada por trade-offs com oportunidades de trabalho.
+    \item \textbf{Clima e Ambiente:} A infraestrutura rural é altamente vulnerável às alterações climáticas, exigindo estratégias de adaptação, ao mesmo tempo que a sua expansão levanta preocupações ambientais.
+\end{itemize}
+
+\subsection*{Limitações}
+\begin{itemize}
+    \item A revisão depende da qualidade e disponibilidade da literatura existente, que apresenta lacunas, especialmente em áreas como educação e os impactos de gênero não-binário.
+    \item A síntese de estudos de contextos muito diferentes pode mascarar heterogeneidades importantes.
+    \item A revisão foca em literatura a partir de 2014, podendo omitir alguns estudos seminais mais antigos.
+\end{itemize}
+
+\subsection*{Relevância}
+\begin{itemize}
+    \item Síntese abrangente do estado da arte na investigação sobre transporte rural, expandindo o foco para além das estradas rurais.
+    \item Apela a uma abordagem mais integrada e sistêmica, vendo o transporte rural como um ponto de alavancagem interligado com múltiplos setores do desenvolvimento.
+    \item Identifica áreas críticas para investigação futura, incluindo a necessidade de melhores dados, maior foco na manutenção, e o desenvolvimento de intervenções explicitamente pró-pobres e sensíveis ao gênero.
+\end{itemize}
+\newpage
+
+\section{Local economic effects of connecting to China's high-speed rail network: evidence from spatial econometric models}
+
+\subsection*{Autores}
+Xiaoxuan Zhang e John Gibson (2025)
+
+\subsection*{Objetivo Principal}
+Estudar o impacto da conexão à rede de cabos de alta velocidade (HSR) da China na atividade econômica local, utilizando dados de painel de quase 2500 unidades de nível de condado de 2012 a 2019 e focando nos efeitos de spillover espacial.
+
+\subsection*{Método}
+
+\subsubsection*{Tipo de Estudo}
+☑️ Empírico (dados quantitativos)
+
+\subsubsection*{Dados}
+Painel de dados para 2342 unidades de nível de condado na China de 2012 a 2019. Os indicadores de atividade econômica são o PIB e dados de luminosidade noturna (DMSP e VNL). Os dados sobre a rede HSR provêm da National Railway Corporation da China.
+
+\subsubsection*{Modelo}
+O estudo utiliza uma gama de modelos econométricos espaciais, com foco no modelo espacial autorregressivo com erros espaciais autorregressivos (SARAR), que engloba outros modelos como o Durbin espacial (SDM). A equação geral é:
+\begin{equation*}
+O_{it} = \lambda W O_{it} + \beta_1 D_{it} + \beta_2 W D_{it} + \mu_i + \vartheta_t + \rho W u_{it} + e_{it}
+\end{equation*}
+Onde $O_{it}$ é o produto econômico, $D_{it}$ é o indicador de tratamento (conexão HSR), $W$ é a matriz de pesos espaciais, e $\mu_i$ e $\vartheta_t$ são efeitos fixos espaciais e temporais. Para lidar com a endogeneidade da localização da rede HSR, é usada uma abordagem de variáveis instrumentais (VI) baseada no método de "linha reta" entre as principais cidades.
+
+\subsection*{Resultados-Chave}
+\begin{itemize}
+    \item Contrariamente a muitos estudos, os resultados geralmente indicam um crescimento mais baixo na atividade econômica local após a conexão à rede HSR.
+    \item Estes efeitos negativos parecem ser especialmente pronunciados em áreas com menor densidade populacional.
+    \item Os modelos espaciais mostram a presença de interações espaciais significativas, tanto através das variáveis dependentes como das independentes, rejeitando modelos mais simples e não espaciais.
+    \item A utilização de dados de luminosidade noturna (especialmente VNL, que são mais precisos) reforça a conclusão de um impacto nulo ou negativo no crescimento econômico local.
+\end{itemize}
+
+\subsection*{Limitações}
+\begin{itemize}
+    \item O estudo foca-se no crescimento da atividade econômica e não consegue analisar em detalhe os mecanismos subjacentes, como a realocação espacial da população ou do investimento.
+    \item A análise de heterogeneidade é limitada à densidade populacional, e outros fatores poderiam mediar os impactos.
+    \item Embora a estratégia de VI seja utilizada, a validade do instrumento de "linha reta" pode ser debatida.
+\end{itemize}
+
+\subsection*{Relevância}
+\begin{itemize}
+    \item Contribui para o debate sobre os impactos econômicos da HSR, fornecendo evidências de efeitos negativos ou nulos em um contexto de rápida expansão.
+    \item Destaca a importância de considerar os spillovers espaciais e a endogeneidade na avaliação de grandes projetos de infraestrutura.
+    \item Sugere que a contínua expansão da rede HSR da China, especialmente em áreas de baixa densidade, pode não estimular necessariamente o crescimento econômico local, mesmo que sirva outros propósitos estratégicos.
+\end{itemize}
+
+
+\end{document}

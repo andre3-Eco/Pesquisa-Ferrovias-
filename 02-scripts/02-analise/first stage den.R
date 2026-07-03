@@ -1,13 +1,11 @@
 # ==============================================================================
+# Etapa 10
 # FIRST-STAGE: DENSIDADE BUFFER SINTÉTICA vs REAL — SEM PONTAS (POR ANO)
-# Baseline OLS (Sem Spatial Lag)
+# Baseline OLS 
 # ==============================================================================
 
-library(dplyr)
 library(tidyverse)
 library(fixest)
-library(stringr)
-library(readr)
 
 if (!exists("data.wd")) {
   data.wd <- normalizePath(file.path(getwd(), "..", ".."))
@@ -19,32 +17,17 @@ cat("FIRST-STAGE: DENSIDADE BUFFER DINÂMICA — SEM PONTAS (SEM SPATIAL LAG)\n"
 cat("========================================================================\n\n")
 
 # ------------------------------------------------------------------------------
-# 1. CARREGAMENTO DAS BASES TABULARES
+# 1. CARREGAMENTO DA BASE UNIFICADA E PAINEL DE PONTAS
 # ------------------------------------------------------------------------------
-cat("1. Carregando bases de dados...\n")
 
-base_main <- read_csv(
-  "01-dados/processados/base_completa_integrada.csv",
-  show_col_types = FALSE
-)
-base_densidade <- read_csv(
-  "01-dados/processados/base_densidade_buffer_unificada.csv",
-  show_col_types = FALSE
-)
+base <- readRDS("01-dados/processados/base_completa_integrada_buffer.rds")
 
 ne_states <- c("MA", "PI", "CE", "RN", "PB", "PE", "AL", "SE", "BA")
 
-base <- base_main |>
-  filter(state_abbr %in% ne_states) |>
-  select(-starts_with("densidade_real_"), -starts_with("densidade_sintetica")) |>
-  left_join(base_densidade, by = "code_amc")
+base <- base |>
+  filter(state_abbr %in% ne_states)
 
 cat(sprintf("   AMCs Nordeste na base: %d\n", nrow(base)))
-
-# ------------------------------------------------------------------------------
-# 2. CARREGAR PAINEL DE PONTAS (EXCLUSÃO TEMPORAL)
-# ------------------------------------------------------------------------------
-cat("2. Carregando painel de pontas ferroviárias...\n")
 
 painel_pontas <- read_csv(
   "01-dados/processados/painel_amcs_pontas_ano_a_ano.csv",
@@ -56,25 +39,8 @@ pontas_por_ano <- painel_pontas |>
   distinct()
 
 # ------------------------------------------------------------------------------
-# 3. CONTROLES AMBIENTAIS E GEOGRÁFICOS
+# 2. IDENTIFICAR ANOS DISPONÍVEIS
 # ------------------------------------------------------------------------------
-cat("3. Carregando controles ambientais...\n")
-
-ctrl_clima <- readRDS("01-dados/processados/controles_clima_amcs_nordeste.rds")
-ctrl_rios  <- readRDS("01-dados/processados/controles_rios_amcs_nordeste.rds")
-ctrl_solo  <- readRDS("01-dados/processados/controles_solo_amcs_nordeste.rds")
-
-base <- base |>
-  left_join(ctrl_clima |> select(code_amc, bio_1, bio_12, bio_15),             by = "code_amc") |>
-  left_join(ctrl_rios  |> select(code_amc, dist_rio_km, densidade_hidro_km_km2), by = "code_amc") |>
-  left_join(ctrl_solo  |> select(code_amc, pct_solo_latossolos, pct_solo_neossolos), by = "code_amc")
-
-cat("   Controles adicionados.\n\n")
-
-# ------------------------------------------------------------------------------
-# 4. IDENTIFICAR ANOS DISPONÍVEIS
-# ------------------------------------------------------------------------------
-cat("4. Identificando anos disponíveis...\n")
 
 cols <- colnames(base)
 dens_real_cols <- grep("^densidade_buffer_real_[0-9]+$", cols, value = TRUE)
@@ -83,9 +49,8 @@ years <- sort(as.integer(sub("densidade_buffer_real_", "", dens_real_cols)))
 cat(sprintf("   %d anos disponíveis: %d–%d\n\n", length(years), min(years), max(years)))
 
 # ------------------------------------------------------------------------------
-# 5. LOOP PRINCIPAL: PRIMEIRO ESTÁGIO POR ANO
+# 3. LOOP PRINCIPAL: PRIMEIRO ESTÁGIO POR ANO
 # ------------------------------------------------------------------------------
-cat("5. Rodando regressões de primeiro estágio (sem lag espacial)...\n\n")
 
 fixed_controls <- paste(
   "bio_1", "bio_12", "bio_15",
@@ -108,13 +73,13 @@ for (ano in years) {
     next
   }
   
-  # Pontas deste ano específico
+  # AMCs que eram pontas NESTE ano específico
   codes_pontas_ano <- pontas_por_ano |>
     filter(ano_corte == ano) |>
     pull(code_amc) |>
     unique()
   
-  # Montar dados da regressão
+  # Montar dados da regressão filtrando pontas e dados faltantes
   df <- base |>
     select(
       code_amc, state_abbr,
@@ -124,7 +89,6 @@ for (ano in years) {
       dist_rio_km, densidade_hidro_km_km2,
       pct_solo_latossolos, pct_solo_neossolos
     ) |>
-    # Excluir AMCs que eram pontas NESTE ano
     filter(!(code_amc %in% codes_pontas_ano)) |>
     filter(
       is.finite(.data[[endo_var]]),
@@ -136,7 +100,7 @@ for (ano in years) {
   
   n_excluidas <- sum(base$code_amc %in% codes_pontas_ano)
   
-  # Formula simplificada: endo ~ inst + controles | state_abbr
+  # Formula: endo ~ inst + controles | fixed_effects
   form_str <- sprintf(
     "%s ~ %s + %s | state_abbr",
     endo_var, inst_var, fixed_controls
@@ -175,9 +139,8 @@ for (ano in years) {
 }
 
 # ------------------------------------------------------------------------------
-# 6. COMPILAR E SALVAR
+# 4. COMPILAR E SALVAR
 # ------------------------------------------------------------------------------
-cat("\n6. Compilando resultados...\n")
 
 if (length(resultados) == 0) stop("Nenhuma regressão bem-sucedida.")
 
@@ -193,22 +156,10 @@ resultados_df <- bind_rows(resultados) |>
     instrumento_forte = F_estatistica >= 10
   )
 
+# Garantir que a pasta existe antes de salvar (previne erro silencioso)
+dir.create("03-resultados/csv", showWarnings = FALSE, recursive = TRUE)
+
 output_file <- "03-resultados/csv/first_stage_buffer_density_sem_pontas_baseline.csv"
 write_csv(resultados_df, output_file)
 cat(sprintf("   ✓ Resultados salvos em: %s\n\n", output_file))
 
-# ------------------------------------------------------------------------------
-# 7. RESUMO DIAGNÓSTICO
-# ------------------------------------------------------------------------------
-cat("========================================================================\n")
-cat("   RESUMO: FORÇA DO INSTRUMENTO (BASELINE SEM LAG ESPACIAL)\n")
-cat("========================================================================\n")
-cat(sprintf("Total de regressões: %d\n", nrow(resultados_df)))
-
-n_forte <- sum(resultados_df$instrumento_forte)
-cat(sprintf("Instrumento forte (F ≥ 10): %d/%d anos (%.0f%%)\n",
-            n_forte, nrow(resultados_df), 100 * n_forte / nrow(resultados_df)))
-
-cat("\nDistribuição do F-statistic:\n")
-print(summary(resultados_df$F_estatistica))
-cat("\n✅ PROCESSO CONCLUÍDO.\n")

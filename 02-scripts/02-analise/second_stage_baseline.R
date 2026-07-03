@@ -1,52 +1,28 @@
 # ==============================================================================
+# Etapa 11
 # SECOND-STAGE IV (2SLS): DENSIDADE BUFFER SINTÉTICA → REAL — SEM PONTAS
 # Instrumento: densidade_buffer_sintetica_YYYY → densidade_buffer_real_YYYY
 # Outcomes: PIB e população (persistência + contemporâneos)
-# Baseline: Sem Spatial Lag
+# Baseline: Sem Spatial Lag - USANDO BASE UNIFICADA
 # ==============================================================================
 
-library(dplyr)
 library(tidyverse)
 library(fixest)
-library(stringr)
-library(readr)
 
 if (!exists("data.wd")) {
   data.wd <- normalizePath(file.path(getwd(), "..", ".."))
 }
 setwd(data.wd)
 
-cat("========================================================================\n")
-cat("SECOND-STAGE IV: DENSIDADE BUFFER — SEM PONTAS (SEM SPATIAL LAG)\n")
-cat("========================================================================\n\n")
-
 # ------------------------------------------------------------------------------
-# 1. CARREGAR BASES TABULARES
+# 1. CARREGAMENTO DA BASE UNIFICADA E PAINEL DE PONTAS
 # ------------------------------------------------------------------------------
-cat("1. Carregando bases de dados...\n")
 
-base_main <- read_csv(
-  "01-dados/processados/base_completa_integrada.csv",
-  show_col_types = FALSE
-)
-base_densidade <- read_csv(
-  "01-dados/processados/base_densidade_buffer_unificada.csv",
-  show_col_types = FALSE
-)
+base <- readRDS("01-dados/processados/base_completa_integrada_buffer.rds")
 
 ne_states <- c("MA", "PI", "CE", "RN", "PB", "PE", "AL", "SE", "BA")
 
-base <- base_main |>
-  filter(state_abbr %in% ne_states) |>
-  select(-starts_with("densidade_real_"), -starts_with("densidade_sintetica")) |>
-  left_join(base_densidade, by = "code_amc")
-
-cat(sprintf("   AMCs Nordeste na base: %d\n", nrow(base)))
-
-# ------------------------------------------------------------------------------
-# 2. CARREGAR PAINEL DE PONTAS
-# ------------------------------------------------------------------------------
-cat("2. Carregando painel de pontas ferroviárias...\n")
+base <- base |> filter(state_abbr %in% ne_states)
 
 painel_pontas <- read_csv(
   "01-dados/processados/painel_amcs_pontas_ano_a_ano.csv",
@@ -58,25 +34,8 @@ pontas_por_ano <- painel_pontas |>
   distinct()
 
 # ------------------------------------------------------------------------------
-# 3. CONTROLES AMBIENTAIS E GEOGRÁFICOS
+# 2. CARREGAR E UNIR OUTCOMES INTERPOLADOS
 # ------------------------------------------------------------------------------
-cat("3. Carregando controles ambientais...\n")
-
-ctrl_clima <- readRDS("01-dados/processados/controles_clima_amcs_nordeste.rds")
-ctrl_rios  <- readRDS("01-dados/processados/controles_rios_amcs_nordeste.rds")
-ctrl_solo  <- readRDS("01-dados/processados/controles_solo_amcs_nordeste.rds")
-
-base <- base |>
-  left_join(ctrl_clima |> select(code_amc, bio_1, bio_12, bio_15),             by = "code_amc") |>
-  left_join(ctrl_rios  |> select(code_amc, dist_rio_km, densidade_hidro_km_km2), by = "code_amc") |>
-  left_join(ctrl_solo  |> select(code_amc, pct_solo_latossolos, pct_solo_neossolos), by = "code_amc")
-
-cat("   Controles adicionados.\n\n")
-
-# ------------------------------------------------------------------------------
-# 4. CARREGAR OUTCOMES INTERPOLADOS
-# ------------------------------------------------------------------------------
-cat("4. Carregando outcomes interpolados...\n")
 
 outcomes_interp <- readRDS(
   "01-dados/processados/outcomes/interpolados/outcomes_amc_ne_interpolado.rds"
@@ -95,26 +54,26 @@ outcomes_selecionados <- outcomes_interp |>
     pop_total_1996, pop_total_2000, pop_total_2010
   )
 
-base <- base |>
+# Identificar quais colunas existem em AMBAS as bases 
+colunas_sobrepostas <- setdiff(
+  intersect(names(base), names(outcomes_selecionados)), 
+  "code_amc"
+)
+
+# Remover as sobrepostas da base principal e fazer o join limpo
+base <- base |> 
+  select(-all_of(colunas_sobrepostas)) |> 
   left_join(outcomes_selecionados, by = "code_amc")
 
-cat(sprintf("   Outcomes adicionados. Base final: %d AMCs × %d colunas\n\n",
-            nrow(base), ncol(base)))
-
+cat(sprintf("   ✓ %d colunas sobrepostas substituídas com sucesso (evitou sufixos .x/.y)\n", length(colunas_sobrepostas)))
+cat(sprintf("   AMCs Nordeste na base pronta para regressão: %d\n\n", nrow(base)))
 # ------------------------------------------------------------------------------
-# 5. IDENTIFICAR ANOS DISPONÍVEIS DO TRATAMENTO
+# 3. IDENTIFICAR ANOS E DEFINIR MAPA DE OUTCOMES
 # ------------------------------------------------------------------------------
-cat("5. Identificando anos disponíveis do tratamento...\n")
 
 cols <- colnames(base)
 dens_real_cols <- grep("^densidade_buffer_real_[0-9]+$", cols, value = TRUE)
 years <- sort(as.integer(sub("densidade_buffer_real_", "", dens_real_cols)))
-
-cat(sprintf("   %d anos disponíveis: %d–%d\n\n", length(years), min(years), max(years)))
-
-# ------------------------------------------------------------------------------
-# 6. DEFINIR OUTCOMES E CONTROLES
-# ------------------------------------------------------------------------------
 
 fixed_controls <- paste(
   "bio_1", "bio_12", "bio_15",
@@ -123,15 +82,12 @@ fixed_controls <- paste(
   sep = " + "
 )
 
-# Outcomes de persistência
+
 outcomes_persistencia <- c(
-  "log(pib_2010)",
-  "log(pib_2003)",
-  "log(pop_total_2010)",
-  "log(pop_total_2000)"
+  "log(pib_2010)", "log(pib_2003)",
+  "log(pop_total_2010)", "log(pop_total_2000)"
 )
 
-# Outcomes contemporâneos
 contemporaneo_map <- tribble(
   ~ano_min, ~ano_max, ~outcome_pib,         ~outcome_pop,
   1858,     1929,     "log(pib_1920)",       "log(pop_total_1940)",
@@ -156,13 +112,17 @@ get_contemporaneo <- function(ano) {
 }
 
 # ------------------------------------------------------------------------------
-# 7. FUNÇÃO AUXILIAR: RODAR 2SLS (CORRIGIDA PARA fixest)
+# 4. FUNÇÃO AUXILIAR: RODAR 2SLS (fixest::feols) CORRIGIDA E ROBUSTA
 # ------------------------------------------------------------------------------
 
 rodar_2sls <- function(df, endo_var, inst_var, outcome_var, ano, tipo_outcome) {
   
   outcome_col <- gsub("log\\(|\\)", "", outcome_var)
-  if (!(outcome_col %in% names(df))) return(NULL)
+  
+  if (!(outcome_col %in% names(df))) {
+    cat(sprintf("  ⚠ Pulo [ano=%d]: Outcome '%s' não existe na base.\n", ano, outcome_col))
+    return(NULL)
+  }
   
   vals <- df[[outcome_col]]
   if (sum(!is.na(vals) & vals > 0, na.rm = TRUE) < 10) return(NULL)
@@ -174,22 +134,20 @@ rodar_2sls <- function(df, endo_var, inst_var, outcome_var, ano, tipo_outcome) {
   
   tryCatch({
     mod <- feols(as.formula(form_str), data = df, se = "hetero")
-    
     ct <- summary(mod)$coeftable
     
-    # AQUI ESTÁ A CORREÇÃO: O fixest adiciona "fit_" ao nome da variável endógena.
-    nome_endo_fixest <- paste0("fit_", endo_var)
+    # Busca inteligente do nome do coeficiente 
+    nome_coef <- paste0("fit_", endo_var)
+    if (!(nome_coef %in% rownames(ct))) {
+      if (endo_var %in% rownames(ct)) {
+        nome_coef <- endo_var
+      } else {
+        cat(sprintf("  ⚠ Pulo [ano=%d]: Coeficiente para '%s' não encontrado.\n", ano, endo_var))
+        return(NULL)
+      }
+    }
     
-    if (!(nome_endo_fixest %in% rownames(ct))) return(NULL)
-    
-    coef_val <- ct[nome_endo_fixest, 1]   # Estimate
-    se_val   <- ct[nome_endo_fixest, 2]   # Std. Error
-    t_val    <- ct[nome_endo_fixest, 3]   # t value
-    p_val    <- ct[nome_endo_fixest, 4]   # Pr(>|t|)
-    
-    f_stat <- tryCatch({
-      fitstat(mod, "ivf")[[1]]$stat
-    }, error = function(e) NA_real_)
+    f_stat <- tryCatch({ fitstat(mod, "ivf")[[1]]$stat }, error = function(e) NA_real_)
     
     tibble(
       ano                  = ano,
@@ -197,41 +155,40 @@ rodar_2sls <- function(df, endo_var, inst_var, outcome_var, ano, tipo_outcome) {
       outcome_var          = outcome_var,
       variavel_endogena    = endo_var,
       variavel_instrumento = inst_var,
-      coeficiente          = coef_val,
-      erro_padrao          = se_val,
-      t_estatistica        = t_val,
-      p_valor              = p_val,
+      coeficiente          = ct[nome_coef, 1],
+      erro_padrao          = ct[nome_coef, 2],
+      t_estatistica        = ct[nome_coef, 3],
+      p_valor              = ct[nome_coef, 4],
       F_stat_1estagio      = f_stat,
       n_observacoes        = nrow(df)
     )
   }, error = function(e) {
-    cat(sprintf("  ⚠ Erro [ano=%d, outcome=%s]: %s\n", ano, outcome_var, e$message))
+    cat(sprintf("  ⚠ Erro Crítico [ano=%d, outcome=%s]: %s\n", ano, outcome_var, e$message))
     NULL
   })
 }
-
 # ------------------------------------------------------------------------------
-# 8. LOOP PRINCIPAL: SEGUNDO ESTÁGIO POR ANO
+# 5. LOOP PRINCIPAL: SEGUNDO ESTÁGIO POR ANO
 # ------------------------------------------------------------------------------
-cat("6. Rodando regressões de segundo estágio (2SLS)...\n\n")
 
 resultados <- list()
 contador   <- 0
 
 for (ano in years) {
   
-  endo_var <- paste0("densidade_buffer_real_",      ano)
+  endo_var <- paste0("densidade_buffer_real_", ano)
   inst_var <- paste0("densidade_buffer_sintetica_", ano)
   
   if (!all(c(endo_var, inst_var) %in% cols)) next
   if (sum(base[[inst_var]], na.rm = TRUE) == 0) next
   
-  # Excluir pontas deste ano
+  # Pontas deste ano específico
   codes_pontas_ano <- pontas_por_ano |>
     filter(ano_corte == ano) |>
     pull(code_amc) |>
     unique()
   
+  # Filtragem primária do ano
   df <- base |>
     filter(!(code_amc %in% codes_pontas_ano)) |>
     filter(
@@ -242,7 +199,7 @@ for (ano in years) {
   
   if (nrow(df) < 10) next
   
-  # ── 8A. PERSISTÊNCIA: outcomes fixos × tratamento de cada ano ───────────────
+  # A. Modelos de Persistência
   for (oc_var in outcomes_persistencia) {
     res <- rodar_2sls(df, endo_var, inst_var, oc_var, ano, "persistencia")
     if (!is.null(res)) {
@@ -251,7 +208,7 @@ for (ano in years) {
     }
   }
   
-  # ── 8B. CONTEMPORÂNEO: outcome do mesmo período ───────────────────────────
+  # B. Modelos Contemporâneos
   ct <- get_contemporaneo(ano)
   if (!is.null(ct)) {
     for (oc_var in unique(c(ct$pib, ct$pop))) {
@@ -263,23 +220,20 @@ for (ano in years) {
     }
   }
   
-  if (which(years == ano) %% 15 == 0) {
-    cat(sprintf("  → Ano %d (%d/%d) | n=%d | regressões acumuladas: %d\n",
-                ano, which(years == ano), length(years), nrow(df), contador))
+  # Feedback visual
+  if (which(years == ano) %% 10 == 0 || ano == max(years)) {
+    cat(sprintf("  → Ano %d processado | regressões acumuladas: %d\n", ano, contador))
   }
 }
 
 # ------------------------------------------------------------------------------
-# 9. COMPILAR E SALVAR
+# 6. COMPILAR E SALVAR RESULTADOS
 # ------------------------------------------------------------------------------
-cat("\n7. Compilando resultados...\n")
+cat("\n5. Compilando e salvando resultados...\n")
 
 if (length(resultados) == 0) stop("Nenhuma regressão bem-sucedida.")
 
-resultados_df <- bind_rows(resultados)
-
-# Adicionar indicativo de estrelas de significância
-resultados_df <- resultados_df |>
+resultados_df <- bind_rows(resultados) |>
   mutate(
     significancia = case_when(
       p_valor < 0.01 ~ "***",
@@ -290,12 +244,12 @@ resultados_df <- resultados_df |>
     coeficiente_sig = sprintf("%+.4f%s", coeficiente, significancia)
   )
 
+# Garantir existência do diretório
+dir.create("03-resultados/csv", showWarnings = FALSE, recursive = TRUE)
+
 output_file <- "03-resultados/csv/second_stage_buffer_density_sem_pontas_baseline.csv"
 write_csv(resultados_df, output_file)
 
-cat("========================================================================\n")
-cat("   RESUMO DA EXECUÇÃO\n")
-cat("========================================================================\n")
-cat(sprintf("Total de regressões rodadas e salvas: %d\n", nrow(resultados_df)))
-cat(sprintf("Arquivo gerado em: %s\n", output_file))
-cat("\n✅ PROCESSO CONCLUÍDO COM SUCESSO!\n")
+cat(sprintf("   ✓ %d Regressões validadas\n", nrow(resultados_df)))
+cat(sprintf("   ✓ Resultados salvos em: %s\n\n", output_file))
+cat("✅ PROCESSO CONCLUÍDO.\n")

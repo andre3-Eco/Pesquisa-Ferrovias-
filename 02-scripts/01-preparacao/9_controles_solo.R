@@ -1,4 +1,5 @@
 # ==============================================================================
+#  Etapa 06.2
 #  CONTROLES PEDOLÓGICOS POR AMC — Solos do Brasil (IBGE/EMBRAPA)
 #  Projeto: Ferrovias Nordeste
 #  Saída:   controles_solo_amcs_nordeste.csv / .rds
@@ -21,7 +22,6 @@ SAIDA_CSV    <- file.path(DIR_PROJETO, "controles_solo_amcs_nordeste.csv")
 SAIDA_RDS    <- file.path(DIR_PROJETO, "controles_solo_amcs_nordeste.rds")
 
 # 3. AMCs do Nordeste (via geobr) ----------------------------------------------
-cat("Carregando AMCs do Nordeste...\n")
 
 amcs_nordeste <- read_comparable_areas(start_year = 1970, end_year = 2010) |>
   filter(substr(list_code_muni_2010, 1, 1) == "2") |>
@@ -32,7 +32,7 @@ amcs_nordeste <- read_comparable_areas(start_year = 1970, end_year = 2010) |>
 cat("  AMCs carregadas:", nrow(amcs_nordeste), "\n")
 
 # 4. Shapefile de Solos --------------------------------------------------------
-cat("Carregando shapefile de solos do Brasil...\n")
+
 
 solos <- st_read(SOLOS_SHP, quiet = TRUE) |>
   # Manter apenas colunas necessárias
@@ -54,8 +54,6 @@ solos <- solos |>
   mutate(ordem1 = if_else(is.na(ordem1), "AGUA_DUNAS", ordem1))
 
 # 5. Interseção Espacial Solos × AMCs ------------------------------------------
-cat("Executando interseção espacial solos × AMCs...\n")
-cat("  (Isso pode levar alguns minutos)\n")
 
 # Desligar validação esférica s2 para evitar erros de topologia
 sf_use_s2(FALSE)
@@ -75,7 +73,6 @@ cat("  Fragmentos resultantes:", nrow(solos_amcs), "\n")
 cat("  AMCs cobertas:", n_distinct(solos_amcs$code_amc), "\n")
 
 # 6. Estatísticas por AMC ------------------------------------------------------
-cat("Calculando estatísticas de solo por AMC...\n")
 
 solos_tbl <- st_drop_geometry(solos_amcs)
 
@@ -117,7 +114,6 @@ classe_dom <- pct_ordens |>
          pct_dominante   = pct)
 
 # 7. Consolidar base final ------------------------------------------------------
-cat("Consolidando base...\n")
 
 controles_solo <- pct_wide |>
   left_join(classe_dom,      by = "code_amc") |>
@@ -154,14 +150,6 @@ saveRDS(controles_solo,   SAIDA_RDS)
 cat("  Salvo em:", SAIDA_CSV, "\n")
 cat("  Salvo em:", SAIDA_RDS, "\n")
 
-# 10. Resumo das classes dominantes --------------------------------------------
-cat("\n=== DISTRIBUIÇÃO DAS CLASSES DOMINANTES ===\n")
-controles_solo |>
-  count(solo_dominante, sort = TRUE) |>
-  mutate(pct_amcs = round(100 * n / sum(n), 1)) |>
-  print()
 
-cat("\nNota para regressão: os percentuais de solo somam 100% por AMC.\n")
-cat("Omita uma categoria de referência (ex: pct_solo_argissolos) para\n")
-cat("evitar colinearidade perfeita. Alternativamente, use 'solo_dominante'\n")
-cat("como variável categórica (dummies automáticas com factor()).\n")
+
+

@@ -1,24 +1,11 @@
 # =============================================================================
-# 5_Extrair_Outcomes_Desenvolvimento.R
+# Etapa 05
 #
 # Extrai e harmoniza outcomes de desenvolvimento para os 4 escopos do projeto:
 #   1. PIB e renda agregada            (ipeadatar)
 #   2. Dinâmica demográfica            (ipeadatar)
 #   3. Transformação estrutural / PAM  (ipeadatar + SIDRA tabela 5457)
 #   4. IDHM, Gini e pobreza            (ipeadatar – Atlas DH)
-#
-# Nível de extração : município (IBGE 7 dígitos)
-# Nível final       : AMC do projeto (code_amc 3001–10336)
-#
-# Saídas:
-#   01-dados/brutos/outcomes/       <- arquivos crus por categoria
-#   01-dados/processados/outcomes/  <- dados tratados prontos para uso
-#
-# Pré-requisitos em memória (já gerados pelo pipeline principal):
-#   amc_lookup            (data.frame: code_muni, code_amc)
-#   base_completa_integrada (tibble com a coluna code_amc)
-#
-# Tempo estimado: 20–35 min (dominado pela API do SIDRA)
 # =============================================================================
 
 library(ipeadatar)
@@ -31,30 +18,35 @@ DIR_PROC   <- "01-dados/processados/outcomes"
 dir.create(DIR_BRUTOS, showWarnings = FALSE, recursive = TRUE)
 dir.create(DIR_PROC,   showWarnings = FALSE, recursive = TRUE)
 
-
 # =============================================================================
-# 0.  MAPEAMENTO MUNICÍPIO → AMC
+# 0.  MAPEAMENTO MUNICÍPIO → AMC 
 # =============================================================================
 
-amc_map <- amc_lookup |>
-  separate_rows(code_muni, sep = ",") |>
+amcs_geometria <- readRDS(paste0(data.wd, "/01-dados/processados/amcs_geometria.rds")) # gerado na etapa 04
+
+amc_map <- amcs_geometria |>
   mutate(
-    code_muni = as.integer(trimws(code_muni)),
+    
+    list_code_muni_2010 = str_split(list_code_muni_2010, ",\\s*") 
+  ) |>
+  unnest(list_code_muni_2010) |>
+  mutate(
+    code_muni = as.integer(list_code_muni_2010),
     code_amc  = as.integer(code_amc)
-  )
+  ) |>
+  select(code_muni, code_amc) |>
+  filter(!is.na(code_muni)) 
 
-# Nordeste: code_amc entre 3001 e 10336 (coincide com estados 21–29 do IBGE)
-ne_amcs  <- sort(unique(base_completa_integrada$code_amc))
-ne_munis <- amc_map |> filter(code_amc %in% ne_amcs) |> pull(code_muni) |> unique()
+
+ne_amcs  <- sort(unique(amc_map$code_amc))
+ne_munis <- unique(amc_map$code_muni[amc_map$code_amc %in% ne_amcs])
 
 cat("Municípios NE no mapeamento :", length(ne_munis), "\n")
-cat("AMCs NE na base do projeto  :", length(ne_amcs),  "\n\n")
-
+cat("AMCs NE na base do projeto  :", length(ne_amcs), "\n\n")
 
 # =============================================================================
 # FUNÇÃO AUXILIAR – extração de série ipeadatar em nível municipal
 # =============================================================================
-
 extrai_ipea_mun <- function(codigo_serie) {
   cat("  Extraindo:", codigo_serie, "...")
   df <- ipeadata(codigo_serie, language = "br")
@@ -70,14 +62,12 @@ extrai_ipea_mun <- function(codigo_serie) {
   out
 }
 
-
 # =============================================================================
 # ESCOPO 1 – PIB E RENDA AGREGADA
 # PIB total: R$ mil, preços de mercado (preços de 2010), período 1920–2010
 # VAB setorial: R$ mil, preços de 2010
 # =============================================================================
 
-cat("===== ESCOPO 1: PIB E RENDA =====\n")
 
 series_pib <- c("PIB", "PIBAG", "PIBI", "PIBSE", "PIBG", "IMPPIB")
 
@@ -87,13 +77,11 @@ raw_pib <- map_dfr(series_pib, extrai_ipea_mun) |>
 write_csv(raw_pib, file.path(DIR_BRUTOS, "pib_vab_municipal_ne.csv"))
 cat("Salvo: pib_vab_municipal_ne.csv\n\n")
 
-
 # =============================================================================
 # ESCOPO 2 – DINÂMICA DEMOGRÁFICA
 # Pop. urbana e rural dos Censos decenais (Ipeadata)
 # =============================================================================
 
-cat("===== ESCOPO 2: POPULAÇÃO =====\n")
 
 raw_pop <- map_dfr(c("POPUR", "POPRU"), extrai_ipea_mun) |>
   filter(code_muni %in% ne_munis)
@@ -101,20 +89,16 @@ raw_pop <- map_dfr(c("POPUR", "POPRU"), extrai_ipea_mun) |>
 write_csv(raw_pop, file.path(DIR_BRUTOS, "populacao_municipal_ne.csv"))
 cat("Salvo: populacao_municipal_ne.csv\n\n")
 
-
 # =============================================================================
 # ESCOPO 3 – PAM: PESQUISA AGRÍCOLA MUNICIPAL  (SIDRA tabela 5457)
-#
 # Variáveis extraídas:
-#   8331 – Área plantada ou destinada à colheita (ha)
-#    214 – Quantidade produzida (t)
-#    215 – Valor da produção (R$ mil)
+# 8331 – Área plantada ou destinada à colheita (ha)
+# 214 – Quantidade produzida (t)
+# 215 – Valor da produção (R$ mil)
 # Categoria c782 = 0 → Total de lavouras
 # Período: 1974–2023 (todos os anos disponíveis)
 # =============================================================================
 
-cat("===== ESCOPO 3: PAM / SIDRA =====\n")
-cat("  Puxando municípios por estado NE (pode demorar 5–10 min)...\n")
 
 estados_ne <- c(21, 22, 23, 24, 25, 26, 27, 28, 29)
 
@@ -168,13 +152,11 @@ write_csv(raw_pam,      file.path(DIR_BRUTOS, "pam_raw_ne.csv"))
 write_csv(raw_pam_tidy, file.path(DIR_BRUTOS, "pam_tidy_ne.csv"))
 cat("Salvo: pam_raw_ne.csv + pam_tidy_ne.csv\n\n")
 
-
 # =============================================================================
 # ESCOPO 4 – IDHM, GINI E POBREZA  (Atlas do Desenvolvimento Humano – Censo)
 # Período: 1991, 2000, 2010 (anos censitários)
 # =============================================================================
 
-cat("===== ESCOPO 4: IDHM, GINI, POBREZA =====\n")
 
 series_social <- c(
   "ADH_IDHM",   # IDHM total
@@ -193,12 +175,9 @@ raw_social <- map_dfr(series_social, extrai_ipea_mun) |>
 write_csv(raw_social, file.path(DIR_BRUTOS, "social_idhm_gini_pobreza_municipal_ne.csv"))
 cat("Salvo: social_idhm_gini_pobreza_municipal_ne.csv\n\n")
 
-
 # =============================================================================
 # HARMONIZAÇÃO PARA AMC
 # =============================================================================
-
-cat("===== HARMONIZANDO PARA AMC =====\n")
 
 # Pesos populacionais para médias ponderadas (pop total = POPUR + POPRU)
 pop_pesos <- raw_pop |>
@@ -245,12 +224,9 @@ cat("PAM por AMC    :", nrow(pam_amc), "obs\n")
 social_amc <- harmonizar(raw_social,  metodo = "media_pond")
 cat("Social por AMC :", nrow(social_amc), "obs\n")
 
-
 # =============================================================================
 # VARIÁVEIS DERIVADAS
 # =============================================================================
-
-cat("\n===== DERIVANDO VARIÁVEIS =====\n")
 
 # Pop total, taxa de urbanização e densidade demográfica
 pop_derivado <- pop_amc |>
@@ -268,12 +244,9 @@ pib_percapita <- pib_amc |>
   inner_join(pop_derivado |> select(code_amc, ano, pop_total), by = c("code_amc", "ano")) |>
   mutate(pib_percapita = pib_total / pop_total * 1000)  # R$ mil → R$/pessoa
 
-
 # =============================================================================
 # SALVAR DADOS PROCESSADOS (formato long por escopo)
 # =============================================================================
-
-cat("\n===== SALVANDO DADOS PROCESSADOS =====\n")
 
 write_csv(pib_amc,       file.path(DIR_PROC, "escopo1_pib_vab_amc.csv"))
 write_csv(pop_derivado,  file.path(DIR_PROC, "escopo2_populacao_amc.csv"))
@@ -281,12 +254,11 @@ write_csv(pib_percapita, file.path(DIR_PROC, "escopo1_pib_percapita_amc.csv"))
 write_csv(pam_amc,       file.path(DIR_PROC, "escopo3_pam_amc.csv"))
 write_csv(social_amc,    file.path(DIR_PROC, "escopo4_social_amc.csv"))
 
-
 # =============================================================================
 # BASE CONSOLIDADA EM FORMATO LARGO (wide) – pronta para juntar com base IV
 # =============================================================================
 
-# Função: long → wide (col = serie_ANO)
+
 para_wide <- function(df, col_serie = "serie") {
   df |>
     mutate(col_name = paste0(tolower(.data[[col_serie]]), "_", ano)) |>
@@ -296,11 +268,11 @@ para_wide <- function(df, col_serie = "serie") {
 
 pib_wide    <- para_wide(pib_amc)
 pop_long    <- pop_derivado |>
-                 pivot_longer(c(pop_urbana, pop_rural, pop_total, tx_urbanizacao),
-                               names_to = "serie", values_to = "value")
+  pivot_longer(c(pop_urbana, pop_rural, pop_total, tx_urbanizacao),
+               names_to = "serie", values_to = "value")
 pop_wide    <- para_wide(pop_long)
 pibpc_long  <- pib_percapita |> mutate(serie = "pib_percapita") |>
-                 rename(value = pib_percapita)
+  rename(value = pib_percapita)
 pibpc_wide  <- para_wide(pibpc_long)
 pam_wide    <- para_wide(pam_amc)
 social_wide <- para_wide(social_amc)
@@ -317,10 +289,3 @@ cat("Base final: ", nrow(base_outcomes), " AMCs × ", ncol(base_outcomes),
 
 write_csv(base_outcomes, file.path(DIR_PROC, "outcomes_amc_wide.csv"))
 saveRDS(base_outcomes,   file.path(DIR_PROC, "outcomes_amc_wide.rds"))
-
-cat("\n✓ Concluído.\n")
-cat("  Arquivo principal: ", file.path(DIR_PROC, "outcomes_amc_wide.csv"), "\n")
-cat("\nPróximos passos sugeridos:\n")
-cat("  base_iv <- left_join(base_completa_integrada,\n")
-cat("             readRDS('01-dados/processados/outcomes/outcomes_amc_wide.rds'),\n")
-cat("             by = 'code_amc')\n")

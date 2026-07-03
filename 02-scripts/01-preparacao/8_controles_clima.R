@@ -1,4 +1,5 @@
 # ==============================================================================
+#  Etapa 06.1
 #  CONTROLES CLIMÁTICOS POR AMC — WorldClim (10 minutos)
 #  Projeto: Ferrovias Nordeste
 #  Saída:   controles_clima_amcs_nordeste.csv / .rds
@@ -21,10 +22,8 @@ DIR_TMEAN    <- file.path(DIR_CLIMA, "tmean_10m_esri/tmean")
 SAIDA_CSV    <- file.path(DIR_PROJETO, "controles_clima_amcs_nordeste.csv")
 SAIDA_RDS    <- file.path(DIR_PROJETO, "controles_clima_amcs_nordeste.rds")
 
-# 3. AMCs do Nordeste (via geobr) ----------------------------------------------
-cat("Carregando AMCs do Nordeste...\n")
+# 3. AMCs do Nordeste ----------------------------------------------
 
-# Código IBGE: estados do Nordeste começam com "2"
 amcs_nordeste <- read_comparable_areas(start_year = 1970, end_year = 2010) |>
   filter(substr(list_code_muni_2010, 1, 1) == "2") |>
   distinct(code_amc, .keep_all = TRUE) |>
@@ -34,13 +33,13 @@ amcs_nordeste <- read_comparable_areas(start_year = 1970, end_year = 2010) |>
 cat("  AMCs carregadas:", nrow(amcs_nordeste), "\n")
 
 # 4. Variáveis Bioclimáticas (BIO1 a BIO19) ------------------------------------
-cat("Carregando rasters bioclimáticos...\n")
 
+# Carregando rasters bioclimáticos
 bio_paths <- file.path(DIR_BIO, paste0("bio_", 1:19))
 bio_stack <- rast(bio_paths)
 names(bio_stack) <- paste0("bio_", 1:19)
 
-cat("  Extraindo médias por AMC (pode demorar alguns minutos)...\n")
+# Extraindo médias por AMC 
 bio_extract <- terra::extract(
   bio_stack,
   vect(amcs_nordeste),
@@ -59,8 +58,6 @@ bio_extract <- select(bio_extract, -ID)
 cat("  BIO extraídas:", ncol(bio_extract) - 1, "variáveis\n")
 
 # 5. Precipitação Mensal (prec_1 a prec_12) ------------------------------------
-cat("Carregando rasters de precipitação mensal...\n")
-
 prec_paths <- file.path(DIR_PREC, paste0("prec_", 1:12))
 prec_stack <- rast(prec_paths)
 names(prec_stack) <- paste0("prec_", 1:12)
@@ -78,8 +75,6 @@ prec_extract <- select(prec_extract, -ID)
 cat("  Precipitação mensal extraída:", ncol(prec_extract) - 1, "variáveis\n")
 
 # 6. Temperatura Média Mensal (tmean_1 a tmean_12) -----------------------------
-cat("Carregando rasters de temperatura média mensal...\n")
-
 tmean_paths <- file.path(DIR_TMEAN, paste0("tmean_", 1:12))
 tmean_stack <- rast(tmean_paths)
 names(tmean_stack) <- paste0("tmean_", 1:12)
@@ -101,8 +96,6 @@ tmean_extract <- select(tmean_extract, -ID)
 cat("  Temperatura mensal extraída:", ncol(tmean_extract) - 1, "variáveis\n")
 
 # 7. Consolidar base final ------------------------------------------------------
-cat("Consolidando base...\n")
-
 controles_clima <- bio_extract |>
   left_join(prec_extract,  by = "code_amc") |>
   left_join(tmean_extract, by = "code_amc") |>
@@ -125,7 +118,6 @@ if (n_nas == 0) {
 }
 
 # 9. Salvar --------------------------------------------------------------------
-cat("Salvando arquivos...\n")
 write_csv(controles_clima, SAIDA_CSV)
 saveRDS(controles_clima,   SAIDA_RDS)
 cat("  Salvo em:", SAIDA_CSV, "\n")
