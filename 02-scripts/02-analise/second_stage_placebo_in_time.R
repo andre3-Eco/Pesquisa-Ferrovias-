@@ -1,4 +1,5 @@
 # ==============================================================================
+# Etapa 15
 # SECOND-STAGE IV (2SLS) — PLACEBO IN-TIME (FUTURE DENSITY)
 # ==============================================================================
 # Lógica:
@@ -28,14 +29,9 @@ if (!exists("data.wd")) {
 }
 setwd(data.wd)
 
-cat("========================================================================\n")
-cat("SECOND-STAGE IV: PLACEBO IN-TIME (FUTURE DENSITY)\n")
-cat("========================================================================\n\n")
-
 # ------------------------------------------------------------------------------
 # 1. CARREGAR BASES
 # ------------------------------------------------------------------------------
-cat("1. Carregando bases de dados...\n")
 
 base_main <- read_csv(
   "01-dados/processados/base_completa_integrada.csv",
@@ -66,7 +62,6 @@ ne_states <- c("MA", "PI", "CE", "RN", "PB", "PE", "AL", "SE", "BA")
 # ------------------------------------------------------------------------------
 # 2. MONTAR BASE ANALÍTICA
 # ------------------------------------------------------------------------------
-cat("2. Montando base analítica...\n")
 
 base <- base_main |>
   filter(state_abbr %in% ne_states) |>
@@ -88,7 +83,6 @@ cat(sprintf("   AMCs Nordeste na base: %d\n\n", nrow(base)))
 # ------------------------------------------------------------------------------
 # 3. ANOS DE TRATAMENTO DISPONÍVEIS
 # ------------------------------------------------------------------------------
-cat("3. Identificando anos de tratamento disponíveis...\n")
 
 cols <- colnames(base)
 future_real_cols <- grep("^densidade_buffer_real_future_[0-9]+$", cols, value = TRUE)
@@ -195,7 +189,6 @@ rodar_2sls <- function(df, endo_var, inst_var, outcome_col, needs_log,
 # ------------------------------------------------------------------------------
 # 6. LOOP PRINCIPAL
 # ------------------------------------------------------------------------------
-cat("4. Rodando regressões de placebo in-time (future density)...\n\n")
 
 resultados_lista <- list()
 contador <- 0
@@ -255,12 +248,10 @@ for (ano_trat in treatment_years) {
   }
 }
 
-cat(sprintf("   → %d regressões concluídas\n\n", contador))
 
 # ------------------------------------------------------------------------------
 # 7. COMPILAR E SALVAR
 # ------------------------------------------------------------------------------
-cat("5. Compilando e salvando resultados...\n")
 
 if (length(resultados_lista) == 0) {
   stop("Nenhuma regressão bem-sucedida. Verifique se base_buffer_future.R foi rodado.")
@@ -272,44 +263,3 @@ resultados_df <- bind_rows(resultados_lista) |>
 dir.create("03-resultados/csv", showWarnings = FALSE, recursive = TRUE)
 write_csv(resultados_df, "03-resultados/csv/resultados_placebo_in_time_future.csv")
 
-# ------------------------------------------------------------------------------
-# 8. RESUMO
-# ------------------------------------------------------------------------------
-cat("========================================================================\n")
-cat("RESUMO — PLACEBO IN-TIME (FUTURE DENSITY)\n")
-cat("========================================================================\n\n")
-cat(sprintf("Total de regressões: %d\n", nrow(resultados_df)))
-cat(sprintf("Arquivo: 03-resultados/csv/resultados_placebo_in_time_future.csv\n\n"))
-
-cat("Taxa de significância por escopo (esperado: ~5% se exógeno):\n")
-resultados_df |>
-  group_by(escopo) |>
-  summarise(
-    n_total    = n(),
-    n_sig_005  = sum(p_valor < 0.05, na.rm = TRUE),
-    pct_sig    = round(100 * mean(p_valor < 0.05, na.rm = TRUE), 1),
-    F_medio    = round(mean(F_stat_1estagio, na.rm = TRUE), 1),
-    coef_medio = round(mean(coeficiente, na.rm = TRUE), 4),
-    .groups = "drop"
-  ) |>
-  print(n = 20)
-
-cat("\nResultados significativos (p < 0.05):\n")
-sig <- resultados_df |>
-  filter(p_valor < 0.05) |>
-  select(escopo, ano_tratamento, ano_outcome, coeficiente, p_valor, F_stat_1estagio)
-
-if (nrow(sig) > 0) {
-  print(sig, n = 30)
-  cat(sprintf(
-    "\n⚠  %d de %d regressões significativas (%.1f%%)\n",
-    nrow(sig), nrow(resultados_df),
-    100 * nrow(sig) / nrow(resultados_df)
-  ))
-} else {
-  cat("✅ Nenhum resultado significativo — placebo aprovado.\n")
-}
-
-cat("\n========================================================================\n")
-cat("✅ PROCESSO CONCLUÍDO\n")
-cat("========================================================================\n")

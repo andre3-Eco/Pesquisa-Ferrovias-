@@ -1,4 +1,5 @@
 # ==============================================================================
+# Etapa 14
 # CRIAR BASE DE DENSIDADE FUTURA DE FERROVIAS (REAL E SINTÉTICA)
 # Placebo In-Time — Lógica "Future Density"
 # ==============================================================================
@@ -13,7 +14,6 @@
 #
 # Diferença em relação a base_buffer.R:
 #   base_buffer.R:        filter(ano_inaug <= ano)   → acumulado até T
-#   base_buffer_future.R: filter(ano_inaug >  ano)   → acumulado após T
 #
 # Saída: base_densidade_buffer_future.csv / .rds
 # ==============================================================================
@@ -21,10 +21,6 @@
 library(sf)
 library(tidyverse)
 
-cat("========================================================================\n")
-cat("CRIANDO BASE DE DENSIDADE FUTURA (PLACEBO IN-TIME)\n")
-cat("Buffer de 5km | Ferrovias inauguradas APÓS cada ano T\n")
-cat("========================================================================\n\n")
 
 if (!exists("data.wd")) data.wd <- getwd()
 sf_use_s2(FALSE)
@@ -103,9 +99,8 @@ calcular_densidade <- function(ferrovias_filtradas, amcs_geo, base_areas) {
 }
 
 # ------------------------------------------------------------------------------
-# 5. LOOP POR ANO — filtro invertido: ano_inaug > ano
+# 5. LOOP POR ANO — filtro invertido
 # ------------------------------------------------------------------------------
-cat("Etapa 3: Calculando densidades futuras ano a ano...\n")
 
 lista_resultados <- list()
 
@@ -137,7 +132,7 @@ for (j in seq_along(anos_loop)) {
 # ------------------------------------------------------------------------------
 # 6. CONSTRUIR E SALVAR BASE FINAL
 # ------------------------------------------------------------------------------
-cat("\nEtapa 4: Compilando e salvando...\n")
+
 
 base_final <- amcs_base |>
   bind_cols(bind_cols(lista_resultados))
@@ -146,7 +141,3 @@ output_dir <- paste0(data.wd, "/01-dados/processados")
 write_csv(base_final, paste0(output_dir, "/base_densidade_buffer_future.csv"))
 saveRDS(base_final,   paste0(output_dir, "/base_densidade_buffer_future.rds"))
 
-cat(sprintf("\n  AMCs processadas : %d\n", nrow(base_final)))
-cat(sprintf("  Anos cobertos    : %d a %d\n", min(anos_loop), max(anos_loop)))
-cat(sprintf("  Colunas geradas  : %d\n", ncol(base_final) - 2))  # -2 para code_amc e area
-cat("\n✅ BASE FUTURA CONCLUÍDA\n")
