@@ -1,6 +1,8 @@
 ================================================================================
 PASTA 01-PREPARACAO — Scripts de Preparação de Dados
 Projeto: Ferrovias do Nordeste — Análise IV (Variáveis Instrumentais)
+Última atualização: Jul 2026 — Melhorias de performance, placebo estrutural e visualização
+Última atualização: Jul 2026 — Melhorias de performance, placebo estrutural e visualização
 ================================================================================
 
 Esta pasta contém 14 scripts que constroem as bases de dados usadas nas
@@ -8,19 +10,20 @@ regressões. A ordem de execução segue uma hierarquia lógica: dados brutos �
 processamento espacial → integração.
 
 ================================================================================
-ORDEM CORRETA DE EXECUÇÃO (FLUXO LÓGICO)
+ORDEM CORRETA DE EXECUÇÃO (FLUXO LÓGICO) - Otimizado julho/2026
 ================================================================================
 
 FASE 1 — FONTES PRIMÁRIAS (rodar uma vez)
   1. create_fake_routes.R
   2. pontastempo.R
 
-FASE 2 — BASES DE DENSIDADE DE BUFFER (alternativas, uma por análise)
-  3. base_buffer.R                  (baseline)
-  4. base_buffer_fake.R             (placebo in-space, requer create_fake_routes.R)
-  5. base_buffer_future.R           (placebo in-time)
-  6. base_buffer_multiraio.R        (teste de múltiplos raios)
-  7. base_buffer_placebo_in_time.R  (variação inversa no tempo — alternativa)
+FASE 2 — BASES DE DENSIDADE DE BUFFER (alternativas, uma por análise) - Otimizadas julho/2026
+   3. base_buffer.R                  (baseline)
+   4. base_buffer_fake.R             (placebo in-space, requer create_fake_routes.R)
+   routes.R)
+   5. base_buffer_future.R           (placebo in-time)
+   6. base_buffer_multiraio.R        (teste de múltiplos raios)
+   7. base_buffer_placebo_in_time.R  (variação inversa no tempo — alternativa)
 
 FASE 3 — CONTROLES AMBIENTAIS (ordem indiferente entre si)
   8. 8_controles_clima.R
@@ -37,7 +40,7 @@ FASE 6 — INTEGRAÇÃO FINAL (MASTER)
   13. 0_MASTER_Criar_Base_Buffer_Unificada.R
 
 ================================================================================
-DESCRIÇÃO DETALHADA DE CADA SCRIPT
+DESCRIÇÃO DETALHADA DE CADA SCRIPT (versões otimizadas julho/2026)
 ================================================================================
 
 ── 1. create_fake_routes.R ──────────────────────────────────────────────────────
