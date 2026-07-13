@@ -1,8 +1,8 @@
 # ==============================================================================
 # Etapa 18
 # SECOND-STAGE IV (2SLS) – PLACEBO IN-SPACE (TESTE DE FALSIFICAÇÃO)
-# Variável endógena: densidade do buffer REAL (multiraio)
-# Instrumento: densidade do buffer PLACEBO CONTINENTAL (multiraio)
+# Variável endógena: densidade do buffer REAL (multiraio wide)
+# Instrumento: densidade do buffer PLACEBO CONTINENTAL (multiraio long)
 # ==============================================================================
 
 library(dplyr)
@@ -22,29 +22,25 @@ raios_m  <- raios_km * 1000
 
 # -------------------- 1. CARREGAR BASES --------------------
 
-# Base principal (controles, outcomes, etc.)
 base_main <- read_csv("01-dados/processados/base_completa_integrada.csv", show_col_types = FALSE)
 
-# Base de densidade REAL (multiraio original)
 base_densidade_real <- read_csv("01-dados/processados/base_densidade_buffer_multiraio.csv", show_col_types = FALSE) %>% 
   select(code_amc, starts_with("densidade_buffer_real_"))
 
-# Base de densidade do PLACEBO CONTINENTAL (gerada pela Etapa 17 atualizada)
-base_densidade_placebo <- read_csv("01-dados/processados/base_densidade_buffer_placebo_multiraio.csv", show_col_types = FALSE)
+# ATENÇÃO: Agora lê o painel longo gerado na Etapa 17 atualizada
+base_densidade_placebo <- read_csv("01-dados/processados/painel_densidade_placebo_long.csv", show_col_types = FALSE)
 
-# Painel de pontas e outcomes interpolados
 painel_pontas <- read_csv("01-dados/processados/painel_amcs_pontas_ano_a_ano.csv", show_col_types = FALSE)
 outcomes_interp <- readRDS("01-dados/processados/outcomes/interpolados/outcomes_amc_ne_interpolado.rds")
 
 ne_states <- c("MA", "PI", "CE", "RN", "PB", "PE", "AL", "SE", "BA")
 
 # -------------------- 2. PREPARAR BASE (CORRIGIDA) --------------------
-# Correção: remoção do join das pontas para evitar duplicação de linhas (Cartesiano)
+# O join do placebo foi removido daqui para evitar Produto Cartesiano
 base <- base_main %>%
   filter(state_abbr %in% ne_states) %>%
-  select(-starts_with("densidade_")) %>% # Limpa qualquer lixo anterior
+  select(-starts_with("densidade_")) %>% 
   left_join(base_densidade_real, by = "code_amc") %>%
-  left_join(base_densidade_placebo, by = "code_amc") %>%
   left_join(outcomes_interp, by = "code_amc")
 
 # -------------------- 3. CONTROLES AMBIENTAIS --------------------
@@ -80,11 +76,12 @@ outcomes_map <- tibble(
 )
 
 # -------------------- 5. ANOS DE TRATAMENTO DISPONÍVEIS --------------------
-prefix_placebo  <- "densidade_buffer_placebo_"
-treatment_cols_placebo <- grep(paste0("^", prefix_placebo, "[0-9]+km_[0-9]+$"), cols, value = TRUE)
-
-get_year <- function(x) as.integer(sub(".*_", "", x))
-anos_trat <- sort(unique(get_year(treatment_cols_placebo)))
+# A extração por Regex foi substituída pela leitura direta da coluna 'ano'
+if ("ano" %in% names(base_densidade_placebo)) {
+  anos_trat <- sort(unique(na.omit(base_densidade_placebo$ano)))
+} else {
+  stop("A base placebo não contém a coluna 'ano'. Verifique os dados.")
+}
 
 cat(sprintf("\n   ✓ %d anos de tratamento identificados no placebo: %d–%d\n\n",
             length(anos_trat), min(anos_trat), max(anos_trat)))
@@ -149,16 +146,25 @@ contador_anos  <- 0
 for (ano_trat in anos_trat) {
   contador_anos <- contador_anos + 1
   
+  # NOVIDADE: Filtra o placebo apenas para o ano da iteração e acopla na base principal
+  placebo_slice <- base_densidade_placebo %>%
+    filter(ano == ano_trat) %>%
+    select(code_amc, starts_with("dens_placebo_"))
+  
+  base_ano <- base %>%
+    left_join(placebo_slice, by = "code_amc")
+  
+  codes_pontas <- painel_pontas %>% filter(ano_corte == ano_trat) %>% pull(code_amc) %>% unique()
+  
   for (r in raios_km) {
     endo_var <- paste0("densidade_buffer_real_", r, "km_", ano_trat)
-    inst_var <- paste0("densidade_buffer_placebo_", r, "km_", ano_trat)
+    inst_var <- paste0("dens_placebo_", r, "km") # Chama o nome padronizado do painel longo
     
-    if (!all(c(endo_var, inst_var) %in% cols)) next
-    if (sum(base[[inst_var]], na.rm = TRUE) == 0) next
+    if (!all(c(endo_var, inst_var) %in% colnames(base_ano))) next
+    if (sum(base_ano[[inst_var]], na.rm = TRUE) == 0) next
     
-    codes_pontas <- painel_pontas %>% filter(ano_corte == ano_trat) %>% pull(code_amc) %>% unique()
-    
-    df_work <- base %>% filter(!(code_amc %in% codes_pontas), is.finite(.data[[endo_var]]), is.finite(.data[[inst_var]]), !is.na(state_abbr))
+    # Agora filtra em cima do dataframe 'base_ano' que já contém as variáveis corretas
+    df_work <- base_ano %>% filter(!(code_amc %in% codes_pontas), is.finite(.data[[endo_var]]), is.finite(.data[[inst_var]]), !is.na(state_abbr))
     if (nrow(df_work) < 20) next
     
     for (i in seq_len(nrow(outcomes_map))) {

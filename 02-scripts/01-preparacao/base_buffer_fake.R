@@ -14,7 +14,6 @@ if (!exists("data.wd")) {
 }
 setwd(data.wd)
 
-
 sf_use_s2(FALSE)
 
 # -------------------- PARÂMETROS E PARALELIZAÇÃO --------------------
@@ -30,15 +29,12 @@ crs_projeto <- 31984
 amcs_ne_utm <- readRDS("01-dados/processados/amcs_geometria.rds") %>% 
   st_transform(crs = crs_projeto)
 
-ferro_reais_utm <- st_read("05-geometrias/ferrovias_cronologicas.gpkg", quiet = TRUE) %>% 
-  st_transform(crs = crs_projeto)
-
 # Carrega a nova rede placebo estrutural gerada pela Etapa 16 otimizada
 ferro_placebo_utm <- st_read("05-geometrias/Rotas_LCP_Fake_Random.gpkg", quiet = TRUE) %>% 
   st_transform(crs = crs_projeto)
 
-if (!"ano_inaug" %in% names(ferro_reais_utm) || !"ano_inaug" %in% names(ferro_placebo_utm)) {
-  stop("ERRO: Coluna 'ano_inaug' ausente em uma das bases de ferrovia.")
+if (!"ano_inaug" %in% names(ferro_placebo_utm)) {
+  stop("ERRO: Coluna 'ano_inaug' ausente na base de ferrovia placebo.")
 }
 
 amcs_base <- amcs_ne_utm %>%
@@ -92,12 +88,13 @@ anos_disponiveis <- sort(unique(na.omit(ferro_placebo_utm$ano_inaug)))
 cat(sprintf("  Encontrados %d anos únicos (%d a %d)\n\n",
             length(anos_disponiveis), min(anos_disponiveis), max(anos_disponiveis)))
 
-# -------------------- PROCESSAMENTO PARALELO --------------------
+# -------------------- PROCESSAMENTO PARALELO (LONG FORMAT) --------------------
 
 processar_ano <- function(ano) {
-  df_res_ano <- data.frame(matrix(ncol = length(raios_m), nrow = nrow(amcs_base)))
-  col_names <- paste0("densidade_buffer_placebo_", raios_km, "km_", ano)
-  colnames(df_res_ano) <- col_names
+  # Inicia um tibble já no formato de painel para o ano corrente
+  df_res_ano <- amcs_base %>%
+    select(code_amc) %>%
+    mutate(ano = ano)
   
   for (k in seq_along(raios_m)) {
     r_m <- raios_m[k]
@@ -108,24 +105,22 @@ processar_ano <- function(ano) {
     
     dens_placebo <- calcular_densidade_rapida(placebo_ano, amcs_ne_utm, amcs_base)
     
-    df_res_ano[[paste0("densidade_buffer_placebo_", r_km, "km_", ano)]] <- dens_placebo
+    # Adiciona a coluna com o nome limpo (sem o ano no nome da variável)
+    df_res_ano[[paste0("dens_placebo_", r_km, "km")]] <- dens_placebo
   }
   return(df_res_ano)
 }
 
-resultados_combinados <- future_map_dfc(anos_disponiveis, processar_ano, .progress = TRUE)
+# future_map_dfr processa em paralelo e aplica um "bind_rows" automático,
+# gerando um painel empilhado perfeitamente formatado para regressões.
+painel_densidade_placebo <- future_map_dfr(anos_disponiveis, processar_ano, .progress = TRUE)
 
-# -------------------- CONSTRUIR BASE FINAL --------------------
-
-base_final <- bind_cols(amcs_base, resultados_combinados)
-
-# Exportação
+# -------------------- EXPORTAÇÃO FINAL --------------------
 output_dir <- "01-dados/processados"
 if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
 
-arquivo_csv <- paste0(output_dir, "/base_densidade_buffer_placebo_multiraio.csv")
-arquivo_rds <- paste0(output_dir, "/base_densidade_buffer_placebo_multiraio.rds")
+arquivo_csv <- paste0(output_dir, "/painel_densidade_placebo_long.csv")
+arquivo_rds <- paste0(output_dir, "/painel_densidade_placebo_long.rds")
 
-write_csv(base_final, arquivo_csv)
-saveRDS(base_final, arquivo_rds)
-
+write_csv(painel_densidade_placebo, arquivo_csv)
+saveRDS(painel_densidade_placebo, arquivo_rds)
