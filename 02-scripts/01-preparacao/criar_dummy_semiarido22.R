@@ -79,7 +79,8 @@ base <- base %>%
   left_join(amcs_semiarido, by = "code_amc")
 
 # AMCs sem match (NA) viram 0 (não estão no shapefile = não classificados)
-base$semiarido[is.na(base$semiarido)] <- 0
+base$semiarido[is.na(base$semiarido.x)] <- 0
+
 
 cat("  Após merge: semiarido = 1:", sum(base$semiarido == 1),
     "| semiarido = 0:", sum(base$semiarido == 0), "\n")
