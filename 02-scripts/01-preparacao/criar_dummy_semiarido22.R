@@ -17,7 +17,7 @@ library(dplyr)
 # ---- Caminhos ----
 p_semiarido  <- "C:/Users/André Elias/Documents/Pesquisa (Ferrovias)/01-dados/brutos/lista_municipios_Semiarido_2022.xlsx"
 p_amcs       <- "C:/Users/André Elias/Documents/Pesquisa (Ferrovias)/amcs_geometria.rds"
-p_base       <- "C:/Users/André Elias/Documents/Pesquisa (Ferrovias)/01-dados/processados/base_completa_integrada_buffer.csv"
+p_base       <- "C:/Users/André Elias/Documents/Pesquisa (Ferrovias)/01-dados/processados/base_completa_integrada_buffer.rds"
 p_saida      <- "C:/Users/André Elias/Documents/Pesquisa (Ferrovias)/01-dados/processados/base_completa_integrada_buffer.csv"
 
 # ---- 1. Carregar lista de municípios do semiárido ----
@@ -66,8 +66,9 @@ print(head(amcs_semiarido, 10))
 
 # ---- 4. Merge na base principal ----
 
-base <- read.csv(p_base, stringsAsFactors = FALSE)
+base <- readRDS(p_base)
 cat("  Linhas:", nrow(base), "| Colunas:", ncol(base), "\n")
+
 
 # Verificar se code_amc existe
 if (!"code_amc" %in% names(base)) {
@@ -79,7 +80,7 @@ base <- base %>%
   left_join(amcs_semiarido, by = "code_amc")
 
 # AMCs sem match (NA) viram 0 (não estão no shapefile = não classificados)
-base$semiarido[is.na(base$semiarido.x)] <- 0
+base$semiarido[is.na(base$semiarido)] <- 0
 
 
 cat("  Após merge: semiarido = 1:", sum(base$semiarido == 1),

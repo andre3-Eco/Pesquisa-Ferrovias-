@@ -1,5 +1,5 @@
 # ==============================================================================
-# VISUALIZAÇÃO DE RESULTADOS 
+# VISUALIZAÇÃO DE RESULTADOS: Efeitos de Longo Prazo (Subamostras - 1950)
 # ==============================================================================
 
 library(tidyverse)
@@ -13,11 +13,12 @@ setwd(data.wd)
 
 dir.create("03-resultados/plots", showWarnings = FALSE, recursive = TRUE)
 
-df_resultados <- read_csv("03-resultados/csv/second_stage_persistencia_longo_prazo.csv", show_col_types = FALSE)
+df_resultados <- read_csv("03-resultados/csv/second_stage_longo_prazo_1950_subamostras.csv", show_col_types = FALSE)
 
-# 2. Manipulação de Dados 
+# 2. Manipulação de Dados (Filtragem e Renomeação)
 df_plot <- df_resultados |>
-  filter(ano_tratamento != 1880) |> 
+  # Manter apenas as duas subamostras de interesse (ignorando o grupo "Nordeste")
+  filter(grupo %in% c("Semiarido", "Nao_Semiarido")) |> 
   mutate(
     ano_outcome = as.numeric(str_extract(outcome_var, "\\d{4}")),
     tipo_outcome = case_when(
@@ -27,23 +28,31 @@ df_plot <- df_resultados |>
     ),
     ci_lower = coeficiente - (1.96 * erro_padrao),
     ci_upper = coeficiente + (1.96 * erro_padrao),
-    Treatment = as.factor(ano_tratamento) 
+    
+    # Criar variável em inglês para a legenda
+    Sample = case_when(
+      grupo == "Semiarido" ~ "Semi-arid",
+      grupo == "Nao_Semiarido" ~ "Non Semi-arid"
+    )
   ) |>
+  # Limpeza das pontas assimétricas e anos de censo irregulares
   filter(!ano_outcome %in% c(1990, 1991, 2023)) |>
   filter(!(str_detect(outcome_var, "pib") & ano_outcome == 2022)) |>
   filter(!(str_detect(outcome_var, "pop") & ano_outcome == 2021)) |>
   filter(!is.na(ano_outcome))
 
+# Estruturando os fatores para garantir que a ordem da legenda faça sentido
+df_plot <- df_plot |> mutate(Sample = factor(Sample, levels = c("Semi-arid", "Non Semi-arid")))
+
 # Separar os dados
 df_gdp <- df_plot |> filter(tipo_outcome == "GDP")
 df_pop <- df_plot |> filter(tipo_outcome == "Population")
 
-# 3. Definição de Cores 
-cores <- c("1911" = "#5c4163", 
-           "1936" = "#80c47d", 
-           "1950" = "#d4a373") 
+# 3. Definição de Cores (Replicando o verde e roxo originais da sua referência)
+cores <- c("Semi-arid"     = "#5c4163", # Roxo escuro
+           "Non Semi-arid" = "#80c47d") # Verde claro
 
-# 4. Tema Customizado
+# 4. Tema Customizado Clássico
 tema_customizado <- theme_minimal() +
   theme(
     panel.grid.major = element_line(linetype = "dashed", color = "gray90"),
@@ -52,8 +61,7 @@ tema_customizado <- theme_minimal() +
     axis.ticks = element_line(color = "black", linewidth = 0.6),
     axis.text = element_text(color = "black", size = 10),
     axis.title = element_text(color = "black", size = 11),
-    plot.title = element_text(size = 13, hjust = 0),
-    # LÓGICA ALTERADA: A posição da legenda agora não é mais fixa aqui internamente
+    plot.title = element_text(size = 13, face = "bold", hjust = 0),
     legend.title = element_text(face = "bold"),
     legend.background = element_blank(),
     legend.key = element_blank()
@@ -62,7 +70,7 @@ tema_customizado <- theme_minimal() +
 pd <- position_dodge(width = 0.6) 
 
 # 5. Construir o Gráfico A (GDP)
-plot_gdp <- ggplot(df_gdp, aes(x = as.factor(ano_outcome), y = coeficiente, color = Treatment)) +
+plot_gdp <- ggplot(df_gdp, aes(x = as.factor(ano_outcome), y = coeficiente, color = Sample)) +
   geom_hline(yintercept = 0, color = "gray30", linewidth = 0.8) +
   geom_errorbar(aes(ymin = ci_lower, ymax = ci_upper),
                 position = pd, width = 0, linewidth = 0.8) +
@@ -71,10 +79,9 @@ plot_gdp <- ggplot(df_gdp, aes(x = as.factor(ano_outcome), y = coeficiente, colo
   scale_y_continuous(expand = expansion(mult = c(0.2, 0.2))) +
   labs(title = "A. Local GDP (log)", x = "Year", y = "Marginal Effect") +
   tema_customizado
-# LÓGICA ALTERADA: Removido o 'legend.position = "none"' daqui
 
 # 6. Construir o Gráfico B (Population)
-plot_pop <- ggplot(df_pop, aes(x = as.factor(ano_outcome), y = coeficiente, color = Treatment)) +
+plot_pop <- ggplot(df_pop, aes(x = as.factor(ano_outcome), y = coeficiente, color = Sample)) +
   geom_hline(yintercept = 0, color = "gray30", linewidth = 0.8) +
   geom_errorbar(aes(ymin = ci_lower, ymax = ci_upper),
                 position = pd, width = 0, linewidth = 0.8) +
@@ -83,17 +90,14 @@ plot_pop <- ggplot(df_pop, aes(x = as.factor(ano_outcome), y = coeficiente, colo
   scale_y_continuous(expand = expansion(mult = c(0.2, 0.2))) +
   labs(title = "B. Population (log)", x = "Year", y = "") +
   tema_customizado
-# LÓGICA ALTERADA: Removido o posicionamento interno c(0.85, 0.20) daqui
 
-# 7. Combinar os gráficos lado a lado e coletar a legenda
-# LÓGICA ALTERADA: guides = "collect" pega a legenda dos dois e unifica.
-# O theme() global aplica a posição inferior e ajusta o layout para horizontal.
+# 7. Combinar os gráficos e coletar a legenda (Rodapé unificado)
 grafico_final <- (plot_gdp + plot_pop) + 
   plot_layout(guides = "collect") & 
   theme(
     legend.position = "bottom",
     legend.direction = "horizontal",
-    legend.box.margin = margin(t = 10) # Dá um pequeno espaço entre o gráfico e a legenda
+    legend.box.margin = margin(t = 10) 
   )
 
 # Exibir o resultado
@@ -101,7 +105,7 @@ print(grafico_final)
 
 # 8. Exportar
 ggsave(
-  filename = "03-resultados/plots/long_run_persistence_effects.png",
+  filename = "03-resultados/plots/long_run_effects_1950_subsamples.png",
   plot = grafico_final,
   width = 12, 
   height = 5.5, 
@@ -109,4 +113,4 @@ ggsave(
   bg = "white"
 )
 
-cat("Gráfico exportado: 03-resultados/plots/long_run_persistence_effects.png\n")
+cat("Gráfico exportado: 03-resultados/plots/long_run_effects_1950_subsamples.png\n")
