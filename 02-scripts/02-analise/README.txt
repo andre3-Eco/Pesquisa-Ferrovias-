@@ -21,6 +21,11 @@ ORDEM CORRETA DE EXECUÇÃO (mantida, com melhorias de eficiência)
   7. second_stage_multiraio.R                       (multiraio 2SLS)
   8. 9_INFERENCIA_ESPACIAL_ROBUSTA.R                (inferência espacial)
 
+  * Adições Recentes (Agosto/2026):
+  9. second_stage_1920_*.R                          (Outcomes de 1920, incluindo Maquinário, Educação, Fábricas e Casas de Negócio)
+ 10. second_stage_1920_spillover_*.R                (Efeitos de Spillover para variáveis de 1920)
+ 11. visualizacao_*.R                               (Visualizações de Efeitos Diretos, Subamostras e Spillover)
+
 Os scripts de análise são independentes entre si (cada um carrega suas
 próprias bases), exceto que:
    - Todos requerem que a pasta 01-preparacao tenha sido executada antes.
@@ -340,6 +345,68 @@ DESCRIÇÃO DETALHADA DE CADA SCRIPT (versões otimizadas julho/2026)
    (especialmente cutoff 100-200 km) e os p-valores cruzam 0.05, a
    significância baseline pode ser espúria (devido a dependência espacial
    não modelada).
+
+── 9. second_stage_1920_*.R (Novos - Ago/2026) ─────────────────────────────────
+   O que fazem: Estimam os efeitos diretos das ferrovias sobre as variáveis 
+   educacionais e estruturais de 1920. Existem versões em nível e log, bem
+   como versões filtradas para Semiárido (e.g. `second_stage_1920_semiarido.R`).
+
+   Fórmula:
+     outcome_1920 ~ controles | state_abbr | endo ~ instrumento
+
+   Entrada:
+     - 01-dados/processados/base_completa_integrada_buffer.rds
+     - 01-dados/processados/base_domi_1920_interpolado.rds
+     - 01-dados/processados/painel_amcs_pontas_ano_a_ano.csv
+
+   Saída:
+     - 03-resultados/csv/second_stage_1920_*.csv
+
+   Lógica:
+     Similar aos modelos baseline, mas cruzam os dados com as variáveis 
+     (alfabetização, maquinário, fábricas) de 1920, limitando a amostra até
+     o ano de tratamento 1920.
+
+── 10. second_stage_1920_spillover_*.R (Novos - Ago/2026) ──────────────────────
+   O que fazem: Testam o efeito de "spillover" (transbordamento espacial).
+   A variável dependente é o outcome da AMC, mas o tratamento é a exposição
+   ferroviária dos VIZINHOS daquela AMC.
+
+   Fórmula:
+     outcome_1920 ~ controles | state_abbr | vizinhos_dens_real ~ vizinhos_dens_sint
+
+   Entrada:
+     Mesmas bases dos modelos diretos, mas usa Matriz de Vizinhança Espacial
+     (tipo Rainha/Queen) gerada via pacote 'spdep'.
+
+   Saída:
+     - 03-resultados/csv/second_stage_1920_spillover_*.csv
+
+   Lógica:
+     Multiplica a densidade férrea de cada AMC pela matriz de pesos espaciais 
+     (W) para obter a densidade espacialmente defasada (W*X). O 2SLS usa 
+     W*dens_sintetica como instrumento para W*dens_real.
+
+── 11. visualizacao_*.R (Novos - Ago/2026) ─────────────────────────────────────
+   O que fazem: Geram os gráficos padronizados para visualização dos efeitos 
+   diretos, subamostras e spillovers das variáveis de 1920.
+
+   Fórmula/Gráficos:
+     Gráficos de pontos com intervalos de confiança (erro padrão). 
+     Usa o pacote `patchwork` para unir resultados A e B na mesma figura.
+
+   Entrada:
+     - CSVs gerados na etapa de estimação (e.g., `second_stage_1920_semiarido_maquinario.csv`)
+
+   Saída:
+     - 03-resultados/plots/direct_effects_maquinario_geral_1920.png
+     - 03-resultados/plots/direct_effects_maquinario_subsamples_1920.png
+     - 03-resultados/plots/spillover_effects_maquinario_subsamples_1920.png
+
+   Lógica:
+     Filtram a amostra de interesse (Geral, Atendidos/Não-Atendidos por ferrovias
+     ou Semiárido), formatam as paletas de cores padrão (Roxo e Verde) e 
+     exportam PNGs de alta qualidade para o relatório final.
 
 ================================================================================
 DEPENDÊNCIAS (PRÉ-REQUISITOS PARA RODAR QUALQUER SCRIPT DESTA PASTA)

@@ -285,6 +285,38 @@ DESCRIÇÃO DETALHADA DE CADA SCRIPT (versões otimizadas julho/2026)
   Importante: Rodar DEPOIS de 7_Extrair_Outcomes_Desenvolvimento.R e ANTES dos
   scripts de análise que usam outcomes interpolados (second_stage_*.R).
 
+── 12b. integra_dados_domi_1920.R (Novo - Ago/2026) ─────────────────────────
+  O que faz: Processa os dados censitários originais de 1920 (Maquinário, Instrução
+  Agrícola, Alfabetização, Fábricas/Oficinas e Casas de Negócio) e une-os à base
+  geográfica (AMCs). Gera proporções relativas à população ou número de estabelecimentos.
+
+  Entrada:
+    - 01-dados/Dados1920.xlsx (páginas 'maquinario', 'sabe_ler' e 'domi')
+    - 01-dados/processados/amcs_geometria.rds
+
+  Saída:
+    - 01-dados/processados/base_domi_1920.rds e .csv
+
+  Lógica:
+    Cruza as informações das três planilhas por AMC, gera variáveis de proporção
+    como 'pct_commaquinas' e 'pct_fabeofi' e cria a base pronta para interpolação.
+
+── 12c. INTERPOLACAO_1920.R (Novo - Ago/2026) ───────────────────────────────
+  O que faz: Preenche valores ausentes (NAs) nos dados censitários de 1920
+  usando Inverse Distance Weighting (IDW).
+
+  Entrada:
+    - 01-dados/processados/base_domi_1920.rds
+    - 01-dados/processados/amcs_geometria.rds
+
+  Saída:
+    - 01-dados/processados/base_domi_1920_interpolado.csv
+    - 01-dados/processados/base_domi_1920_interpolado.rds
+
+  Lógica:
+    Aplica IDW (idp=2) sobre centróides de AMCs para preencher lacunas nos
+    dados de 1920. Validação Leave-One-Out (LOO) mede a qualidade (RMSE).
+
 ── 13. 0_MASTER_Criar_Base_Buffer_Unificada.R ───────────────────────────────────
   O que faz: Script MASTER que integra TUDO em uma base única pronta para
   regressão.
